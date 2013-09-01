@@ -1,0 +1,38 @@
+.container
+  .content
+    .accordion
+      .accordion-header
+        %h3 New Account
+      .accordion-content
+        = render partial: 'accounts/form', locals: {account: @new_account}
+
+      .accordion-header
+        %h3 (10) Checking Account
+        .good.float-right
+          $243.89
+      .accordion-content
+        Some more content
+
+      .accordion-header
+        %h3 (9) Other Account
+        .bad.float-right
+          ($24.83)
+      .accordion-content
+        Something else goes here
+
+      .accordion-header
+        %h3 (7) No Funds Account
+        .neutral.float-right
+          $0.00
+      .accordion-content
+        Some stuff
+
+      .accordion-header.account-disabled
+        %h3 Disabled Account
+        .good.float-right
+          $248.00
+      .accordion-content
+        Stuff in disabled account
+
+  .sidebar
+    This is sidebar content

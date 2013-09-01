@@ -1,0 +1,27 @@
+.container{
+  @include container;
+}
+
+header, footer{
+  @include column($blueprint-grid-columns);
+}
+
+// CONTENT COLUMNS
+.content{
+  @include column(16);
+}
+
+.accordion-content{
+  @include column(16, true);
+  @include prepend(1);
+  @include append(1);
+}
+
+.accordion-header{
+  @include column(16, true);
+}
+
+// SIDEBAR COLUMNS
+.sidebar{
+  @include column(8, true);
+}

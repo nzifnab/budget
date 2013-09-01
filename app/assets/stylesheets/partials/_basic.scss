@@ -1,0 +1,14 @@
+@function pxtoem($pixels){
+  $diff: $pixels - $app-font-size;
+  $ratio: $diff / $app-font-size;
+  @return #{1 + $ratio}em;
+}
+
+body{
+  font-size: $app-font-size;
+  font-family: $app-font-family;
+}
+
+.float-right{
+  float: right;
+}

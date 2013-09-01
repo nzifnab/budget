@@ -1,0 +1,11 @@
+!!!
+%html
+  %head
+    %title Budgeteer
+    %link{ href: 'http://fonts.googleapis.com/css?family=Arimo:400,700,400italic,700italic', rel: 'stylesheet', type: 'text/css' }
+    = stylesheet_link_tag "screen", media: "all", "data-turbolinks-track" => true
+    = javascript_include_tag "application", "data-turbolinks-track" => true
+    = csrf_meta_tags
+
+  %body
+    = yield

@@ -1,0 +1,24 @@
+= form_for account, remote: true do |f|
+  %ul.fields
+    %li
+      = f.label :name
+      = f.text_field :name
+    %li
+      = f.label :description
+      = f.text_field :description
+    %li
+      = f.label :priority
+      = f.text_field :priority, class: 'field-small'
+    %li
+      = f.label :enabled
+      = f.check_box :enabled
+    %li
+      = f.label :negative_overflows_into
+      %select
+        %option{selected: true} Disallow Negatives
+        %option Allow Negatives
+        %option Option 3
+        %option Option 4
+    %li
+      %label
+      = f.submit "Save Account", class: 'btn btn-green'

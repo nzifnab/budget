@@ -13,14 +13,15 @@
 #
 # Configure Using Gemfile
 # gem 'pg'
-#
+
 development:
   adapter: postgresql
-  encoding: unicode
   database: budgeteer_development
+  username: sgcore
+  password: please$$
+  host: 127.0.0.1
   pool: 5
-  username: budgeteer
-  password:
+  timeout: 5000
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -48,13 +49,5 @@ test:
   encoding: unicode
   database: budgeteer_test
   pool: 5
-  username: budgeteer
-  password:
-
-production:
-  adapter: postgresql
-  encoding: unicode
-  database: budgeteer_production
-  pool: 5
-  username: budgeteer
-  password:
+  username: sgcore
+  password: please$$

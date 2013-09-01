@@ -1,0 +1,27 @@
+$header-gradient-start: #569d5b;
+$header-gradient-end: #007007;
+$content-gradient-start: #f9f9f9;
+$content-gradient-end: #eeeeee;
+$header-hover-gradient-start: #daf2d3;
+$header-hover-gradient-end: #caebc0;
+$disabled-grey: #e0e0e0;
+$disabled-text: #888;
+
+$dark-on-light: #3c5126;
+$light-on-dark: #ffffff;
+
+$green: #008000;
+$red: #db1a3e;
+$black: #000000;
+
+.bad, .error{
+  color: $red;
+}
+
+.good, .success{
+  color: $green
+}
+
+.neutral{
+  color: $black;
+}

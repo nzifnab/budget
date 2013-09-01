@@ -1,0 +1,84 @@
+//.accordion-header{
+//  background-color: #c9de96; // Old browsers
+//  @include filter-gradient(#c9de96, #147f0c, vertical); // IE6-9
+//  @include background-image(linear-gradient(top, #c9de96 0%,#75b548 0%,#438e25 40%,#147f0c 100%));
+//  padding: 7px 15px;
+//  font-weight: bold;
+//  color: #FFFFFF;
+//  border: 1px solid #000000;
+//  @include border-radius(4px);
+//}
+//
+
+// .accordion-header{
+//   background-color: $header-gradient-end;
+//   @include background-image(linear-gradient($header-gradient-start, $header-gradient-end));
+
+//   &.ui-state-active{
+//     background-color: $content-gradient-end;
+//     @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
+//     border-bottom-style: none;
+//   }
+
+//   &.ui-state-hover, &.ui-state-focus{
+//     &:not(.ui-state-active){
+//       background-color: $header-hover-gradient-end;
+//       @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
+//     }
+//   }
+
+//   h3{
+//     float: left;
+//   }
+// }
+
+// .accordion-content{
+//   background-color: $content-gradient-end;
+//   background-image: none;
+//   border-color: #333;
+// }
+
+.accordion-header{
+  background-color: $header-hover-gradient-end;
+  @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
+  color: $dark-on-light;
+
+  &.ui-state-active, &.ui-state-hover, &.ui-state-focus{
+    background-color: $content-gradient-end;
+    @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
+  }
+
+  &.ui-state-active{
+    border-bottom-style: none;
+  }
+
+  //&.ui-state-hover, &.ui-state-focus{
+  //  &:not(.ui-state-active){
+  //    background-color: $header-hover-gradient-end;
+  //    @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
+  //  }
+  //}
+
+  h3{
+    float: left;
+  }
+
+  &.account-disabled{
+    background-image: none;
+    background-color: $disabled-grey;
+
+    .bad, .error, .good, .success, .neutral{
+      color: $disabled-text;
+    }
+  }
+}
+
+.accordion-content{
+  background-color: $content-gradient-end;
+  background-image: none;
+  border-color: #333;
+}
+
+.accordion-header, .accordion-content{
+  box-sizing: border-box;
+}

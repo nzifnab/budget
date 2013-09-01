@@ -1,0 +1,32 @@
+.btn{
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1em;
+  padding: 5px 18px 6px;
+  @include text-shadow(0 1px 1px rgba(0, 0, 0, .3));
+  @include border-radius(0.5em);
+  @include box-shadow(0 1px 2px rgba(0, 0, 0, .2));
+
+  &:active{
+    position: relative;
+    top: 1px;
+  }
+}
+
+.btn-green{
+  color: $light-on-dark;
+  border: solid 1px #538312;
+  @include background-image(linear-gradient(top, $header-gradient-start, $header-gradient-end));
+
+  &:hover{
+    @include background-image(linear-gradient(top, #407544, #004504));
+  }
+
+  &:active{
+    @include background-image(linear-gradient(top, $header-hover-gradient-end, $header-hover-gradient-start));
+    color: $dark-on-light;
+    border-color: $header-hover-gradient-end;
+  }
+}

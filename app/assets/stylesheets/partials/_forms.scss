@@ -1,0 +1,24 @@
+.fields{
+  li{
+    @include clearfix;
+    @include column(10);
+    margin-bottom: 5px;
+  }
+
+  label{
+    padding: 3px 8px;
+    @include column(4);
+    text-align: right;
+  }
+
+  input[type=text]{
+    @include column(5, true);
+    &.field-small{
+      @include column(2, true);
+    }
+  }
+}
+
+.fields{
+  list-style-type: none;
+}
