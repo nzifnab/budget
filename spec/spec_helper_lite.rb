@@ -1,14 +1,13 @@
 require 'rspec/autorun'
+require 'ostruct'
 
 ENV['RAILS_ENV'] ||= 'test'
 
 def stub_module(full_name, &block)
-  puts "stubbing #{full_name} module"
   stub_class_or_module(full_name, Module)
 end
 
 def stub_class(full_name, &block)
-  puts "stubbing #{full_name} class"
   stub_class_or_module(full_name, Class)
 end
 

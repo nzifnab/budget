@@ -4,7 +4,7 @@
       .accordion-header
         %h3 New Account
       .accordion-content
-        -#= render partial: 'accounts/form', locals: {account: @new_account}
+        = render partial: 'accounts/form', locals: {account: @account}
 
       = render partial: 'accounts/account', collection: accounts
       /

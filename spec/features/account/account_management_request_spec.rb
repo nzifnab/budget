@@ -2,6 +2,13 @@ require 'spec_helper'
 
 describe "Account Management", js: true do
   describe "Creating a new account" do
+    let(:budget){MY_BUDGET}
+
+    before(:each) do
+      budget.new_account(name: "Savings Account", priority: 9, enabled: true).submit
+      budget.new_account(name: "Insurance", priority: 3, enabled: true).submit
+    end
+
     it "Inserts new accounts into the correct priority location" do
       visit accounts_path
 
@@ -15,8 +22,11 @@ describe "Account Management", js: true do
         click_button "Save Account"
       end
 
-      #page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
-      #accordion[:content].should_not be_visible
+      # TEMPORARY while the submission is not using 'remote: true':
+      accordion = find_accordion("New Account")
+      
+      page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
+      accordion[:content].should_not be_visible
 
       # find all of them so we can assert it was inserted in the right spot
       page.should have_selector(".accordion-header", text: "Checking Account")

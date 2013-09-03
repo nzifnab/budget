@@ -33,16 +33,38 @@ describe Account do
     account.priority.should == 5
   end
 
+  it "supports setting attributes in the initializer" do
+    account = Account.new(name: "Checking", description: "Fun Times")
+    account.name.should == "Checking"
+    account.description.should == "Fun Times"
+  end
+
   describe "#submit" do
-    let(:budget){mock(:budget)}
+    let(:budget){mock(:budget, add_account: account)}
 
     before(:each) do
       account.budget = budget
+      account.name = "Checking"
     end
 
     it "adds the account to the budget" do
       budget.should_receive(:add_account).with(account)
       account.submit
+    end
+
+    context "Given an invalid account" do
+      before(:each) do
+        account.name = nil
+      end
+
+      it "won't add the account to the budget" do
+        budget.should_not_receive(:add_account)
+        account.submit
+      end
+
+      it "returns false" do
+        account.submit.should be_false
+      end
     end
   end
 end

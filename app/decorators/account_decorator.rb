@@ -1,3 +1,5 @@
+require 'draper'
+require 'action_view/helpers'
 class AccountDecorator < Draper::Decorator
   include ActionView::Helpers::NumberHelper
   delegate_all

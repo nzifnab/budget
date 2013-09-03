@@ -1,4 +1,4 @@
-.accordion-header{class: account.enabled? ? '' : 'account-disabled'}
+.accordion-header{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority}}
   %h3= account.prioritized_name
   .float-right{class: account.amount_class}
     = account.display_amount

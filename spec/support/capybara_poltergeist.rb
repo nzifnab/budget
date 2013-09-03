@@ -1,6 +1,6 @@
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
-Capybara.ignore_hidden_elements = true
+Capybara.ignore_hidden_elements = false
 
 def render_page(filename)
   file_location = Rails.root.join("tmp", filename)

@@ -1,7 +1,6 @@
 require 'spec_helper_lite'
-require 'action_view/helpers/number_helper'
+#require 'action_view/helpers/number_helper'
 stub_class('Account')
-require 'draper'
 require_relative '../../app/decorators/account_decorator'
 
 describe AccountDecorator do
