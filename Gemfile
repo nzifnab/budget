@@ -9,7 +9,6 @@ gem 'haml-rails'
 gem 'haml', '~> 4.0'
 gem 'uglifier', '>= 1.3.0'
 
-gem 'rspec-rails'
 
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
@@ -22,6 +21,7 @@ gem 'turbolinks'
 gem 'bcrypt-ruby', '~> 3.0.0'
 
 gem 'execjs', '1.4.0'
+gem 'draper'
 
 group :assets do
   gem 'compass-rails', "~> 2.0.alpha.0"
@@ -29,6 +29,15 @@ group :assets do
   gem 'sass-rails'
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
+end
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'autotest-rails'
+  gem 'ZenTest'
+  gem 'poltergeist'
+  gem 'launchy'
+  gem 'database_cleaner'
 end
 
 # Use unicorn as the app server

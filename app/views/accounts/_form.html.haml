@@ -5,7 +5,7 @@
       = f.text_field :name
     %li
       = f.label :description
-      = f.text_field :description
+      = f.text_area :description
     %li
       = f.label :priority
       = f.text_field :priority, class: 'field-small'
@@ -14,7 +14,7 @@
       = f.check_box :enabled
     %li
       = f.label :negative_overflows_into
-      %select
+      %select{id: "account_negative_overflows_into"}
         %option{selected: true} Disallow Negatives
         %option Allow Negatives
         %option Option 3

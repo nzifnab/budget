@@ -4,15 +4,33 @@ $content-gradient-start: #f9f9f9;
 $content-gradient-end: #eeeeee;
 $header-hover-gradient-start: #daf2d3;
 $header-hover-gradient-end: #caebc0;
+$action-gradient-start: #00adee;
+$action-gradient-end: #0078a5;
+$action-hover-gradient-start: #0095cc;
+$action-hover-gradient-end: #00678e;
+$action-active-gradient-start: #0078a5;
+$action-active-gradient-end: #00adee;
+$danger-gradient-start: #faa51a;
+$danger-gradient-end: #f47a20;
+$danger-hover-gradient-start: #f88e11;
+$danger-hover-gradient-end: #f06015;
+$danger-active-gradient-start: #f47a20;
+$danger-active-gradient-end: #faa51a;
 $disabled-grey: #e0e0e0;
 $disabled-text: #888;
 
 $dark-on-light: #3c5126;
 $light-on-dark: #ffffff;
+$light-blue-on-dark: #d9eef7;
+$light-orange-on-dark: #fef4e9;
 
 $green: #008000;
 $red: #db1a3e;
 $black: #000000;
+
+$description-background: #f5f3e5;
+$property-background: #efe2cc;
+$property-value-background: #edffda;
 
 .bad, .error{
   color: $red;

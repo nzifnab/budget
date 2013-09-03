@@ -4,35 +4,82 @@
       .accordion-header
         %h3 New Account
       .accordion-content
-        = render partial: 'accounts/form', locals: {account: @new_account}
+        -#= render partial: 'accounts/form', locals: {account: @new_account}
 
-      .accordion-header
-        %h3 (10) Checking Account
-        .good.float-right
-          $243.89
-      .accordion-content
-        Some more content
+      = render partial: 'accounts/account', collection: accounts
+      /
+        .accordion-header
+          %h3 (10) Checking Account
+          .good.float-right
+            $243.89
+        .accordion-content
+          .cols
+            .inner-left-col
+              .box.box-tan
+                %p Lorem ipsum dolor sit amet consectetur adipicising
+                %p And then some things happened and it was super exciting woot to the wooters.
 
-      .accordion-header
-        %h3 (9) Other Account
-        .bad.float-right
-          ($24.83)
-      .accordion-content
-        Something else goes here
+              %dl.properties.break-small
+                %dt Negatives Allowed?
+                %dd No
+                %dt Lorem Ipsum
+                %dd Dolor Sit
 
-      .accordion-header
-        %h3 (7) No Funds Account
-        .neutral.float-right
-          $0.00
-      .accordion-content
-        Some stuff
+              = link_to "Edit", '#', class: 'btn btn-blue'
 
-      .accordion-header.account-disabled
-        %h3 Disabled Account
-        .good.float-right
-          $248.00
-      .accordion-content
-        Stuff in disabled account
+            .inner-right-col
+              %h4.text-right Quick Withdraw / Deposit
+              %form.break-small
+                %ul.fields.fields-small
+                  %li
+                    %label Amount
+                    %input{type: 'text'}
+                  %li
+                    %label Description
+                    %textarea
+
+              .float-right
+                %input{type: 'submit', value: 'Withdraw', class: 'btn btn-orange'}
+                %input{type: 'submit', value: 'Deposit', class: 'btn btn-green'}
+
+        .accordion-header
+          %h3 (9) Other Account
+          .bad.float-right
+            ($24.83)
+        .accordion-content
+          Something else goes here
+
+        .accordion-header
+          %h3 (7) No Funds Account
+          .neutral.float-right
+            $0.00
+        .accordion-content
+          Some stuff
+
+        .accordion-header.account-disabled
+          %h3 Disabled Account
+          .good.float-right
+            $248.00
+        .accordion-content
+          Stuff in disabled account
 
   .sidebar
-    This is sidebar content
+    .box.box-tan-gradient.box-no-shadow.box-container
+      %h2 Checking Account
+      %ul.no-bullets
+        %li.box.no-padding
+          .box-header
+            .good.float-left
+              $200.00
+            .float-right
+              Feb 20, 2012 16:54
+          .box-content
+            %p Initial Deposit
+        %li.box.no-padding
+          .box-header
+            .bad.float-left
+              ($25.00)
+            .float-right
+              Feb 21, 2012 17:83
+          .box-content
+            %p Gas Money

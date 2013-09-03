@@ -1,0 +1,32 @@
+.accordion-header{class: account.enabled? ? '' : 'account-disabled'}
+  %h3= account.prioritized_name
+  .float-right{class: account.amount_class}
+    = account.display_amount
+.accordion-content
+  .cols
+    .inner-left-col
+      .box.box-tan
+        = simple_format account.description
+
+      %dl.properties.break-small
+        %dt Negatives Allowed?
+        %dd No
+        %dt Lorem Ipsum
+        %dd Dolor Sit
+
+      = link_to 'Edit', '#', class: 'btn btn-blue'
+
+    .inner-right-col
+      %h4.text-right Quick Withdraw / Deposit
+      %form.break-small
+        %ul.fields.fields-small
+          %li
+            %label Amount
+            %input{type: 'text'}
+          %li
+            %label Description
+            %textarea
+
+      .float-right
+        %input{type: 'submit', value: 'Withdraw', class: 'btn btn-orange'}
+        %input{type: 'submit', value: "Deposit", class: 'btn btn-green'}

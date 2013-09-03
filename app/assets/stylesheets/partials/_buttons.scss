@@ -1,10 +1,12 @@
 .btn{
+  display: inline-block;
   outline: none;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   font-size: 1em;
   padding: 5px 18px 6px;
+  font-weight: bold;
   @include text-shadow(0 1px 1px rgba(0, 0, 0, .3));
   @include border-radius(0.5em);
   @include box-shadow(0 1px 2px rgba(0, 0, 0, .2));
@@ -28,5 +30,35 @@
     @include background-image(linear-gradient(top, $header-hover-gradient-end, $header-hover-gradient-start));
     color: $dark-on-light;
     border-color: $header-hover-gradient-end;
+  }
+}
+
+.btn-blue{
+  color: $light-blue-on-dark;
+  border: solid 1px #0076a3;
+  @include background-image(linear-gradient(top, $action-gradient-start, $action-gradient-end));
+
+  &:hover{
+    @include background-image(linear-gradient(top, $action-hover-gradient-start, $action-hover-gradient-end));
+  }
+
+  &:active{
+    @include background-image(linear-gradient(top, $action-active-gradient-start, $action-active-gradient-end));
+    color: #80bed6;
+  }
+}
+
+.btn-orange{
+  color: $light-orange-on-dark;
+  border: solid 1px #da7c0c;
+  @include background-image(linear-gradient(top, $danger-gradient-start, $danger-gradient-end));
+
+  &:hover{
+    @include background-image(linear-gradient(top, $danger-hover-gradient-start, $danger-hover-gradient-end));
+  }
+
+  &:active{
+    @include background-image(linear-gradient(top, $danger-active-gradient-start, $danger-active-gradient-end));
+    color: #fcd3a5;
   }
 }

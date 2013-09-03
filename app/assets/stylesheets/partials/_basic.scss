@@ -9,6 +9,50 @@ body{
   font-family: $app-font-family;
 }
 
+input{
+  font-family: inherit;
+}
+
+p{
+  margin-bottom: 6px;
+
+  &:last-child{
+    margin-bottom: 0;
+  }
+}
+
+h2{
+  font-weight: bold;
+  font-size: pxtoem(14);
+  margin-bottom: 8px;
+}
+
+h4{
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 4px;
+}
+
 .float-right{
   float: right;
+}
+
+.float-left{
+  float: left;
+}
+
+.break-small{
+  margin-bottom: 15px;
+}
+
+.text-right{
+  text-align: right;
+}
+
+.no-padding{
+  padding: 0;
+}
+
+.no-bullets{
+  list-style-type: none;
 }

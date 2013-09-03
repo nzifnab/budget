@@ -1,0 +1,43 @@
+require 'spec_helper'
+
+describe "Account Management", js: true do
+  describe "Creating a new account" do
+    it "Inserts new accounts into the correct priority location" do
+      visit accounts_path
+
+      accordion = open_accordion("New Account")
+      within(accordion[:content]) do
+        fill_in "Name", with: "Checking Account"
+        fill_in "Description", with: "Wells Fargo checking account"
+        fill_in "Priority", with: "7"
+        check "Enabled"
+        select "Disallow Negatives", from: "Negative overflows into"
+        click_button "Save Account"
+      end
+
+      #page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
+      #accordion[:content].should_not be_visible
+
+      # find all of them so we can assert it was inserted in the right spot
+      page.should have_selector(".accordion-header", text: "Checking Account")
+      headers = page.all(".accordion-header")
+
+      headers.size.should == 4
+      headers[0].should have_content("New Account")
+      headers[1].should have_content("Savings Account")
+      headers[2].should have_content("Checking Account")
+      headers[3].should have_content("Insurance")
+
+      checking_accordion = find_accordion("Checking Account")
+      checking_accordion[:content].should be_visible
+
+      within(checking_accordion[:content]) do
+        page.should have_content("Wells Fargo checking account")
+      end
+      within(checking_accordion[:header]) do
+        page.should have_content("$0.00")
+        page.should have_content("(7) Checking Account")
+      end
+    end
+  end
+end

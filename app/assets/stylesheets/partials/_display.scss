@@ -79,6 +79,86 @@
   border-color: #333;
 }
 
-.accordion-header, .accordion-content{
-  box-sizing: border-box;
+.box{
+  display: block;
+  border-width: 1px;
+  border-style: solid;
+  @include border-radius(4px);
+  padding: 2px 4px;
+  margin-bottom: 8px;
+}
+
+.box-container{
+  padding: 5px 20px;
+}
+
+.box-tan{
+  border-color: #666666;
+  background-color: $description-background;
+  @include box-shadow(4px 4px 5px $description-background);
+}
+
+.box-brown{
+  border-color: #cccccc;
+  background-color: $property-background;
+  @include box-shadow(4px 4px 5px $property-background);
+}
+
+.box-green{
+  border-color: #aadfd8;
+  background-color: $property-value-background;
+  @include box-shadow(4px 4px 5px $property-value-background);
+}
+
+.box-tan-gradient{
+  border: 1px solid #d4ccb0;
+  background-color: $description-background;
+  @include background-image(linear-gradient(top, #fcfcfa, #fafbf4 40px, $description-background));
+}
+
+.box-no-shadow{
+  @include box-shadow(none);
+}
+
+.box-header{
+  @include clearfix;
+  background-color: #ddd;
+  margin-bottom: 3px;
+  @include border-top-radius(3px);
+  font-weight: bold;
+}
+
+.box-header, .box-content{
+  padding: 4px;
+}
+
+dl.properties{
+  @include clearfix;
+
+  dt, dd{
+    float: left;
+    width: 138px;
+    margin-bottom: 7px;
+    display: block;
+  }
+
+  dt{
+    position: relative;
+    margin-right: 12px;
+    @extend .box;
+    @extend .box-brown;
+
+    &:after{
+      content: "\00bb";
+      display: block;
+      position: absolute;
+      top: 1px;
+      left: 150px;
+    }
+  }
+
+  dd{
+    @extend .box;
+    @extend .box-green;
+  }
 }

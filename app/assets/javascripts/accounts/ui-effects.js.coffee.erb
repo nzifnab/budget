@@ -3,7 +3,7 @@ $ ->
     collapsible: true
     header: '.accordion-header'
     heightStyle: 'content'
-    animate: 250
+    animate: <%= Rails.env.test? ? '0' : '250' %>
     active: false
 
 

@@ -12,13 +12,39 @@ header, footer{
 }
 
 .accordion-content{
+  @include box-sizing(border-box);
   @include column(16, true);
   @include prepend(1);
   @include append(1);
+
+  // See notes in .accordion-header width definition.
+  width: span(16) + 2px;
 }
 
 .accordion-header{
+  @include box-sizing(border-box);
   @include column(16, true);
+
+  // Because of how jquery uses padding
+  // to put an icon on the left side of
+  // the accordion, we have to use border-box
+  // to make it size correctly, *but*
+  // then we need to increase the width by 2px
+  // for the borders so that inner columns can be sized
+  // correctly.
+  width: span(16) + 2px;
+}
+
+.cols{
+  overflow: hidden;
+}
+
+.inner-left-col{
+  @include column(8);
+}
+
+.inner-right-col{
+  @include column(6, true);
 }
 
 // SIDEBAR COLUMNS
