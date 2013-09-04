@@ -34,7 +34,6 @@ describe "Account Management", js: true do
       headers = page.all(".accordion-header")
 
       headers.size.should == 5
-      render_page('test.png')
       headers[0].should have_content("New Account")
       headers[1].should have_content("Savings Account")
       headers[2].should have_content("Checking Account")
