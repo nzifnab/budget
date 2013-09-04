@@ -12,6 +12,7 @@ class Budget
   end
 
   def add_account(account)
+    account.id = account.object_id
     @accounts << account
   end
 

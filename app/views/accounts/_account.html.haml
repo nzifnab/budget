@@ -1,8 +1,8 @@
-.accordion-header{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority}}
+.accordion-header.js-account{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority, account_id: account.id, enabled: account.enabled?}}
   %h3= account.prioritized_name
   .float-right{class: account.amount_class}
     = account.display_amount
-.accordion-content
+.accordion-content.js-account-content
   .cols
     .inner-left-col
       .box.box-tan

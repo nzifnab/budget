@@ -1,4 +1,4 @@
-= form_for account, remote: true do |f|
+= form_for account, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
   %ul.fields
     %li
       = f.label :name

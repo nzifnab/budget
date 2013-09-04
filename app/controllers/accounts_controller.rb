@@ -37,14 +37,17 @@ class AccountsController < ApplicationController
   def create
     @account = budget.new_account(params[:account])
     if @account.submit
-      if request.xhr?
-        render partial: 'accounts/account', locals: {account: account}
-      else
-        redirect_to accounts_path
+      respond_to do |format|
+        format.json do
+          render 'show'
+        end
       end
     else
-      @accounts = budget.accounts
-      render action: 'index'
+      respond_to do |format|
+        format.json do
+          render 'form'
+        end
+      end
     end
   end
 end

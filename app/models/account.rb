@@ -5,7 +5,7 @@ class Account# < ActiveRecord::Base
   include ActiveModel::Validations
   include Draper::Decoratable
 
-  attr_accessor :name, :description, :priority, :enabled, :amount
+  attr_accessor :name, :description, :priority, :enabled, :amount, :id
   attr_accessor :budget
 
   validates :name, presence: true

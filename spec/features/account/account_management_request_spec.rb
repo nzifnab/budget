@@ -7,6 +7,7 @@ describe "Account Management", js: true do
     before(:each) do
       budget.new_account(name: "Savings Account", priority: 9, enabled: true).submit
       budget.new_account(name: "Insurance", priority: 3, enabled: true).submit
+      budget.new_account(name: "Disabled Account", priority: 8, enabled: false).submit
     end
 
     it "Inserts new accounts into the correct priority location" do
@@ -23,7 +24,7 @@ describe "Account Management", js: true do
       end
 
       # TEMPORARY while the submission is not using 'remote: true':
-      accordion = find_accordion("New Account")
+      #accordion = find_accordion("New Account")
       
       page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
       accordion[:content].should_not be_visible
@@ -32,11 +33,13 @@ describe "Account Management", js: true do
       page.should have_selector(".accordion-header", text: "Checking Account")
       headers = page.all(".accordion-header")
 
-      headers.size.should == 4
+      headers.size.should == 5
+      render_page('test.png')
       headers[0].should have_content("New Account")
       headers[1].should have_content("Savings Account")
       headers[2].should have_content("Checking Account")
       headers[3].should have_content("Insurance")
+      headers[4].should have_content("Disabled Account")
 
       checking_accordion = find_accordion("Checking Account")
       checking_accordion[:content].should be_visible

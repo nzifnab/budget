@@ -1,0 +1,23 @@
+class Effects
+  @name: 'Effects'
+
+  # Rule of thumb:  fat arrow when using
+  # the function as a callback or sending the function
+  # itself as a parameter
+  @events: =>
+    @initAccordion()
+
+  @initAccordion: ->
+    $(".accordion").accordion
+      collapsible: true
+      header: '.accordion-header'
+      heightStyle: 'content'
+      animate: <%= Rails.env.test? ? '0' : '250' %>
+      active: false
+
+  @refreshAccordion: (accordionId=null) ->
+    $(".accordion").accordion('refresh')
+    if accordionId?
+      $(".accordion").accordion('option', 'active', accordionId)
+
+budget.register Effects
