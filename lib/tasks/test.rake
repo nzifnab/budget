@@ -4,14 +4,12 @@ namespace 'test' do |ns|
 
   desc "Run unit tests"
   RSpec::Core::RakeTask.new('unit') do |t|
-    #t.pattern = %r{spec/.*(?<!integration)_spec\.rb}
     t.pattern = "spec/**/*_unit_spec.rb"
     t.rspec_opts = options
     t.fail_on_error = false
   end
   desc "Run integration tests"
   RSpec::Core::RakeTask.new('integration') do |t|
-    #t.pattern = %r{spec/.+_integration_spec\.rb}
     t.pattern = "spec/**/*_integration_spec.rb"
     t.rspec_opts = options
     t.fail_on_error = false
@@ -22,8 +20,10 @@ namespace 'test' do |ns|
     t.rspec_opts = options
     t.fail_on_error = false
   end
+  desc "Run js tests"
+  task "javascript" => %w[teaspoon]
 end
 # Clear out the default Rails dependencies
 #Rake::Task['test'].clear
 desc "Run all tests"
-task 'test' => %w[test:feature test:integration test:unit]
+task 'test' => %w[test:feature test:integration test:unit test:javascript]

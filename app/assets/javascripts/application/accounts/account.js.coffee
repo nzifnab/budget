@@ -34,6 +34,9 @@
 class Account
   @name: 'Account'
 
+  @init: (args...) ->
+    new this(args...)
+
   constructor: (@id, @html=null) ->
     unless @id?
       @$_headerDom = $(".accordion-header").first()
@@ -42,8 +45,8 @@ class Account
   render: (newPriority, enabled) ->
     throw "No new html found" unless @html?
     @remove()
-    nearestAccount = Account.lastNearPriority(newPriority, enabled)
-    nearestAccount.$contentDom().after(@html)
+    nearestAccount = Account.insertLocation(newPriority, enabled)
+    nearestAccount.nextTo(@html)
     @refresh(@accordionId())
 
   remove: ->
@@ -57,7 +60,7 @@ class Account
     budget.Effects.refreshAccordion(newAccordionId)
 
   priority: ->
-    parseInt $headerDom().data('priority')
+    parseInt @$headerDom().data('priority')
 
   $headerDom: ->
     @$_headerDom ||= $(".js-account[data-account-id=#{@id}]")
@@ -68,19 +71,23 @@ class Account
   accordionId: ->
     @_accordionId ||= $(".accordion-header").index(@$headerDom())
 
+  # Inserts given html (presumably another account) next to
+  # this one (above/below as appropriate)
+  nextTo: (html) ->
+
   @create: (data) ->
     html = data.accountHTML
     id = data.accountId
-    (new Account(id, html)).render(data.priority, data.enabled)
+    (@init(id, html)).render(data.priority, data.enabled)
 
-  @lastNearPriority: (priority, enabled) ->
+  @insertLocation: (priority, enabled) ->
     enableSelector = if enabled? then '[data-enabled]' else ':not([data-enabled])'
     for i in [priority..10]
       if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
         break
     if $headers.length <= 0
       $headers = $(".js-account[data-priority=11]")
-    new Account($headers.last().data('account-id'))
+    @init($headers.last().data('account-id'))
 
   @events: =>
     $(".js-update-account").on

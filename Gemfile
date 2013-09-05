@@ -39,6 +39,7 @@ group :development, :test do
   gem 'poltergeist'
   gem 'launchy'
   gem 'database_cleaner'
+  gem 'teaspoon'
 end
 
 # Use unicorn as the app server
