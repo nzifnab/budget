@@ -38,6 +38,8 @@ class Account
     new this(args...)
 
   constructor: (@id, @html=null) ->
+    @insertionDirection = null
+
     unless @id?
       @$_headerDom = $(".accordion-header").first()
       @$_contentDom = $(".accordion-content").first()
@@ -45,8 +47,9 @@ class Account
   render: (newPriority, enabled) ->
     throw "No new html found" unless @html?
     @remove()
-    nearestAccount = Account.insertLocation(newPriority, enabled)
-    nearestAccount.nextTo(@html)
+    @_priority = newPriority
+    @_enabled = enabled
+    @insertNextTo(@insertLocation())
     @refresh(@accordionId())
 
   remove: ->
@@ -60,7 +63,10 @@ class Account
     budget.Effects.refreshAccordion(newAccordionId)
 
   priority: ->
-    parseInt @$headerDom().data('priority')
+    @_priority ?= parseInt @$headerDom().data('priority')
+
+  enabled: ->
+    @_enabled ?= @$headerDom().data('enabled')?
 
   $headerDom: ->
     @$_headerDom ||= $(".js-account[data-account-id=#{@id}]")
@@ -71,23 +77,39 @@ class Account
   accordionId: ->
     @_accordionId ||= $(".accordion-header").index(@$headerDom())
 
-  # Inserts given html (presumably another account) next to
-  # this one (above/below as appropriate)
-  nextTo: (html) ->
+  insertLocation: ->
+    @insertionDirection = 'after'
+    enableSelector = if @enabled() then '[data-enabled]' else ':not([data-enabled])'
+    for i in [(@priority() - 1)..0]
+      if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
+        @insertionDirection = 'before'
+        break
+    if $headers.length <= 0
+      $headers = $(".js-account#{enableSelector}:last")
+    if $headers.length <= 0
+      $headers = if @enabled() then $(".accordion-header:first") else $(".accordion-header:last")
+
+    Account.init($headers.first().data('account-id'))
+
+  # Inserts new html before/after (as appropriate) the given account
+  insertNextTo: (locationAccount, direction=@insertionDirection) ->
+    if direction == 'before'
+      locationAccount.before(@html)
+    else if direction == 'after'
+      locationAccount.after(@html)
+    else
+      throw "Only 'before' and 'after' allowed for direction"
+
+  before: (html) ->
+    @$headerDom().before(html)
+
+  after: (html) ->
+    @$contentDom().after(html)
 
   @create: (data) ->
     html = data.accountHTML
     id = data.accountId
     (@init(id, html)).render(data.priority, data.enabled)
-
-  @insertLocation: (priority, enabled) ->
-    enableSelector = if enabled? then '[data-enabled]' else ':not([data-enabled])'
-    for i in [priority..10]
-      if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
-        break
-    if $headers.length <= 0
-      $headers = $(".js-account[data-priority=11]")
-    @init($headers.last().data('account-id'))
 
   @events: =>
     $(".js-update-account").on

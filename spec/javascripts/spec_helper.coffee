@@ -24,7 +24,7 @@
 # You can require javascript files here. A good place to start is by requiring your application.js.
 
 #= require jquery
-#= require support/jasmine-jquery
+#= require support/jasmine-jquery-1.5.8
 #= require support/sinon
 #= require support/jasmine-sinon
 #= require budget
