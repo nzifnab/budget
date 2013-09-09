@@ -1,24 +1,27 @@
-= form_for account, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
-  %ul.fields
-    %li
-      = f.label :name
-      = f.text_field :name
-    %li
-      = f.label :description
-      = f.text_area :description
-    %li
-      = f.label :priority
-      = f.text_field :priority, class: 'field-small'
-    %li
-      = f.label :enabled
-      = f.check_box :enabled
-    %li
-      = f.label :negative_overflows_into
-      %select{id: "account_negative_overflows_into"}
-        %option{selected: true} Disallow Negatives
-        %option Allow Negatives
-        %option Option 3
-        %option Option 4
-    %li
-      %label
-      = f.submit "Save Account", class: 'btn btn-green'
+.accordion-header
+  %h3 New Account
+.accordion-content
+  = form_for account, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
+    %ul.fields
+      %li
+        = f.label :name
+        = f.text_field :name
+      %li
+        = f.label :description
+        = f.text_area :description
+      %li
+        = f.label :priority
+        = f.text_field :priority, class: 'field-small'
+      %li
+        = f.label :enabled
+        = f.check_box :enabled
+      %li
+        = f.label :negative_overflows_into
+        %select{id: "account_negative_overflows_into"}
+          %option{selected: true, value: ''} Disallow Negatives
+          %option{value: 5} Allow Negatives
+          %option{value: 7} Option 3
+          %option{value: 9} Option 4
+      %li
+        %label
+        = f.submit "Save Account", class: 'btn btn-green'

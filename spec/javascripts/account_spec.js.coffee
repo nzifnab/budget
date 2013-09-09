@@ -10,9 +10,11 @@ describe "Account", ->
     beforeEach ->
       loadFixtures("account/account_form.html")
       sinon.stub(Account, "create")
+      sinon.stub(budget, "clearForm")
 
     afterEach ->
       Account.create.restore()
+      budget.clearForm.restore()
 
     it "binds the ajax:success event to an update-account form", ->
       $form = $(".js-update-account")
@@ -20,27 +22,48 @@ describe "Account", ->
       Account.events()
       expect($form).toHandle('ajax:success')
 
-    it "runs the '.create' method if the response contains accountHTML", ->
+    it "runs the '.create' method if the response contains html", ->
       Account.events()
       expect(Account.create).not.toHaveBeenCalled()
       $(".js-update-account").trigger(
         "ajax:success",
-        JSON.parse(readFixtures("account/account.json")),
-        200,
-        null
+        [JSON.parse(readFixtures("account/account.json")),
+        'success',
+        {status: 200}]
       )
       expect(Account.create).toHaveBeenCalledOnce()
 
-    it "doesn't run '.create' if there is no accountHTML in the response", ->
+    it "doesn't run '.create' if there is no html in the response", ->
       Account.events()
       expect(Account.create).not.toHaveBeenCalled()
       $(".js-update-account").trigger(
         "ajax:success",
-        {accountId: 22},
-        200,
-        null
+        [{accountId: 22},
+        'success',
+        {status: 200}]
       )
       expect(Account.create).not.toHaveBeenCalled()
+
+    it "doesn't run '.create' if the status code was not 200", ->
+      Account.events()
+      $(".js-update-account").trigger(
+        "ajax:success",
+        [JSON.parse(readFixtures("account/account.json")),
+        'success',
+        {status: 500}]
+      )
+      expect(Account.create).not.toHaveBeenCalledOnce()
+
+    it "clears the form on success", ->
+      $form = $(".js-update-account")
+      Account.events()
+      $(".js-update-account").trigger(
+        "ajax:success",
+        [JSON.parse(readFixtures("account/account.json")),
+        'success',
+        {status: 200}]
+      )
+      expect(budget.clearForm).toHaveBeenCalled()
 
   describe ".create", ->
     beforeEach ->
@@ -49,7 +72,7 @@ describe "Account", ->
       sinon.stub(@account, 'render')
 
       @data = {
-        accountHTML: 'some html',
+        html: 'some html',
         accountId: 4,
         priority: 8,
         enabled: true
@@ -91,7 +114,7 @@ describe "Account", ->
   describe "#render", ->
     beforeEach ->
       @data = JSON.parse readFixtures("account/account.json")
-      @account = new Account(@data.id, @data.accountHTML)
+      @account = new Account(@data.id, @data.html)
       @nearAccount = new Account()
       sinon.stub(@account, "insertNextTo")
       sinon.spy(@account, "remove")

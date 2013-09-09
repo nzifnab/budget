@@ -28,3 +28,6 @@
 #= require support/sinon
 #= require support/jasmine-sinon
 #= require budget
+
+beforeEach ->
+  budget.events = []

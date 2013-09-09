@@ -45,7 +45,7 @@ class AccountsController < ApplicationController
     else
       respond_to do |format|
         format.json do
-          render 'form'
+          render partial: 'accounts/form', status: :unprocessable_entity
         end
       end
     end

@@ -5,10 +5,11 @@ class Account# < ActiveRecord::Base
   include ActiveModel::Validations
   include Draper::Decoratable
 
-  attr_accessor :name, :description, :priority, :enabled, :amount, :id
+  attr_accessor :name, :description, :priority, :enabled, :amount, :id, :created_at
   attr_accessor :budget
 
-  validates :name, presence: true
+  validates :name, presence: {message: "Required"}
+  validates :priority, inclusion: {in: 1..10, message: "1 to 10"}
 
   def initialize(attrs={})
     attrs.each do |k,v| send("#{k}=", v) end
@@ -31,6 +32,7 @@ class Account# < ActiveRecord::Base
 
   def submit
     return false unless valid?
+    self.created_at = Time.now
     !!budget.add_account(self)
   end
 

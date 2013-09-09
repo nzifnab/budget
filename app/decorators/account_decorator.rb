@@ -1,17 +1,11 @@
 require 'draper'
 require 'action_view/helpers'
+require_relative '../helpers/application_helper'
 class AccountDecorator < Draper::Decorator
   include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
   delegate_all
 
-  # Define presentation-specific methods here. Helpers are accessed through
-  # `helpers` (aka `h`). You can override attributes, for example:
-  #
-  #   def created_at
-  #     helpers.content_tag :span, class: 'time' do
-  #       object.created_at.strftime("%a %m/%d/%y")
-  #     end
-  #   end
   def prioritized_name
     "(#{object.priority}) #{object.name}"
   end
@@ -28,5 +22,9 @@ class AccountDecorator < Draper::Decorator
 
   def display_amount
     number_to_currency(object.amount, negative_format: "(%u%n)")
+  end
+
+  def formatted_created_at
+    nice_date(object.created_at)
   end
 end

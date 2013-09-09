@@ -1,36 +1,3 @@
-# TODO:  the new element should be positioned at the top of the
-# similar-priority list, not the bottom.  Also, if other elements
-# of that enabled flag were not found, position the element after
-# the first element (for enabled=true) and after the last element
-# (for enabled=false).
-#
-# aka. emulate behavior from old version:
-
-#    var foundSolution = false;
-#    // Loops through each item in the section and selects
-#    // the first element that should be *below* our data.
-#    group.each(function(){
-#      if($(this).data('priority') < priority){
-#        foundSolution = $(this);
-#        return false;
-#      }
-#    });
-#
-#    if(foundSolution){
-#      // If an appropriate element was found, position our data before it
-#      foundSolution.before(data);
-#    }else{
-#      if(group.length == 0){
-#        // If there was nothing in the group, place the data at the top or the bottom,
-#        // depending on it's enabled flag
-#        subselect = (enabled == 0) ? 'last' : 'first';
-#        $('h3.accordion-header:' + subselect).next().after(data)
-#      }else{
-#        // The group did have content, so put our data at the end of it.
-#        group.last().next().after(data);
-#      }
-#    }
-
 class Account
   @name: 'Account'
 
@@ -44,6 +11,7 @@ class Account
       @$_headerDom = $(".accordion-header").first()
       @$_contentDom = $(".accordion-content").first()
 
+  # renders new @html into the dom as an accordion element
   render: (newPriority, enabled) ->
     throw "No new html found" unless @html?
     @remove()
@@ -52,6 +20,7 @@ class Account
     @insertNextTo(@insertLocation())
     @refresh(@accordionId())
 
+  # removes the accordion element
   remove: ->
     @$contentDom().remove()
     @$headerDom().remove()
@@ -59,24 +28,31 @@ class Account
     @$_contentDom = null
     @_accordionId = null
 
+  # refreshes accordion
   refresh: (newAccordionId) ->
     budget.Effects.refreshAccordion(newAccordionId)
 
+  # the priority level of this account
   priority: ->
     @_priority ?= parseInt @$headerDom().data('priority')
 
   enabled: ->
     @_enabled ?= @$headerDom().data('enabled')?
 
+  # accordion header
   $headerDom: ->
     @$_headerDom ||= $(".js-account[data-account-id=#{@id}]")
 
+  # accordion content
   $contentDom: ->
     @$_contentDom ||= @$headerDom().next('.js-account-content')
 
+  # accordion 0-based index
   accordionId: ->
     @_accordionId ||= $(".accordion-header").index(@$headerDom())
 
+  # returns a nearby accordion element account object where this
+  # account can be placed
   insertLocation: ->
     @insertionDirection = 'after'
     enableSelector = if @enabled() then '[data-enabled]' else ':not([data-enabled])'
@@ -92,6 +68,7 @@ class Account
     Account.init($headers.first().data('account-id'))
 
   # Inserts new html before/after (as appropriate) the given account
+  # (particularly useful when used with `insertLocation`)
   insertNextTo: (locationAccount, direction=@insertionDirection) ->
     if direction == 'before'
       locationAccount.before(@html)
@@ -106,15 +83,18 @@ class Account
   after: (html) ->
     @$contentDom().after(html)
 
+  # creates/updates an accordion based on the account id and other
+  # data returned from the ajax request.
   @create: (data) ->
-    html = data.accountHTML
+    html = data.html
     id = data.accountId
     (@init(id, html)).render(data.priority, data.enabled)
 
   @events: =>
     $(".js-update-account").on
       'ajax:success': (e, data, status, xhr) =>
-        if data.accountHTML?
+        if xhr.status == 200 && data.html?
           @create(data)
+          budget.clearForm()
 
 budget.register Account

@@ -48,4 +48,13 @@ describe AccountDecorator do
       decorator.display_amount.should == "($12.43)"
     end
   end
+
+  describe "#formatted_created_at" do
+    let(:time_now){"January 3rd, 2013".to_datetime}
+
+    it "returns a properly formatted time" do
+      account.stub(created_at: time_now)
+      decorator.formatted_created_at.should == "Jan 03, 2013"
+    end
+  end
 end

@@ -9,10 +9,10 @@
         = simple_format account.description
 
       %dl.properties.break-small
-        %dt Negatives Allowed?
+        %dt Negatives allowed?
         %dd No
-        %dt Lorem Ipsum
-        %dd Dolor Sit
+        %dt Created on
+        %dd= account.formatted_created_at
 
       = link_to 'Edit', '#', class: 'btn btn-blue'
 
