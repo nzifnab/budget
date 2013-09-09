@@ -45,6 +45,7 @@ describe Account do
     before(:each) do
       account.budget = budget
       account.name = "Checking"
+      account.priority = 4
     end
 
     it "adds the account to the budget" do

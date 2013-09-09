@@ -8,7 +8,7 @@ class Effects
     @initAccordion()
 
   @initAccordion: ->
-    $(".accordion").accordion
+    $(".js-account-accordion").accordion
       collapsible: true
       header: '.accordion-header'
       heightStyle: 'content'
@@ -16,8 +16,8 @@ class Effects
       active: false
 
   @refreshAccordion: (accordionId=null) ->
-    $(".accordion").accordion('refresh')
+    $(".js-account-accordion").accordion('refresh')
     if accordionId?
-      $(".accordion").accordion('option', 'active', accordionId)
+      $(".js-account-accordion").accordion('option', 'active', accordionId)
 
 budget.register Effects

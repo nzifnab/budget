@@ -5,8 +5,9 @@
 .accordion-content.js-account-content
   .cols
     .inner-left-col
-      .box.box-tan
-        = simple_format account.description
+      - if account.description.present?
+        .box.box-tan
+          = simple_format account.description
 
       %dl.properties.break-small
         %dt Negatives allowed?

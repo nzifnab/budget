@@ -1,4 +1,5 @@
 class Account
+  @$accordionContainer: -> $(".js-account-accordion")
   @name: 'Account'
 
   @init: (args...) ->
@@ -8,8 +9,8 @@ class Account
     @insertionDirection = null
 
     unless @id?
-      @$_headerDom = $(".accordion-header").first()
-      @$_contentDom = $(".accordion-content").first()
+      @_enabled = true
+      @_priority = 0
 
   # renders new @html into the dom as an accordion element
   render: (newPriority, enabled) ->
@@ -41,11 +42,19 @@ class Account
 
   # accordion header
   $headerDom: ->
-    @$_headerDom ||= $(".js-account[data-account-id=#{@id}]")
+    @$_headerDom ?= do =>
+      if @id?
+        $(".js-account[data-account-id=#{@id}]")
+      else
+        $(".accordion-header").first()
 
   # accordion content
   $contentDom: ->
-    @$_contentDom ||= @$headerDom().next('.js-account-content')
+    @$_contentDom ?= do =>
+      if @id?
+        @$headerDom().next('.js-account-content')
+      else
+        $(".accordion-content").first()
 
   # accordion 0-based index
   accordionId: ->
@@ -55,15 +64,24 @@ class Account
   # account can be placed
   insertLocation: ->
     @insertionDirection = 'after'
-    enableSelector = if @enabled() then '[data-enabled]' else ':not([data-enabled])'
-    for i in [(@priority() - 1)..0]
-      if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
-        @insertionDirection = 'before'
-        break
-    if $headers.length <= 0
-      $headers = $(".js-account#{enableSelector}:last")
+
+    if !@id?
+      $headers = $(".js-account:first")
+      @insertionDirection = 'before'
+    else
+      enableSelector = if @enabled() then '[data-enabled]' else ':not([data-enabled])'
+      for i in [(@priority() - 1)..0]
+        if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
+          @insertionDirection = 'before'
+          break
+      if $headers.length <= 0
+        $headers = $(".js-account#{enableSelector}:last")
+
     if $headers.length <= 0
       $headers = if @enabled() then $(".accordion-header:first") else $(".accordion-header:last")
+    if $headers.length <= 0
+      @insertionDirection = 'replace'
+      return null
 
     Account.init($headers.first().data('account-id'))
 
@@ -74,6 +92,8 @@ class Account
       locationAccount.before(@html)
     else if direction == 'after'
       locationAccount.after(@html)
+    else if direction == 'replace'
+      Account.$accordionContainer().html(@html)
     else
       throw "Only 'before' and 'after' allowed for direction"
 
@@ -91,10 +111,17 @@ class Account
     (@init(id, html)).render(data.priority, data.enabled)
 
   @events: =>
-    $(".js-update-account").on
-      'ajax:success': (e, data, status, xhr) =>
-        if xhr.status == 200 && data.html?
-          @create(data)
-          budget.clearForm()
+    $('.js-account-accordion').on(
+      {
+        'ajax:success': (e, data, status, xhr) =>
+          if xhr.status == 200 && data.html?
+            @create(data)
+            budget.clearForm()
+
+        'ajax:error': (e, xhr, status, error) =>
+          @create(JSON.parse(xhr.responseText))
+      },
+      '.js-update-account'
+    )
 
 budget.register Account

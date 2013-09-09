@@ -16,10 +16,11 @@ describe "Account", ->
       Account.create.restore()
       budget.clearForm.restore()
 
-    it "binds the ajax:success event to an update-account form", ->
+    xit "binds the ajax:success event to an update-account form", ->
       $form = $(".js-update-account")
       expect($form).not.toHandle('ajax:success')
       Account.events()
+      expect($(".js-account-accordion")).toHandle('ajax:success')
       expect($form).toHandle('ajax:success')
 
     it "runs the '.create' method if the response contains html", ->
@@ -64,6 +65,25 @@ describe "Account", ->
         {status: 200}]
       )
       expect(budget.clearForm).toHaveBeenCalled()
+
+    xit "binds the ajax:error event to the update-account form", ->
+      $form = $(".js-update-account")
+      expect($form).not.toHandle('ajax:error')
+      Account.events()
+      expect($form).toHandle('ajax:error')
+
+    it "runs the '.create' method if the response contains html", ->
+      Account.events()
+      expect(Account.create).not.toHaveBeenCalled()
+      $(".js-update-account").trigger(
+        "ajax:error",
+        [
+          {responseText: '{"html":"NEW HTML"}'},
+          422,
+          'Unprocessable Entity'
+        ]
+      )
+      expect(Account.create).toHaveBeenCalledOnce()
 
   describe ".create", ->
     beforeEach ->
@@ -191,36 +211,36 @@ describe "Account", ->
 
   describe "#priority", ->
     it "returns the priority data-attribute from the header dom", ->
-      account = new Account()
+      account = new Account(8)
       account.$_headerDom = $("<div data-priority=4></div>")
       expect(account.priority()).toBe(4)
 
   describe "#enabled", ->
     it "is enabled if the attribute exists", ->
-      account = new Account()
+      account = new Account(8)
       account.$_headerDom = $("<div data-enabled></div>")
       expect(account.enabled()).toBe(true)
 
     it "is not enabled if the attribute does not exist", ->
-      account = new Account()
+      account = new Account(8)
       account.$_headerDom = $("<div></div>")
       expect(account.enabled()).toBe(false)
 
     it "can be overriden to 'true'", ->
-      account = new Account()
+      account = new Account(8)
       account.$_headerDom = $("<div></div>")
       account._enabled = true
       expect(account.enabled()).toBe(true)
 
     it "can be overriden to 'false'", ->
-      account = new Account()
+      account = new Account(8)
       account.$_headerDom = $("<div data-enabled></div>")
       account._enabled = false
       expect(account.enabled()).toBe(false)
 
   describe "#insertLocation", ->
     beforeEach ->
-      @account = new Account()
+      @account = new Account(99)
       @account._priority = 11
       loadFixtures("account/dummy_accordion")
 
@@ -308,6 +328,31 @@ describe "Account", ->
         @account.insertLocation()
         expect(@account.insertionDirection).toBe('after')
 
+    describe "an account object with no id (new account form)", ->
+      beforeEach ->
+        @account = new Account()
+        @account.remove()
+
+      it "returns the first account in the list", ->
+        insertion = @account.insertLocation()
+        expect(insertion.$headerDom()).toBe($("#account1-header"))
+
+      it "sets the insertionDirection to 'before'", ->
+        @account.insertLocation()
+        expect(@account.insertionDirection).toBe('before')
+
+      it "returns null if there are no other accounts", ->
+        $(".accordion-header").remove()
+        $(".accordion-content").remove()
+        insertion = @account.insertLocation()
+        expect(insertion).toBe(null)
+
+      it "sets insertDirection to 'replace' if there are no other accounts", ->
+        $(".accordion-header").remove()
+        $(".accordion-content").remove()
+        @account.insertLocation()
+        expect(@account.insertionDirection).toBe('replace')
+
   describe "#insertNextTo", ->
     beforeEach ->
       loadFixtures("account/dummy_accordion")
@@ -316,6 +361,7 @@ describe "Account", ->
 
     it "puts data before the account", ->
       @account.insertionDirection = 'before'
+      expect($("#some-new-content")).not.toExist()
 
       @account.insertNextTo(@locationAccount)
       
@@ -325,9 +371,26 @@ describe "Account", ->
 
     it "puts data after the account", ->
       @account.insertionDirection = 'after'
+      expect($("#some-new-content")).not.toExist()
 
       @account.insertNextTo(@locationAccount)
 
       expect($("#some-new-content")).toBeMatchedBy(
         "#account3-content + #some-new-content"
       )
+
+    it "replaces the entire accordion", ->
+      expect($(".accordion-header")).toExist()
+      expect($(".accordion-content")).toExist()
+      expect($("#some-new-content")).not.toExist()
+
+      @account.insertionDirection = 'replace'
+      @account.insertNextTo(null)
+
+      expect($("#some-new-content")).toExist()
+      expect($("#some-new-content")).toBeMatchedBy(
+        ".js-account-accordion #some-new-content"
+      )
+
+      expect($(".accordion-header")).not.toExist()
+      expect($(".accordion-content")).not.toExist()
