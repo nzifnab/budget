@@ -1,7 +1,4 @@
-require 'spec_helper_lite'
-#require 'action_view/helpers/number_helper'
-stub_class('Account')
-require_relative '../../app/decorators/account_decorator'
+require 'spec_helper'
 
 describe AccountDecorator do
   let(:account){mock(:account)}

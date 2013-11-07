@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Account Management", js: true do
   describe "Creating a new account" do
-    let(:budget){MY_BUDGET}
+    let(:budget){Budget.new}
 
     before(:each) do
       budget.new_account(name: "Savings Account", priority: 9, enabled: true).submit
@@ -11,8 +11,8 @@ describe "Account Management", js: true do
     end
 
     it "Inserts new accounts into the correct priority location" do
+      puts budget.accounts.size
       visit accounts_path
-
       accordion = open_accordion("New Account")
       within(accordion[:content]) do
         fill_in "Name", with: "Checking Account"

@@ -1,34 +1,12 @@
-require 'active_model'
-class Account# < ActiveRecord::Base
-  extend ActiveModel::Naming
-  include ActiveModel::Conversion
-  include ActiveModel::Validations
+class Account < ActiveRecord::Base
   include Draper::Decoratable
 
-  attr_accessor :name, :description, :priority, :enabled, :amount, :id, :created_at
   attr_accessor :budget
 
   validates :name, presence: {message: "Required"}
   validates :priority, inclusion: {in: 1..10, message: "1 to 10"}
 
-  def initialize(attrs={})
-    attrs.each do |k,v| send("#{k}=", v) end
-    self.amount ||= 0
-  end
-
-  def priority
-    @priority ? @priority.to_i : @priority
-  end
-
-  def enabled
-    if @enabled == "1"
-      true
-    elsif @enabled == "0"
-      false
-    else
-      @enabled
-    end
-  end
+  before_save :default_amount_to_zero
 
   def submit
     return false unless valid?
@@ -36,11 +14,11 @@ class Account# < ActiveRecord::Base
     !!budget.add_account(self)
   end
 
-  def enabled?
-    !!enabled
-  end
+  private
 
-  def persisted?
-    false
+  def default_amount_to_zero
+    unless amount.present?
+      self.amount = 0
+    end
   end
 end

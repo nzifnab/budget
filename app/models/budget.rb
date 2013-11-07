@@ -1,9 +1,7 @@
 class Budget
   attr_writer :account_source
 
-  def initialize
-    @accounts = []
-  end
+  
 
   def new_account(*args)
     account_source.call(*args).tap do |a|
@@ -12,18 +10,11 @@ class Budget
   end
 
   def add_account(account)
-    account.id = account.object_id
-    @accounts << account
+    account.save
   end
 
   def accounts
-    @accounts.sort{|a,b|
-      if a.enabled? == b.enabled?
-        b.priority <=> a.priority
-      else
-        b.enabled? ? 1 : -1
-      end
-    }
+    Account.all.order("accounts.enabled DESC, accounts.priority DESC")
   end
 
   private

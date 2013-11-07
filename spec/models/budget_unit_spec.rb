@@ -1,5 +1,4 @@
-require 'spec_helper_lite'
-require_relative '../../app/models/budget'
+require 'spec_helper'
 
 describe Budget do
   let(:budget){Budget.new}
@@ -33,33 +32,8 @@ describe Budget do
   describe "#add_account" do
     it "adds the account to your budget" do
       account = stub(:account).as_null_object
-      budget.add_account(account)
-      budget.accounts.should include(account)
-    end
-  end
-
-  describe "#accounts" do
-    def stub_account_with_priority(val, params={})
-      OpenStruct.new(params.merge(priority: val))
-    end
-    it "sorts with highest priority first" do
-      lowest = stub_account_with_priority(4)
-      middle = stub_account_with_priority(7)
-      highest = stub_account_with_priority(9)
-      budget.add_account(lowest)
-      budget.add_account(highest)
-      budget.add_account(middle)
-      budget.accounts.should == [highest, middle, lowest]
-    end
-
-    it "always puts disabled accounts at the bottom" do
-      enabled = stub_account_with_priority(4, enabled?: true)
-      disabled_lowest = stub_account_with_priority(3, enabled?: false)
-      disabled_highest = stub_account_with_priority(6, enabled?: false)
-      budget.add_account(disabled_lowest)
-      budget.add_account(enabled)
-      budget.add_account(disabled_highest)
-      budget.accounts.should == [enabled, disabled_highest, disabled_lowest]
+      account.should_receive(:save).and_return(true)
+      budget.add_account(account).should be_true
     end
   end
 end

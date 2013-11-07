@@ -13,6 +13,7 @@ class Budget
   clearForm: ($form=$("form")) ->
     $form.find("input[type=text], textarea, select").val('')
     $form.find("input[type=checkbox], input[type=radio]").prop('checked', false)
+    $form.find(".form-error").remove()
 
 
   register: (classToRegister) ->

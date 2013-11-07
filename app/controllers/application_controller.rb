@@ -4,6 +4,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def budget
-    @budget ||= MY_BUDGET
+    @budget ||= Budget.new
   end
 end

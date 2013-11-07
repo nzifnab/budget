@@ -30,12 +30,11 @@ class AccountsController < ApplicationController
       )
       account3.submit
     end
-
     @accounts = budget.accounts
   end
 
   def create
-    @account = budget.new_account(params[:account])
+    @account = budget.new_account(account_params(params))
     if @account.submit
       respond_to do |format|
         format.json do
@@ -49,5 +48,17 @@ class AccountsController < ApplicationController
         end
       end
     end
+  end
+
+  protected
+
+  def account_params(params)
+    params.require(:account).permit(
+      :name,
+      :description,
+      :priority,
+      :enabled,
+      :negative_overflows_into_id
+    )
   end
 end
