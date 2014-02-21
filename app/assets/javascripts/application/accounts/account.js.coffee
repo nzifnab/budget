@@ -1,6 +1,6 @@
 class Account
   @$accordionContainer: -> $(".js-account-accordion")
-  @name: 'Account'
+  @className: 'Account'
 
   @init: (args...) ->
     new this(args...)
