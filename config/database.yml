@@ -17,7 +17,7 @@
 development:
   adapter: postgresql
   database: budgeteer_development
-  username: sgcore
+  username: pg_dev
   password: please$$
   host: 127.0.0.1
   pool: 5
@@ -49,5 +49,5 @@ test:
   encoding: unicode
   database: budgeteer_test
   pool: 5
-  username: sgcore
+  username: pg_dev
   password: please$$
