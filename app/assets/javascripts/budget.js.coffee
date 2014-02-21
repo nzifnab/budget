@@ -15,6 +15,11 @@ class Budget
     $(document).on 'page:before-change', (e) =>
       @triggerEvents(@teardowns)
 
+  # TODO:  Move this somewhere else... like a form class?
+  clearForm: ($form=$("form")) ->
+    $form.find("input[type=text], textarea, select").val('')
+    $form.find("input[type=checkbox], input[type=radio]").prop('checked', false)
+
   register: (classToRegister) ->
     # Requires classToRegister to respond to the following:
     #   @name
