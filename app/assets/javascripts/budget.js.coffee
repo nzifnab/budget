@@ -9,7 +9,7 @@ class Budget
     $ =>
       @triggerEvents(@globalEvents)
     # By god this should be the only call to $(document).ready() EVER
-    $(document).on 'page:load', (e) =>
+    $(document).on 'ready page:load', (e) =>
       @triggerEvents(@events)
 
     $(document).on 'page:before-change', (e) =>

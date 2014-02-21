@@ -1,8 +1,8 @@
 source "https://rubygems.org"
-ruby '2.1.0'
+ruby '2.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4.0.3'
+gem 'rails', '4.0.0'
 gem 'pg'
 
 gem 'haml-rails'
@@ -37,7 +37,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'autotest-rails'
   gem 'ZenTest'
-  gem 'poltergeist'
+  gem 'poltergeist', '~> 1.4.0'
   gem 'launchy'
   gem 'database_cleaner'
   gem 'teaspoon'

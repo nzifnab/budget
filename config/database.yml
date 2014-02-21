@@ -17,11 +17,11 @@
 development:
   adapter: postgresql
   database: budgeteer_development
+  encoding: unicode
   username: pg_dev
   password: please$$
-  host: 127.0.0.1
+  host: localhost
   pool: 5
-  timeout: 5000
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -49,5 +49,6 @@ test:
   encoding: unicode
   database: budgeteer_test
   pool: 5
+  host: localhost
   username: pg_dev
   password: please$$
