@@ -40,7 +40,7 @@ describe "Budget", ->
       @dummy = {
         events: ->
           'some stuff'
-        name: 'DummyClass'
+        className: 'DummyClass'
       }
 
     it "adds the class to the budget namespace", ->
@@ -60,6 +60,6 @@ describe "Budget", ->
       budget.events = [@event1, @event2]
 
     it "should trigger all events", ->
-      budget.triggerEvents()
+      budget.triggerEvents(budget.events)
       expect(@event1).toHaveBeenCalled()
       expect(@event2).toHaveBeenCalled()

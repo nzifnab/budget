@@ -5,13 +5,12 @@ describe "Account Management", js: true do
     let(:budget){Budget.new}
 
     before(:each) do
-      budget.new_account(name: "Savings Account", priority: 9, enabled: true).submit
-      budget.new_account(name: "Insurance", priority: 3, enabled: true).submit
-      budget.new_account(name: "Disabled Account", priority: 8, enabled: false).submit
+      budget.new_account(name: "Savings Account", priority: 9, enabled: true).save
+      budget.new_account(name: "Insurance", priority: 3, enabled: true).save
+      budget.new_account(name: "Disabled Account", priority: 8, enabled: false).save
     end
 
     it "Inserts new accounts into the correct priority location" do
-      puts budget.accounts.size
       visit accounts_path
       accordion = open_accordion("New Account")
       within(accordion[:content]) do
@@ -23,9 +22,6 @@ describe "Account Management", js: true do
         click_button "Save Account"
       end
 
-      # TEMPORARY while the submission is not using 'remote: true':
-      #accordion = find_accordion("New Account")
-      
       page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
       accordion[:content].should_not be_visible
 

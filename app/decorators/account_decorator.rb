@@ -1,6 +1,3 @@
-require 'draper'
-require 'action_view/helpers'
-require_relative '../helpers/application_helper'
 class AccountDecorator < Draper::Decorator
   include ActionView::Helpers::NumberHelper
   include ApplicationHelper

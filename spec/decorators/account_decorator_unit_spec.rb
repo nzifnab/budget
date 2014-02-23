@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe AccountDecorator do
-  let(:account){mock(:account)}
+  let(:account){double(:account)}
   let(:decorator){AccountDecorator.decorate(account)}
 
   describe "#prioritized_name" do
