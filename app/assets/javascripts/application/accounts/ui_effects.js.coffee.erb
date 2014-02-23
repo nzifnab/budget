@@ -10,6 +10,16 @@ class Effects
   @globalEvents: =>
     @initRemoteHide()
     @initRemoteContentAppend()
+    @initClickRemove()
+    @initClickShow()
+
+  @initClickRemove: ->
+    $(document).on 'click', "[data-click-remove]", ->
+      $($(this).data('click-remove')).remove()
+
+  @initClickShow: ->
+    $(document).on 'click', "[data-click-show]", ->
+      $($(this).data('click-show')).show()
 
   @initRemoteHide: ->
     $(document).on 'ajax:complete', "[data-remote-hide]", ->

@@ -4,3 +4,4 @@
     %li
       %label
       = f.submit "Update", class: 'btn btn-green'
+      = link_to "Cancel", '#', class: 'btn btn-red', data: {click_remove: "#edit_account_#{@account.id}", click_show: ".js-account-content-#{@account.id}"}

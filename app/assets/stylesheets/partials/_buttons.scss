@@ -25,11 +25,8 @@
   &:hover{
     @include background-image(linear-gradient(top, #407544, #004504));
   }
-
   &:active{
-    @include background-image(linear-gradient(top, $header-hover-gradient-end, $header-hover-gradient-start));
-    color: $dark-on-light;
-    border-color: $header-hover-gradient-end;
+    @include background-image(linear-gradient(top, $header-gradient-end, $header-gradient-start));
   }
 }
 
@@ -43,8 +40,8 @@
   }
 
   &:active{
-    @include background-image(linear-gradient(top, $action-active-gradient-start, $action-active-gradient-end));
-    color: #80bed6;
+    @include background-image(linear-gradient(top, $action-gradient-end, $action-gradient-start));
+    /*color: #80bed6;*/
   }
 }
 
@@ -58,7 +55,21 @@
   }
 
   &:active{
-    @include background-image(linear-gradient(top, $danger-active-gradient-start, $danger-active-gradient-end));
-    color: #fcd3a5;
+    @include background-image(linear-gradient(top, $danger-gradient-end, $danger-gradient-start));
+    /*color: #fcd3a5;*/
+  }
+}
+
+.btn-red{
+  color: $light-on-dark;
+  border: solid 1px #992323;
+  @include background-image(linear-gradient(top, $error-gradient-start, $error-gradient-end));
+
+  &:hover{
+    @include background-image(linear-gradient(top, $error-hover-gradient-start, $error-hover-gradient-end));
+  }
+
+  &:active{
+    @include background-image(linear-gradient(top, $error-gradient-end, $error-gradient-start));
   }
 }
