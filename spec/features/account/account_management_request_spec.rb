@@ -58,14 +58,18 @@ describe "Account Management", js: true do
       within(accordion[:content]) do
         click_link "Edit"
         find_field("Name").value.should == "Savings Account"
-        find_field("Priority").value.should == 10
+        find_field("Priority").value.should == "10"
         find_field("Description").value.should == ""
         fill_in "Description", with: "Important Money"
         fill_in "Name", with: "Emergency Funds"
         click_button "Update"
+      end
 
+      # Have to find it again because updating removes/re-adds the
+      # element to the page
+      accordion = open_accordion("Emergency Funds")
+      within(accordion[:content]) do
         page.should have_content("Important Money")
-        page.should have_content("Emergency Funds")
       end
     end
   end

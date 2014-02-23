@@ -1,4 +1,9 @@
 .accordion-header
   %h3 New Account
 .accordion-content
-  = render partial: 'accounts/form', locals: {account: account}
+  = form_for account, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
+    %ul.fields
+      = render partial: 'accounts/form', locals: {account: account, f: f}
+      %li
+        %label
+        = f.submit "Save Account", class: 'btn btn-green'

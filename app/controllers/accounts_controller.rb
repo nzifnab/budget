@@ -22,6 +22,16 @@ class AccountsController < ApplicationController
     render layout: !request.xhr?
   end
 
+  def update
+    @account = budget.account(params[:id])
+
+    if @account.update_attributes(account_params(params))
+      render action: 'show'
+    else
+      render partial: 'edit'
+    end
+  end
+
   protected
 
   def account_params(params)

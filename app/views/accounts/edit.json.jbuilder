@@ -1,0 +1,1 @@
+json.html render(action: 'edit', formats: [:html])
