@@ -9,6 +9,7 @@ gem 'haml-rails'
 gem 'haml'
 gem 'uglifier'
 gem 'jbuilder'
+gem 'squeel'
 
 
 

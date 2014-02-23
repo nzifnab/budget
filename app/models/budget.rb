@@ -4,7 +4,11 @@ class Budget
   end
 
   def accounts
-    Account.all.order("accounts.enabled DESC, accounts.priority DESC")
+    Account.order{[
+      accounts.enabled.desc,
+      accounts.priority.desc,
+      accounts.amount.desc
+    ]}
   end
 
   def account(account_id)

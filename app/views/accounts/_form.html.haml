@@ -11,9 +11,5 @@
   = f.label :enabled
   = f.check_box :enabled
 %li
-  = f.label :negative_overflows_into
-  %select{id: "account_negative_overflows_into"}
-    %option{selected: true, value: ''} Disallow Negatives
-    %option{value: 5} Allow Negatives
-    %option{value: 7} Option 3
-    %option{value: 9} Option 4
+  = f.label :negative_overflow_id, "Negative overflows into"
+  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :name, include_blank: ">> Disallow Negatives"

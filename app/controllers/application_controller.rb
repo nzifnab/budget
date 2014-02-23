@@ -3,7 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  def budget
-    @budget ||= Budget.new
-  end
+  protected
+    def budget
+      @budget ||= Budget.new
+    end
 end

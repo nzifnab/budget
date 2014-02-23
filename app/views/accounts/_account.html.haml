@@ -10,8 +10,8 @@
           = simple_format account.description
 
       %dl.properties.break-small
-        %dt Negatives allowed?
-        %dd No
+        %dt= account.negative_overflow_label
+        %dd= account.negative_overflow_name
         %dt Created on
         %dd= account.formatted_created_at
 

@@ -98,6 +98,8 @@ GEM
       cliver (~> 0.2.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    polyamorous (0.6.4)
+      activerecord (>= 3.0)
     polyglot (0.3.4)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -144,6 +146,10 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
+    squeel (1.1.1)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      polyamorous (~> 0.6.0)
     teaspoon (0.7.9)
       railties (>= 3.2.5, < 5)
     therubyracer (0.12.1)
@@ -188,6 +194,7 @@ DEPENDENCIES
   rails (= 4.0.0)
   rspec-rails
   sass-rails
+  squeel
   teaspoon
   therubyracer
   turbolinks
