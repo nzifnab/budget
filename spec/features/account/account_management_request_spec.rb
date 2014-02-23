@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe "Account Management", js: true do
+  let(:budget){Budget.new}
   describe "Creating a new account" do
-    let(:budget){Budget.new}
 
     before(:each) do
       budget.new_account(name: "Savings Account", priority: 9, enabled: true).save
@@ -45,6 +45,27 @@ describe "Account Management", js: true do
       within(checking_accordion[:header]) do
         page.should have_content("$0.00")
         page.should have_content("(7) Checking Account")
+      end
+    end
+  end
+
+  describe "editing accounts" do
+    let!(:account){budget.new_account(name: "Savings Account", priority: 10, enabled: true).save}
+
+    it "let's me edit accounts inline" do
+      visit accounts_path
+      accordion = open_accordion("Savings Account")
+      within(accordion[:content]) do
+        click_link "Edit"
+        find_field("Name").value.should == "Savings Account"
+        find_field("Priority").value.should == 10
+        find_field("Description").value.should == ""
+        fill_in "Description", with: "Important Money"
+        fill_in "Name", with: "Emergency Funds"
+        click_button "Update"
+
+        page.should have_content("Important Money")
+        page.should have_content("Emergency Funds")
       end
     end
   end

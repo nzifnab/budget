@@ -1,7 +1,7 @@
 Budgeteer::Application.routes.draw do
   root 'accounts#index'
 
-  resources :accounts, only: [:index, :create]
+  resources :accounts, only: [:index, :create, :edit, :update]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -42,7 +42,7 @@ Budgeteer::Application.routes.draw do
   #       get 'recent', on: :collection
   #     end
   #   end
-  
+
   # Example resource route with concerns:
   #   concern :toggleable do
   #     post 'toggle'

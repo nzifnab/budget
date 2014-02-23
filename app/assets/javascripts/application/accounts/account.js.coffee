@@ -3,7 +3,7 @@ class Account
   @className: 'Account'
 
   @init: (args...) ->
-    new this(args...)
+    new @(args...)
 
   constructor: (@id, @html=null) ->
     @insertionDirection = null

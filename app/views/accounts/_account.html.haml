@@ -3,7 +3,7 @@
   .float-right{class: account.amount_class}
     = account.display_amount
 .accordion-content.js-account-content
-  .cols
+  .cols{class: "js-account-content-#{account.id}"}
     .inner-left-col
       - if account.description.present?
         .box.box-tan
@@ -15,7 +15,7 @@
         %dt Created on
         %dd= account.formatted_created_at
 
-      = link_to 'Edit', '#', class: 'btn btn-blue'
+      = link_to 'Edit', edit_account_path(account), class: 'btn btn-blue', data: {remote: true, remote_hide: ".js-account-content-#{account.id}", remote_content_append: ".js-account-content-#{account.id}"}
 
     .inner-right-col
       %h4.text-right Quick Withdraw / Deposit

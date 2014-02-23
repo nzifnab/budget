@@ -10,18 +10,16 @@ class AccountsController < ApplicationController
   def create
     @account = budget.new_account(account_params(params))
     if @account.save
-      respond_to do |format|
-        format.json do
-          render 'show'
-        end
-      end
+      render action: 'show'
     else
-      respond_to do |format|
-        format.json do
-          render partial: 'accounts/form', status: :unprocessable_entity
-        end
-      end
+      render partial: 'accounts/new_account', status: :unprocessable_entity
     end
+  end
+
+  def edit
+    @account = budget.account(params[:id])
+
+    render layout: !request.xhr?
   end
 
   protected

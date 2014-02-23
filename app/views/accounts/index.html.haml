@@ -1,6 +1,6 @@
 .container
   .content
     .js-account-accordion
-      = render partial: 'accounts/form', locals: {account: @account}
+      = render partial: 'accounts/new_account', locals: {account: @account}
 
       = render partial: 'accounts/account', collection: accounts

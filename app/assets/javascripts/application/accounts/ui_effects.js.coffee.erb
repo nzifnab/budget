@@ -7,6 +7,27 @@ class Effects
   @events: =>
     @initAccordion()
 
+  @globalEvents: =>
+    @initRemoteHide()
+    @initRemoteContentAppend()
+
+  @initRemoteHide: ->
+    $(document).on 'ajax:complete', "[data-remote-hide]", ->
+      $($(this).data('remote-hide')).hide()
+
+  @initRemoteContentAppend: ->
+    $(document).on(
+      {
+        'ajax:success': (e, data, status, xhr) ->
+          Effects.remoteContentAppend(this, data)
+        'ajax:error': (e, xhr, status, error) ->
+          Effects.remoteContentAppend(this, xhr.responseText)
+      }, "[data-remote-content-append]"
+    )
+
+  @remoteContentAppend: (clickedLink, data) ->
+    $($(clickedLink).data('remote-content-append')).after(data)
+
   @initAccordion: ->
     $(".js-account-accordion").accordion
       collapsible: true

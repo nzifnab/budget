@@ -1,6 +1,4 @@
 class AccountDecorator < Draper::Decorator
-  include ActionView::Helpers::NumberHelper
-  include ApplicationHelper
   delegate_all
 
   def prioritized_name
@@ -18,10 +16,10 @@ class AccountDecorator < Draper::Decorator
   end
 
   def display_amount
-    number_to_currency(object.amount, negative_format: "(%u%n)")
+    h.number_to_currency(object.amount, negative_format: "(%u%n)")
   end
 
   def formatted_created_at
-    nice_date(object.created_at)
+    h.nice_date(object.created_at)
   end
 end
