@@ -14,7 +14,7 @@ class AccountsController < ApplicationController
     if @account.save
       render action: 'show'
     else
-      render partial: 'accounts/new_account', status: :unprocessable_entity
+      render action: 'new', status: :unprocessable_entity
     end
   end
 
@@ -30,7 +30,7 @@ class AccountsController < ApplicationController
     if @account.update_attributes(account_params(params))
       render action: 'show'
     else
-      render partial: 'edit'
+      render partial: 'edit', status: :unprocessable_entity
     end
   end
 

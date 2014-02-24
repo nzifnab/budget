@@ -1,9 +1,11 @@
 class BudgetFormBuilder < ActionView::Helpers::FormBuilder
   def error_for(attribute)
-    errors = object.errors[attribute]
-    if errors.present?
-      @template.content_tag(:div, class: 'form-error', title: "This field was invalid") do
-        errors.first
+    if object.present?
+      errors = object.errors.messages[attribute]
+      if errors.present?
+        @template.content_tag(:div, class: 'form-error', title: "This field was invalid") do
+          errors.first
+        end
       end
     end
   end

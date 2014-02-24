@@ -1,7 +1,9 @@
 Budgeteer::Application.routes.draw do
   root 'accounts#index'
 
-  resources :accounts, only: [:index, :create, :edit, :update]
+  resources :accounts, only: [:index, :create, :edit, :update], shallow: true do
+    resources :quick_funds, only: [:create]
+  end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

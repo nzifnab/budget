@@ -11,10 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140223180028) do
+ActiveRecord::Schema.define(version: 20140224023334) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_histories", force: true do |t|
+    t.decimal  "amount",           precision: 8, scale: 2
+    t.text     "description"
+    t.integer  "overflow_from_id"
+    t.integer  "account_id"
+    t.integer  "quick_fund_id"
+    t.integer  "income_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "account_histories", ["account_id"], name: "index_account_histories_on_account_id", using: :btree
+  add_index "account_histories", ["income_id"], name: "index_account_histories_on_income_id", using: :btree
+  add_index "account_histories", ["overflow_from_id"], name: "index_account_histories_on_overflow_from_id", using: :btree
+  add_index "account_histories", ["quick_fund_id"], name: "index_account_histories_on_quick_fund_id", using: :btree
 
   create_table "accounts", force: true do |t|
     t.text     "name"
@@ -30,5 +46,16 @@ ActiveRecord::Schema.define(version: 20140223180028) do
 
   add_index "accounts", ["negative_overflow_id"], name: "index_accounts_on_negative_overflow_id", using: :btree
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
+
+  create_table "quick_funds", force: true do |t|
+    t.decimal  "amount",      precision: 8, scale: 2
+    t.integer  "account_id"
+    t.text     "description"
+    t.string   "fund_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "quick_funds", ["account_id"], name: "index_quick_funds_on_account_id", using: :btree
 
 end

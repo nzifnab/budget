@@ -18,16 +18,4 @@
       = link_to 'Edit', edit_account_path(account), class: 'btn btn-blue', data: {remote: true, remote_hide: ".js-account-content-#{account.id}", remote_content_append: ".js-account-content-#{account.id}"}
 
     .inner-right-col
-      %h4.text-right Quick Withdraw / Deposit
-      %form.break-small
-        %ul.fields.fields-small
-          %li
-            %label Amount
-            %input{type: 'text'}
-          %li
-            %label Description
-            %textarea
-
-      .float-right
-        %input{type: 'submit', value: 'Withdraw', class: 'btn btn-orange'}
-        %input{type: 'submit', value: "Deposit", class: 'btn btn-green'}
+      = render partial: 'quick_funds/form', locals: {account: account}

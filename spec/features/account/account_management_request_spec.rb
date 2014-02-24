@@ -59,8 +59,8 @@ describe "Account Management", js: true do
         click_link "Edit"
         find_field("Name").value.should == "Savings Account"
         find_field("Priority").value.should == "10"
-        find_field("Description").value.should == ""
-        fill_in "Description", with: "Important Money"
+        find_field("account_description").value.should == ""
+        fill_in "account_description", with: "Important Money"
         fill_in "Name", with: "Emergency Funds"
         click_button "Update"
       end
@@ -72,5 +72,72 @@ describe "Account Management", js: true do
         page.should have_content("Important Money")
       end
     end
+  end
+
+  describe "Deposits/Withdrawals" do
+    let(:account){budget.new_account(name: "Food", priority: 6, enabled: true, amount: 200)}
+
+    it "let's me withdraw funds from an account" do
+      account.save
+      visit accounts_path
+      accordion = open_accordion("Food")
+      within(accordion[:content]) do
+        fill_in "Amount", with: "25"
+        fill_in "Description", with: "Groceries"
+        click_button "Withdraw"
+      end
+
+      accordion = open_accordion("Food")
+      within(accordion[:header]) do
+        page.should have_content("$175.00")
+        within(".header-notice") do
+          page.should have_content("($25.00)")
+        end
+      end
+    end
+
+    #it "let's me deposit funds into an account" do
+    #  account.save
+    #  visit accounts_path
+    #  accordion = open_accordion("Food")
+    #  within(accordion[:content]) do
+    #    fill_in "Amount", with: "80"
+    #    fill_in "Description", with: "Regurgitation"
+    #    click_button "Deposit"
+    #  end
+#
+    #  accordion = open_accordion("Food")
+    #  within(accordion[:header]) do
+    #    page.should have_content("$280.00")
+    #    within(".header-notice") do
+    #      page.should have_content("$80.00")
+    #    end
+    #  end
+    #end
+#
+    #it "doesn't let me withdraw if negatives are disallowed" do
+    #  account.negative_overflow_id = nil
+    #  account.amount = 30
+    #  account.save
+    #  visit accounts_path
+    #  accordion = open_accordion("Food")
+    #  within(accordion[:content]) do
+    #    fill_in "Amount", with: "31"
+    #    fill_in "Description", with: "Too much food!"
+    #    click_button "Withdraw"
+    #  end
+#
+    #  accordion = open_accordion("Food")
+    #  within(accordion[:header]) do
+    #    page.should have_content("$30.00")
+    #    page.should_not have_css(".header-notice")
+    #  end
+#
+    #  within(accordion[:content]) do
+    #    within(".form-error") do
+    #      page.should have_content("Not enough funds")
+    #    end
+    #  end
+    #end
   end
 end

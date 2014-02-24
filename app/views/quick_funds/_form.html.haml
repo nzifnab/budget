@@ -1,0 +1,15 @@
+%h4.text-right Quick Withdraw / Deposit
+- Rails.logger.debug "quick_fund errors = #{@quick_fund && @quick_fund.errors.inspect}"
+= form_for @quick_fund || :quick_fund, url: account_quick_funds_path(account_id: account.id, format: 'json'), method: :post, remote: true, html: {class: 'js-update-account'} do |f|
+  %ul.fields.fields-small
+    %li
+      = f.label :amount
+      = f.text_field :amount
+    %li
+      = f.label :description
+      = f.text_area :description
+
+    %li
+      .float-right
+        = f.submit "Withdraw", name: "fund_type", class: 'btn btn-orange'
+        = f.submit "Deposit", name: "fund_type", class: 'btn btn-green'
