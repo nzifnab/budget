@@ -49,6 +49,12 @@
   input[type=text], textarea{
     @include column(2.8, true);
   }
+
+  .form-error{
+    clear: left;
+    float: right;
+    margin-bottom: 5px;
+  }
 }
 
 .fields{

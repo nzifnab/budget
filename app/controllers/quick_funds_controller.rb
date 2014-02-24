@@ -8,6 +8,7 @@ class QuickFundsController < ApplicationController
     if @quick_fund.save
       render action: 'show'
     else
+      @account.reset_amount
       render action: 'new', status: :unprocessable_entity
     end
   end

@@ -34,6 +34,10 @@ class Account < ActiveRecord::Base
 #
   #end
 
+  def reset_amount
+    self.amount = amount_was
+  end
+
   private
 
   # before_save
@@ -50,9 +54,7 @@ class Account < ActiveRecord::Base
 
   # validate
   def deny_negative_amount_with_no_overflow
-    Rails.logger.debug "running deny_negative_amount_with_no_overflow"
-    if amount < 0 && !negative_overflow_id
-      self.amount = amount_was
+    if amount.to_d < "0".to_d && !negative_overflow_id
       errors.add(:amount, "Insufficient Funds")
     end
   end

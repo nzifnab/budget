@@ -27,16 +27,14 @@ class AccountHistory < ActiveRecord::Base
 
     # before_validation on: :create
     def update_account_amount
-      Rails.logger.debug "running update_account_amount did_distribute = #{did_distribute_funds.inspect}"
       unless did_distribute_funds
         self.did_distribute_funds = true
-        account.amount += amount
+        account.amount = account.amount.to_d + amount.to_d
       end
     end
 
     # validate
     def steal_amount_validation_from_account
-      Rails.logger.debug "running steal_amount_validation_from_account"
       if !account.valid? && (errors_found = account.errors.messages[:amount]).present?
         errors.add(:amount, errors_found.first)
       end
