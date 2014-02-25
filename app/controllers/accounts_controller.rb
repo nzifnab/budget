@@ -30,7 +30,9 @@ class AccountsController < ApplicationController
     if @account.update_attributes(account_params(params))
       render action: 'show'
     else
-      render partial: 'edit', status: :unprocessable_entity
+      @account_with_errors = @account
+      @account = budget.account(params[:id])
+      render action: 'edit', status: :unprocessable_entity
     end
   end
 

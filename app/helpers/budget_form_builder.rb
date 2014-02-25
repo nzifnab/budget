@@ -17,4 +17,9 @@ class BudgetFormBuilder < ActionView::Helpers::FormBuilder
       send("old_#{method_name}", method, *args).concat error_for(method)
     end
   end
+
+  alias_method :old_collection_select, :collection_select
+  def collection_select(method, *args)
+    old_collection_select(method, *args).concat error_for(method)
+  end
 end

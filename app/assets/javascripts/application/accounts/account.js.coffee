@@ -15,9 +15,12 @@ class Account
   # renders new @html into the dom as an accordion element
   render: (newPriority, enabled) ->
     throw "No new html found" unless @html?
+    priority = @priority()
+    enabled = @enabled()
     @remove()
-    @_priority = newPriority
-    @_enabled = enabled
+    @_priority = newPriority ? priority
+    @_enabled = enabled ? enabled
+    console.log @_priority
     @insertNextTo(@insertLocation())
     @refresh(@accordionId())
 

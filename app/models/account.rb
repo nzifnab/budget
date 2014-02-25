@@ -56,6 +56,7 @@ class Account < ActiveRecord::Base
   def deny_negative_amount_with_no_overflow
     if amount.to_d < "0".to_d && !negative_overflow_id
       errors.add(:amount, "Insufficient Funds")
+      errors.add(:negative_overflow_id, "Insufficient Funds")
     end
   end
 end

@@ -1,9 +1,10 @@
+- edit_form ||= false
 .accordion-header.js-account{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority, account_id: account.id, enabled: account.enabled?}}
   %h3= account.prioritized_name
   .float-right{class: account.amount_class}
     = account.display_amount
 .accordion-content.js-account-content
-  .cols{class: "js-account-content-#{account.id}"}
+  .cols{class: "js-account-content-#{account.id}", style: edit_form ? "display: none;" : ""}
     .inner-left-col
       - if account.description.present?
         .box.box-tan
@@ -19,3 +20,5 @@
 
     .inner-right-col
       = render partial: 'quick_funds/form', locals: {account: account}
+  - if edit_form
+    = render partial: 'accounts/edit_form', locals: {account: form_account}
