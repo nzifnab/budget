@@ -32,7 +32,7 @@ class Account
     @_accordionId = null
 
   # refreshes accordion
-  refresh: (newAccordionId) ->
+  @refresh: (newAccordionId) ->
     budget.Effects.refreshAccordion(newAccordionId)
 
   # the priority level of this account
@@ -60,7 +60,7 @@ class Account
 
   # accordion 0-based index
   accordionId: ->
-    @_accordionId ||= $(".accordion-header").index(@$headerDom())
+    $(".accordion-header").index(@$headerDom())
 
   # returns a nearby accordion element account object where this
   # account can be placed
@@ -111,19 +111,23 @@ class Account
     html = data.html
     id = data.accountId
     account = (@init(id, html)).render(data.priority, data.enabled)
-    account.refresh(account.accordionId()) if data.auto_open
 
   @events: =>
     $('.js-account-accordion').on(
       {
         'ajax:success': (e, data, status, xhr) =>
           if xhr.status == 200 && data.accounts?
+            auto_open = null
             for account in data.accounts
               if account.html?
-                @create(account)
+                m = @create(account)
+                if data.auto_open == account.accountId
+                  auto_open = m
+            @refresh(auto_open.accordionId())
             budget.clearForm()
           else if xhr.status == 200 && data.html?
-            @create(data)
+            account = @create(data)
+            @refresh(account.accordionId())
             budget.clearForm()
 
         'ajax:error': (e, xhr, status, error) =>

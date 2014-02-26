@@ -7,13 +7,11 @@ class AccountHistory < ActiveRecord::Base
     foreign_key: "overflow_from_id"
 
   validate :steal_amount_validation_from_account
-  before_validation :update_account_amount, on: :create
   before_create :save_account
 
   #before_validation :update_amount_based_on_type
 #
   #attr_accessor :history_type
-  attr_accessor :did_distribute_funds
 #
   #protected
   #  # before_validation
@@ -23,15 +21,22 @@ class AccountHistory < ActiveRecord::Base
   #    end
   #  end
 
-  protected
+  def amount=(val)
+    self[:amount] = val
+    if new_record?
+      account.amount = account.amount.to_d + amount.to_d
 
-    # before_validation on: :create
-    def update_account_amount
-      unless did_distribute_funds
-        self.did_distribute_funds = true
-        account.amount = account.amount.to_d + amount.to_d
+      if account.requires_negative_overflow?
+        remaining_funds = account.amount
+        account.amount = 0
+
+        quick_fund.distribute_funds(remaining_funds, account.negative_overflow_account)
       end
     end
+  end
+
+  protected
+
 
     # validate
     def steal_amount_validation_from_account

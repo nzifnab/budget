@@ -26,6 +26,10 @@ class Account < ActiveRecord::Base
     (@fund_change ||= 0).to_f
   end
 
+  def requires_negative_overflow?
+    amount.to_d < 0 && negative_overflow_id && negative_overflow_id != self.id
+  end
+
   private
 
   # before_save
@@ -47,7 +51,7 @@ class Account < ActiveRecord::Base
 
   # validate
   def deny_negative_amount_with_no_overflow
-    if amount.to_d < "0".to_d && !negative_overflow_id
+    if amount.to_d < 0 && negative_overflow_id != self.id
       errors.add(:amount, "Insufficient Funds")
       errors.add(:negative_overflow_id, "Insufficient Funds")
     end

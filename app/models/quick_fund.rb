@@ -10,15 +10,21 @@ class QuickFund < ActiveRecord::Base
   before_validation :build_account_history, on: :create
   validate :steal_amount_validation_from_history
 
+  def distribute_funds(funds, acc)
+    history = account_histories.build(
+      account: acc,
+      description: description
+    )
+    history.amount = funds
+    history
+  end
+
   protected
 
     # before_validation on: :create
     def build_account_history
-      account_histories.build(
-        account: account,
-        amount: fund_type.to_s.downcase == "withdraw" ? -amount.to_d : amount.to_d,
-        description: description
-      )
+      funds = fund_type.to_s.downcase == "withdraw" ? -amount.to_d : amount.to_d
+      distribute_funds(funds, account)
     end
 
     # validate
