@@ -21,7 +21,7 @@ class Account
     @_priority = newPriority ? priority
     @_enabled = newEnabled ? enabled
     @insertNextTo(@insertLocation())
-    @refresh(@accordionId())
+    this
 
   # removes the accordion element
   remove: ->
@@ -110,18 +110,25 @@ class Account
   @create: (data) ->
     html = data.html
     id = data.accountId
-    (@init(id, html)).render(data.priority, data.enabled)
+    account = (@init(id, html)).render(data.priority, data.enabled)
+    account.refresh(account.accordionId()) if data.auto_open
 
   @events: =>
     $('.js-account-accordion').on(
       {
         'ajax:success': (e, data, status, xhr) =>
-          if xhr.status == 200 && data.html?
+          if xhr.status == 200 && data.accounts?
+            for account in data.accounts
+              if account.html?
+                @create(account)
+            budget.clearForm()
+          else if xhr.status == 200 && data.html?
             @create(data)
             budget.clearForm()
 
         'ajax:error': (e, xhr, status, error) =>
-          @create(JSON.parse(xhr.responseText))
+          data = JSON.parse(xhr.responseText)
+          @create(data)
       },
       '.js-update-account'
     )

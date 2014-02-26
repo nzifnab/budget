@@ -6,17 +6,15 @@ class AccountDecorator < Draper::Decorator
   end
 
   def amount_class
-    if model.amount > 0
-      'good'
-    elsif model.amount < 0
-      'bad'
-    else
-      'neutral'
-    end
+    h.amount_class(model.amount)
   end
 
   def display_amount
-    h.number_to_currency(model.amount, negative_format: "(%u%n)")
+    h.nice_currency(model.amount)
+  end
+
+  def display_fund_change
+    h.nice_currency(model.fund_change)
   end
 
   def formatted_created_at

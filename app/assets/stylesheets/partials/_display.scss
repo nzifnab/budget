@@ -39,6 +39,7 @@
 // }
 
 .accordion-header{
+  position: relative;
   background-color: $header-hover-gradient-end;
   @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
   color: $dark-on-light;
@@ -77,6 +78,15 @@
   background-color: $content-gradient-end;
   background-image: none;
   border-color: #333;
+}
+
+.header-notice{
+  position: absolute;
+  right: 200px;
+  background-color: $accordion-notice-color;
+  padding: 4px 8px;
+  top: 2px;
+  border-radius: 3px;
 }
 
 .box{

@@ -11,31 +11,19 @@ class Account < ActiveRecord::Base
   validates :priority, inclusion: {in: 1..10, message: "1 to 10"}
 
   before_save :default_amount_to_zero
+  before_save :record_fund_change_amount
   after_create :update_self_negative_overflow
 
   validate :deny_negative_amount_with_no_overflow
 
-  # TODO:  fund withdraw/deposit needs to be a method on account
-  # that will add/remove the funds and go through any required
-  # overflow accounts and modify them as well - then save them,
-  # record proper errors, and return all modified accounts in a nice
-  # array for the controller to give to the jbuilder.  Maybe this should
-  # be an intermediary class FundChange or AccountFund that handles this
-  # stuff.
-  #def new_history(params={})
-  #  history = account_histories.build(params)
-  #end
-  #def modify_amount(params={})
-  #  if params[:history_type].to_s.downcase == "withdraw"
-  #    params[:amount] = params[:amount].to_d * -1
-  #  end
-#
-  #  funds = []
-#
-  #end
+  attr_accessor :fund_change
 
   def reset_amount
     self.amount = amount_was
+  end
+
+  def fund_change
+    (@fund_change ||= 0).to_f
   end
 
   private
@@ -45,6 +33,11 @@ class Account < ActiveRecord::Base
     unless amount.present?
       self.amount = 0
     end
+  end
+
+  # before_save
+  def record_fund_change_amount
+    @fund_change = self.amount.to_d - self.amount_was.to_d
   end
 
   # after_create

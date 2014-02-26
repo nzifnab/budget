@@ -39,7 +39,7 @@ describe "Account", ->
       expect(Account.create).not.toHaveBeenCalled()
       $(".js-update-account").trigger(
         "ajax:success",
-        [{accountId: 22},
+        [{accounts: [accountId: 22]},
         'success',
         {status: 200}]
       )
@@ -133,17 +133,15 @@ describe "Account", ->
 
   describe "#render", ->
     beforeEach ->
-      @data = JSON.parse readFixtures("account/account.json")
+      @data = JSON.parse(readFixtures("account/account.json")).accounts[0]
       @account = new Account(@data.id, @data.html)
       @nearAccount = new Account()
       sinon.stub(@account, "insertNextTo")
       sinon.spy(@account, "remove")
       sinon.stub(@account, 'insertLocation').returns(@nearAccount)
-      sinon.stub(@account, "refresh")
 
     afterEach ->
       @account.remove.restore()
-      @account.refresh.restore()
       @account.insertNextTo.restore()
       @account.insertLocation.restore()
 
@@ -158,10 +156,6 @@ describe "Account", ->
     it "inserts the html next to the located account", ->
       @account.render(6, true)
       expect(@account.insertNextTo).toHaveBeenCalledWith(@nearAccount)
-
-    it "refreshes the accordion view", ->
-      @account.render(5, true)
-      expect(@account.refresh).toHaveBeenCalledOnce()
 
     it "sets the priority and enabled flag of the account", ->
       @account.render(1, true)
@@ -364,7 +358,7 @@ describe "Account", ->
       expect($("#some-new-content")).not.toExist()
 
       @account.insertNextTo(@locationAccount)
-      
+
       expect($("#account3-header")).toBeMatchedBy(
         "#some-new-content + #account3-header"
       )
