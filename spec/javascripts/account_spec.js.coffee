@@ -9,12 +9,14 @@ describe "Account", ->
   describe ".events", ->
     beforeEach ->
       loadFixtures("account/account_form.html")
-      sinon.stub(Account, "create")
+      sinon.stub(Account, "create").returns(new Account(71, "blah blah"))
       sinon.stub(budget, "clearForm")
+      sinon.stub(Account, "refresh")
 
     afterEach ->
       Account.create.restore()
       budget.clearForm.restore()
+      Account.refresh.restore()
 
     xit "binds the ajax:success event to an update-account form", ->
       $form = $(".js-update-account")
@@ -39,7 +41,7 @@ describe "Account", ->
       expect(Account.create).not.toHaveBeenCalled()
       $(".js-update-account").trigger(
         "ajax:success",
-        [{accounts: [accountId: 22]},
+        [{accounts: [accountId: 22], auto_open: 22},
         'success',
         {status: 200}]
       )
@@ -200,7 +202,7 @@ describe "Account", ->
       budget.Effects = @oldEffects
 
     it "should refresh the accordion on the page", ->
-      @account.refresh(12)
+      Account.refresh(12)
       expect(budget.Effects.refreshAccordion).toHaveBeenCalledWith(12)
 
   describe "#priority", ->

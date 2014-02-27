@@ -3,5 +3,5 @@ json.accounts [1] do
   json.html "<div class='nonsense'></div>"
   json.priority 5
   json.enabled true
-  json.auto_open true
 end
+json.auto_open 71

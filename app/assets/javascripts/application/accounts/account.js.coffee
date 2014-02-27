@@ -123,7 +123,7 @@ class Account
                 m = @create(account)
                 if data.auto_open == account.accountId
                   auto_open = m
-            @refresh(auto_open.accordionId())
+            @refresh(auto_open?.accordionId())
             budget.clearForm()
           else if xhr.status == 200 && data.html?
             account = @create(data)

@@ -2,16 +2,17 @@ require 'spec_helper'
 
 describe QuickFund do
   describe "#before_validation" do
-    let(:account){Account.new(amount: 100)}
+    let(:account){Account.new(amount: 100, id: 200)}
 
     describe "the new account history object" do
       let(:quick_fund) do
-        account.quick_funds.build(
+        fund = account.quick_funds.build(
           account: account,
           fund_type: "Deposit",
-          amount: 28,
           description: "My Funds"
         )
+        fund.amount = 28
+        fund
       end
       let(:history){quick_fund.account_histories.first}
 

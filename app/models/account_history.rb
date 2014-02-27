@@ -9,30 +9,19 @@ class AccountHistory < ActiveRecord::Base
   validate :steal_amount_validation_from_account
   before_create :save_account
 
-  #before_validation :update_amount_based_on_type
-#
-  #attr_accessor :history_type
-#
-  #protected
-  #  # before_validation
-  #  def update_amount_based_on_type
-  #    if amount_changed? && history_type.to_s.downcase == "withdraw"
-  #      self.amount *= -1
-  #    end
-  #  end
-
   def amount=(val)
     self[:amount] = val
     if new_record?
       account.amount = account.amount.to_d + amount.to_d
-
       if account.requires_negative_overflow?
         remaining_funds = account.amount
+        self[:amount] = self[:amount] - remaining_funds
         account.amount = 0
 
         quick_fund.distribute_funds(remaining_funds, account.negative_overflow_account)
       end
     end
+    val
   end
 
   protected
