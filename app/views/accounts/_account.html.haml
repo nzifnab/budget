@@ -1,5 +1,5 @@
 - edit_form ||= false
-.accordion-header.js-account{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority, account_id: account.id, enabled: account.enabled?}}
+.accordion-header.js-account{class: account.enabled? ? '' : 'account-disabled', data: {priority: account.priority, account_id: account.id, enabled: account.enabled?, sort_weight: account.js_sort_weight}}
   %h3= account.prioritized_name
   - if account.fund_change != 0
     .header-notice{class: amount_class(account.fund_change)}= account.display_fund_change

@@ -1,5 +1,5 @@
 class QuickFundsController < ApplicationController
-  decorates_assigned :account
+  decorates_assigned :account, :quick_fund
 
   def create
     @account = budget.account(params[:account_id])

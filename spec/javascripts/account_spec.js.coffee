@@ -96,8 +96,7 @@ describe "Account", ->
       @data = {
         html: 'some html',
         accountId: 4,
-        priority: 8,
-        enabled: true
+        sort_weight: "1080000"
       }
 
     afterEach ->
@@ -110,7 +109,7 @@ describe "Account", ->
 
     it "renders the account", ->
       Account.create(@data)
-      expect(@account.render).toHaveBeenCalledWith(8, true)
+      expect(@account.render).toHaveBeenCalledWith("1080000")
 
   describe "new instance", ->
     beforeEach ->
@@ -159,10 +158,9 @@ describe "Account", ->
       @account.render(6, true)
       expect(@account.insertNextTo).toHaveBeenCalledWith(@nearAccount)
 
-    it "sets the priority and enabled flag of the account", ->
-      @account.render(1, true)
-      expect(@account.priority()).toBe(1)
-      expect(@account.enabled()).toBe(true)
+    it "sets the sortWeight of the account", ->
+      @account.render("03214")
+      expect(@account.sortWeight()).toBe("03214")
 
   describe "#remove", ->
     beforeEach ->
@@ -205,124 +203,49 @@ describe "Account", ->
       Account.refresh(12)
       expect(budget.Effects.refreshAccordion).toHaveBeenCalledWith(12)
 
-  describe "#priority", ->
-    it "returns the priority data-attribute from the header dom", ->
-      account = new Account(8)
-      account.$_headerDom = $("<div data-priority=4></div>")
-      expect(account.priority()).toBe(4)
-
-  describe "#enabled", ->
-    it "is enabled if the attribute exists", ->
-      account = new Account(8)
-      account.$_headerDom = $("<div data-enabled></div>")
-      expect(account.enabled()).toBe(true)
-
-    it "is not enabled if the attribute does not exist", ->
-      account = new Account(8)
-      account.$_headerDom = $("<div></div>")
-      expect(account.enabled()).toBe(false)
-
-    it "can be overriden to 'true'", ->
-      account = new Account(8)
-      account.$_headerDom = $("<div></div>")
-      account._enabled = true
-      expect(account.enabled()).toBe(true)
-
-    it "can be overriden to 'false'", ->
-      account = new Account(8)
-      account.$_headerDom = $("<div data-enabled></div>")
-      account._enabled = false
-      expect(account.enabled()).toBe(false)
-
   describe "#insertLocation", ->
     beforeEach ->
       @account = new Account(99)
-      @account._priority = 11
       loadFixtures("account/dummy_accordion")
 
-    describe "an enabled account", ->
-      beforeEach ->
-        @account._enabled = true
+    it "returns the first account that has a lower sortWeight", ->
+      @account._sortWeight = "107000"
+      insertion = @account.insertLocation()
+      expect(insertion.$headerDom()).toBe($("#account2-header"))
 
-      it "returns the first account that has a lower priority", ->
-        @account._priority = 7
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account2-header"))
+    it "sets the insertionDirection to 'before' when a location is matched", ->
+      @account._sortWeight = "107000"
+      insertion = @account.insertLocation()
+      expect(@account.insertionDirection).toBe('before')
 
-      it "sets the insertionDirection to 'before' when a location is matched", ->
-        @account._priority = 7
-        insertion = @account.insertLocation()
-        expect(@account.insertionDirection).toBe('before')
+    it "returns the last account if there are no lower sort weights", ->
+      @account._sortWeight = "0069500"
+      insertion = @account.insertLocation()
+      expect(insertion.$headerDom()).toBe($("#account5-header"))
 
-      it "returns the last account if there are no lower priorities", ->
-        @account._priority = 3
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account3-header"))
+    it "sets the content to be added 'after' when there are no lower priorities", ->
+      @account._sortWeight = "0069500"
+      insertion = @account.insertLocation()
+      expect(@account.insertionDirection).toBe('after')
 
-      it "sets the content to be added 'after' when there were no lower priorities", ->
-        @account._priority = 3
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('after')
+    it "returns the new account container if there are no accounts", ->
+      @account.sortWeight = "10500"
+      $(".js-account").remove()
+      insertion = @account.insertLocation()
+      expect(insertion.$headerDom()).toBe($("#new-account-header"))
 
-      it "returns the new account container if there were no enabled accounts", ->
-        @account._priority = 5
-        $(".js-account[data-enabled]").remove()
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#new-account-header"))
+    it "sets the content to be added 'after' when there are no accounts", ->
+      @account.sortWeight = "10500"
+      $(".js-account").remove()
+      insertion = @account.insertLocation()
+      expect(@account.insertionDirection).toBe('after')
 
-      it "sets the content to be added 'after' when there are no enabled accounts", ->
-        @account._priority = 5
-        $(".js-account[data-enabled]").remove()
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('after')
+    it "sorts properly even for very large account amounts", ->
+      @account._sortWeight = "10351800957283972800"
+      insertion = @account.insertLocation()
+      expect(insertion.$headerDom()).toBe($("#account3-header"))
+      expect(@account.insertionDirection).toBe('before')
 
-    describe "a disabled account", ->
-      beforeEach ->
-        @account._enabled = false
-
-      it "returns the first account with a lower priority", ->
-        @account._priority = 10
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account4-header"))
-
-      it "sets the insertionDirection to 'before' when a lower priority account is found", ->
-        @account._priority = 10
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('before')
-
-      it "returns the last account if there are no lower priorities", ->
-        @account._priority = 7
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account5-header"))
-
-      it "sets the insertDirection to 'after' when there are no lower priorities", ->
-        @account._priority = 7
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('after')
-
-      it "returns the last enabled account when there are no disabled accounts", ->
-        @account._priority = 10
-        $(".js-account:not([data-enabled])").remove()
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account3-header"))
-
-      it "sets the insertDirection to 'after' when there are no disabled accounts", ->
-        @account._priority = 10
-        $(".js-account:not([data-enabled])").remove()
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('after')
-
-      it "returns the new account container when there are no accounts at all", ->
-        @account._priority = 5
-        $(".js-account").remove()
-        insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#new-account-header"))
-
-      it "sets the insertDirection to 'after' when there are no accounts", ->
-        @account._priority = 5
-        $(".js-account").remove()
-        @account.insertLocation()
-        expect(@account.insertionDirection).toBe('after')
 
     describe "an account object with no id (new account form)", ->
       beforeEach ->

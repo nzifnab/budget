@@ -9,17 +9,12 @@ class Account
     @insertionDirection = null
 
     unless @id?
-      @_enabled = true
-      @_priority = 0
+      @_sortWeight = "10000"
 
   # renders new @html into the dom as an accordion element
-  render: (newPriority, newEnabled) ->
+  render: (@_sortWeight) ->
     throw "No new html found" unless @html?
-    priority = @priority()
-    enabled = @enabled()
     @remove()
-    @_priority = newPriority ? priority
-    @_enabled = newEnabled ? enabled
     @insertNextTo(@insertLocation())
     this
 
@@ -35,12 +30,9 @@ class Account
   @refresh: (newAccordionId) ->
     budget.Effects.refreshAccordion(newAccordionId)
 
-  # the priority level of this account
-  priority: ->
-    @_priority ?= parseInt @$headerDom().data('priority')
 
-  enabled: ->
-    @_enabled ?= @$headerDom().data('enabled')?
+  sortWeight: ->
+    @_sortWeight ?= String(@$headerDom().data('sort-weight'))
 
   # accordion header
   $headerDom: ->
@@ -71,16 +63,17 @@ class Account
       $headers = $(".js-account:first")
       @insertionDirection = 'before'
     else
-      enableSelector = if @enabled() then '[data-enabled]' else ':not([data-enabled])'
-      for i in [(@priority() - 1)..0]
-        if($headers = $(".js-account[data-priority=#{i}]#{enableSelector}")).length > 0
+      $headers = []
+      $(".js-account").each (index, element) =>
+        $headers = $(element)
+        if String(@sortWeight()) > String($headers.data('sort-weight'))
           @insertionDirection = 'before'
-          break
+          return false
       if $headers.length <= 0
-        $headers = $(".js-account#{enableSelector}:last")
+        $headers = $(".js-account:last")
 
     if $headers.length <= 0
-      $headers = if @enabled() then $(".accordion-header:first") else $(".accordion-header:last")
+      $headers = $(".accordion-header:last")
     if $headers.length <= 0
       @insertionDirection = 'replace'
       return null
@@ -110,7 +103,7 @@ class Account
   @create: (data) ->
     html = data.html
     id = data.accountId
-    account = (@init(id, html)).render(data.priority, data.enabled)
+    account = (@init(id, html)).render(data.sort_weight)
 
   @events: =>
     $('.js-account-accordion').on(

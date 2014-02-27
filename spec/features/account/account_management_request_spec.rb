@@ -5,9 +5,9 @@ describe "Account Management", js: true do
   describe "Creating a new account" do
 
     before(:each) do
-      budget.new_account(name: "Savings Account", priority: 9, enabled: true).save
-      budget.new_account(name: "Insurance", priority: 3, enabled: true).save
-      budget.new_account(name: "Disabled Account", priority: 8, enabled: false).save
+      budget.new_account(name: "Savings Account", priority: 9, enabled: true).save!
+      budget.new_account(name: "Insurance", priority: 3, enabled: true).save!
+      budget.new_account(name: "Disabled Account", priority: 8, enabled: false).save!
     end
 
     it "Inserts new accounts into the correct priority location" do
@@ -28,7 +28,6 @@ describe "Account Management", js: true do
       # find all of them so we can assert it was inserted in the right spot
       page.should have_selector(".accordion-header", text: "Checking Account")
       headers = page.all(".accordion-header")
-
       headers.size.should == 5
       headers[0].should have_content("New Account")
       headers[1].should have_content("Savings Account")

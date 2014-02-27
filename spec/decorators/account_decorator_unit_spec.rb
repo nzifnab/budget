@@ -96,4 +96,62 @@ describe AccountDecorator do
       decorator.negative_overflow_name.should == "Credit Card"
     end
   end
+
+  describe "#js_sort_parts" do
+    it "starts the value with '0' for disabled accounts" do
+      account.enabled = false
+      decorator.js_sort_parts[0].should == "0"
+    end
+
+    it "starts the value with '1' for enabled accounts" do
+      account.enabled = true
+      decorator.js_sort_parts[0].should == "1"
+    end
+
+    it "left-pads the priority with '0's" do
+      account.priority = 3
+      decorator.js_sort_parts[1].should == "03"
+    end
+
+    it "doesn't left-pad a priority of 10" do
+      account.priority = 10
+      decorator.js_sort_parts[1].should == "10"
+    end
+
+    it "uses '0' for negative amounts" do
+      account.amount = "-34.29".to_d
+      decorator.js_sort_parts[2].should == "0"
+    end
+
+    it "uses a '1' for positive amounts" do
+      account.amount = "34.29".to_d
+      decorator.js_sort_parts[2].should == "1"
+    end
+
+    it "uses the digit length with 2 decimal places" do
+      account.amount = "307.9153".to_d
+      decorator.js_sort_parts[3].should == "05"
+    end
+
+    it "is the same length for a negative number" do
+      account.amount = "-307.9153".to_d
+      decorator.js_sort_parts[3].should == "05"
+    end
+
+    it "doesn't pad an absurdly large number" do
+      account.amount = "#{"5"*10}.3".to_d
+      decorator.js_sort_parts[3].should == "12"
+    end
+
+    it "removes the decimal place for positive amounts" do
+      account.amount = "307.9153".to_d
+      decorator.js_sort_parts[4].should == "30792"
+    end
+
+    it "inverts negative amounts" do
+      account.amount = "-324.25".to_d
+      # '99999' minus '32425' (for absolute-valued no-decimal number)
+      decorator.js_sort_parts[4].should == "67574"
+    end
+  end
 end

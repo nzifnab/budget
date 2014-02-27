@@ -39,8 +39,9 @@ class Account < ActiveRecord::Base
 
   def negative_overflowed_from_accounts
     Account.
-      where{negative_overflow_id == self.id}.
-      where{id != self.id}
+      where{negative_overflow_id == my{id}}.
+      where{negative_overflow_id != nil}.
+      where{id != my{id}}
   end
 
   private
@@ -90,7 +91,7 @@ class Account < ActiveRecord::Base
 
   # validate
   def cannot_overflow_as_disabled_account
-    if disabled? && negative_overflow_id && negative_overflow_id != self.id
+    if disabled? && negative_overflow_id && negative_overflow_id != self.id && negative_overflow_id != 0
       errors.add(:negative_overflow_id, "Disabled")
       errors.add(:negative_overflow_id_extended, "Cannot set a negative overflow for a disabled account.")
     end

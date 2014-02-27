@@ -1,6 +1,6 @@
 require 'ostruct'
 class AccountsController < ApplicationController
-  decorates_assigned :account, :accounts
+  decorates_assigned :account, :accounts, :account_with_errors
   helper_method :negative_overflow_options
 
   def index
