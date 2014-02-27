@@ -116,6 +116,7 @@ class Account
     $('.js-account-accordion').on(
       {
         'ajax:success': (e, data, status, xhr) =>
+          $(".js-account .header-notice").remove()
           if xhr.status == 200 && data.accounts?
             auto_open = null
             for account in data.accounts
@@ -131,8 +132,10 @@ class Account
             budget.clearForm()
 
         'ajax:error': (e, xhr, status, error) =>
+          $(".js-account .header-notice").remove()
           data = JSON.parse(xhr.responseText)
-          @create(data)
+          account = @create(data)
+          @refresh(account.accordionId())
       },
       '.js-update-account'
     )

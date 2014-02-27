@@ -31,6 +31,7 @@ class AccountHistory < ActiveRecord::Base
     def steal_amount_validation_from_account
       if !account.valid? && (errors_found = account.errors.messages[:amount]).present?
         errors.add(:amount, errors_found.first)
+        errors.add(:amount_extended, account.errors.messages[:amount_extended].first)
       end
     end
 

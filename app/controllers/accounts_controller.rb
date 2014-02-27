@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
   helper_method :negative_overflow_options
 
   def index
-    @account = budget.new_account
+    @account = budget.new_account(enabled: true)
 
     @accounts = budget.accounts
   end

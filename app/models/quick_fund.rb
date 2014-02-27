@@ -34,6 +34,7 @@ class QuickFund < ActiveRecord::Base
       }
       if err_history.present?
         errors.add(:amount, err_history.errors.messages[:amount].first)
+        errors.add(:amount_extended, err_history.errors.messages[:amount_extended].first)
       end
     end
 end
