@@ -35,6 +35,13 @@ class AccountHistory < ActiveRecord::Base
       end
     end
 
+    # validate
+    def check_valid_account
+      if !account.valid?
+        errors.add(:account, "Error")
+      end
+    end
+
     # before_create
     def save_account
       account.save
