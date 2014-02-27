@@ -51,7 +51,7 @@ class AccountsController < ApplicationController
   def negative_overflow_options(self_id)
     [
       OpenStruct.new(id: self_id || 0, name: ">> Allow Negatives"),
-      *budget.accounts.where{id != self_id}
+      *budget.accounts.where{(id != self_id) & (enabled == true)}
     ]
   end
 end

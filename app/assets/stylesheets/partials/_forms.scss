@@ -20,8 +20,8 @@
     }
   }
 
-  select{
-    float: left;
+  input[type=checkbox], input[type=radio], select{
+    float: left
   }
 
   textarea{
