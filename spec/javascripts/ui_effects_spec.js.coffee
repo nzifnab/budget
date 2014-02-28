@@ -1,4 +1,4 @@
-#= require jquery-ui-1.10.3.custom.js
+#= require jquery-ui-1.10.3.js
 #= require application/accounts/ui_effects
 describe "Effect", ->
   beforeEach ->

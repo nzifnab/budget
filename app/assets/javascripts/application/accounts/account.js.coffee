@@ -105,6 +105,16 @@ class Account
     id = data.accountId
     account = (@init(id, html)).render(data.sort_weight)
 
+  @clear: ->
+    budget.clearForm()
+    $form = $(".js-account-content .js-update-account")
+    $accountHeader = $form.closest(".js-account-content").prev(".js-account")
+    $accountHeader.each (index, element) =>
+      id = $(element).data("account-id")
+      $(".js-account-content-#{id}").show()
+      $("#edit_account_#{id}").remove()
+
+
   @events: =>
     $('.js-account-accordion').on(
       {
@@ -118,11 +128,11 @@ class Account
                 if data.auto_open == account.accountId
                   auto_open = m
             @refresh(auto_open?.accordionId())
-            budget.clearForm()
+            Account.clear()
           else if xhr.status == 200 && data.html?
             account = @create(data)
             @refresh(account.accordionId())
-            budget.clearForm()
+            Account.clear()
 
         'ajax:error': (e, xhr, status, error) =>
           $(".js-account .header-notice").remove()
