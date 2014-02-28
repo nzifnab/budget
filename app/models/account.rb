@@ -47,6 +47,49 @@ class Account < ActiveRecord::Base
       where{id != my{id}}
   end
 
+  def negative_overflow_recursion_error?
+    tester = nil
+    if negative_overflow_id.present?
+      tester = Account.where{id == my{self.negative_overflow_id}}
+
+      last_account_alias = "accounts"
+      # well this spiraled out of control...
+      MAX_OVERFLOW_RECURSION_COUNT.times do |num|
+        # Each 'join check' also has to consider the fact
+        # that this is an unsaved record, so it checks for
+        # joined records based on the unsaved value for this account,
+        # or a regular join condition for other accounts.
+        tester = tester.joins(
+          """
+          INNER JOIN accounts a#{num}
+            ON (
+              (
+                #{last_account_alias}.id = #{self.id || 0}
+                AND a#{num}.id = #{negative_overflow_id || 0}
+              )
+              OR (
+                #{last_account_alias}.id != #{self.id || 0}
+                AND #{last_account_alias}.negative_overflow_id = a#{num}.id
+              )
+            )
+            AND (
+              (
+                #{last_account_alias}.id = #{self.id || 0}
+                AND #{negative_overflow_id || 0} != #{last_account_alias}.id
+              )
+              OR (
+                #{last_account_alias}.id != #{self.id || 0}
+                AND #{last_account_alias}.negative_overflow_id != #{last_account_alias}.id
+              )
+            )
+          """
+        )
+        last_account_alias = "a#{num}"
+      end
+    end
+    tester && tester.exists?
+  end
+
   private
 
   # before_save
@@ -102,53 +145,13 @@ class Account < ActiveRecord::Base
 
   # validate
   def cannot_exceed_max_overflow_recursion
-    if negative_overflow_id.present?
-      tester = Account.where{id == my{self.negative_overflow_id}}
-
-      last_account_alias = "accounts"
-      # well this spiraled out of control...
-      MAX_OVERFLOW_RECURSION_COUNT.times do |num|
-        # Each 'join check' also has to consider the fact
-        # that this is an unsaved record, so it checks for
-        # joined records based on the unsaved value for this account,
-        # or a regular join condition for other accounts.
-        tester = tester.joins(
-          """
-          INNER JOIN accounts a#{num}
-            ON (
-              (
-                #{last_account_alias}.id = #{self.id || 0}
-                AND a#{num}.id = #{negative_overflow_id || 0}
-              )
-              OR (
-                #{last_account_alias}.id != #{self.id || 0}
-                AND #{last_account_alias}.negative_overflow_id = a#{num}.id
-              )
-            )
-            AND (
-              /*#{last_account_alias}.negative_overflow_id IS NULL
-              OR */(
-                #{last_account_alias}.id = #{self.id || 0}
-                AND #{negative_overflow_id || 0} != #{last_account_alias}.id
-              )
-              OR (
-                #{last_account_alias}.id != #{self.id || 0}
-                AND #{last_account_alias}.negative_overflow_id != #{last_account_alias}.id
-              )
-            )
-          """
-        )
-        last_account_alias = "a#{num}"
-      end
-
-      if tester.exists?
-        basic_error = "Recursion Error"
-        advanced_error = "Cannot overflow into more than #{MAX_OVERFLOW_RECURSION_COUNT} additional nested accounts"
-        errors.add(:negative_overflow_id, basic_error)
-        errors.add(:negative_overflow_id_extended, advanced_error)
-        errors.add(:amount, basic_error)
-        errors.add(:amount_extended, advanced_error)
-      end
+    if negative_overflow_recursion_error?
+      basic_error = "Recursion Error"
+      advanced_error = "Cannot overflow into more than #{MAX_OVERFLOW_RECURSION_COUNT} additional nested accounts"
+      errors.add(:negative_overflow_id, basic_error)
+      errors.add(:negative_overflow_id_extended, advanced_error)
+      errors.add(:amount, basic_error)
+      errors.add(:amount_extended, advanced_error)
     end
   end
 end
