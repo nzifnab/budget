@@ -6,3 +6,4 @@
 #  load_paths << "#{Gem.loaded_specs['compass'].full_gem_path}/frameworks/blueprint/stylesheets"
 #end
 #
+require 'susy'

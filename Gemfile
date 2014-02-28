@@ -27,11 +27,15 @@ gem 'execjs'
 gem 'draper'
 
 group :assets do
+  gem 'compass', '~> 1.0.0.alpha.18'
   gem 'compass-rails'
   gem 'coffee-rails'
+  # sass is on a RC right now -- upgrade this soon.
   gem 'sass-rails'
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
+  # new syntax and stuff
+  gem 'susy', "~> 2.0.0.rc.1"
 end
 
 group :development, :test do

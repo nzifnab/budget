@@ -9,14 +9,14 @@
 
   label{
     padding: 3px 0px;
-    @include column(4);
+    @include span(4);
     text-align: right;
   }
 
   input[type=text], textarea{
-    @include column(5);
+    @include span(5);
     &.field-small{
-      @include column(2);
+      @include span(2);
     }
   }
 
@@ -43,15 +43,15 @@
 
 .fields-small{
   li{
-    @include column(6, true);
+    @include span(last 6);
   }
 
   label{
-    @include column(3);
+    @include span(3);
   }
 
   input[type=text], textarea{
-    @include column(2.8, true);
+    @include span(last 2.8);
   }
 
   .form-error{

@@ -1,29 +1,29 @@
 .container{
-  @include container;
+  @include container();
 }
 
 header, footer{
-  @include column($blueprint-grid-columns);
+  @include span(100%);
 }
 
 // CONTENT COLUMNS
 .content{
-  @include column(16);
+  @include span(16);
 }
 
 .accordion-content{
   @include box-sizing(border-box);
-  @include column(16, true);
-  @include prepend(1);
-  @include append(1);
+  @include span(last 16); // , true
+  @include pre(1);
+  @include post(1);
 
   // See notes in .accordion-header width definition.
-  width: span(16) + 2px;
+  //width: span(16) + 2px;
 }
 
 .accordion-header{
   @include box-sizing(border-box);
-  @include column(16, true);
+  @include span(last 16); // , true
 
   // Because of how jquery uses padding
   // to put an icon on the left side of
@@ -32,7 +32,7 @@ header, footer{
   // then we need to increase the width by 2px
   // for the borders so that inner columns can be sized
   // correctly.
-  width: span(16) + 2px;
+  //width: span(16) + 2px;
 }
 
 .cols{
@@ -40,14 +40,14 @@ header, footer{
 }
 
 .inner-left-col{
-  @include column(8);
+  @include span(8);
 }
 
 .inner-right-col{
-  @include column(6, true);
+  @include span(last 6); // , true
 }
 
 // SIDEBAR COLUMNS
 .sidebar{
-  @include column(8, true);
+  @include span(last 8); // , true
 }
