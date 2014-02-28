@@ -1,5 +1,5 @@
 //= require jquery
-//= require jquery-ui-1.10.3.custom.js
+//= require jquery-ui-1.10.3.js
 //= require jquery_ujs
 //= require turbolinks
 //= require ./budget
