@@ -36,6 +36,7 @@ group :assets do
   gem 'jquery-rails'
   # new syntax and stuff
   gem 'susy', "~> 2.0.0.rc.1"
+  gem 'breakpoint'
 end
 
 group :development, :test do

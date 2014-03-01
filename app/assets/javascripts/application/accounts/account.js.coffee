@@ -107,6 +107,7 @@ class Account
 
   @clear: ->
     budget.clearForm()
+    $(".form-error").remove()
     $form = $(".js-account-content .js-update-account")
     $accountHeader = $form.closest(".js-account-content").prev(".js-account")
     $accountHeader.each (index, element) =>

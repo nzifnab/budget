@@ -1,42 +1,3 @@
-//.accordion-header{
-//  background-color: #c9de96; // Old browsers
-//  @include filter-gradient(#c9de96, #147f0c, vertical); // IE6-9
-//  @include background-image(linear-gradient(top, #c9de96 0%,#75b548 0%,#438e25 40%,#147f0c 100%));
-//  padding: 7px 15px;
-//  font-weight: bold;
-//  color: #FFFFFF;
-//  border: 1px solid #000000;
-//  @include border-radius(4px);
-//}
-//
-
-// .accordion-header{
-//   background-color: $header-gradient-end;
-//   @include background-image(linear-gradient($header-gradient-start, $header-gradient-end));
-
-//   &.ui-state-active{
-//     background-color: $content-gradient-end;
-//     @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
-//     border-bottom-style: none;
-//   }
-
-//   &.ui-state-hover, &.ui-state-focus{
-//     &:not(.ui-state-active){
-//       background-color: $header-hover-gradient-end;
-//       @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
-//     }
-//   }
-
-//   h3{
-//     float: left;
-//   }
-// }
-
-// .accordion-content{
-//   background-color: $content-gradient-end;
-//   background-image: none;
-//   border-color: #333;
-// }
 
 .accordion-header{
   position: relative;
@@ -52,13 +13,6 @@
   &.ui-state-active{
     border-bottom-style: none;
   }
-
-  //&.ui-state-hover, &.ui-state-focus{
-  //  &:not(.ui-state-active){
-  //    background-color: $header-hover-gradient-end;
-  //    @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
-  //  }
-  //}
 
   h3{
     float: left;
@@ -80,13 +34,15 @@
   border-color: #333;
 }
 
+$old-size: $base-font-size;
+$base-font-size: 14px;
 .header-notice{
   position: absolute;
-  right: 200px;
+  right: em(200px);
   background-color: $accordion-notice-color;
-  padding: 4px 8px;
-  top: 2px;
-  border-radius: 3px;
+  padding: em(4px) em(8px);
+  top: em(2px);
+  border-radius: em(3px);
 }
 
 .box{
@@ -94,12 +50,8 @@
   border-width: 1px;
   border-style: solid;
   @include border-radius(4px);
-  padding: 2px 4px;
-  margin-bottom: 8px;
-}
-
-.box-container{
-  padding: 5px 20px;
+  padding: em(2px) em(4px);
+  margin-bottom: em(8px);
 }
 
 .box-tan{
@@ -146,29 +98,24 @@ dl.properties{
   @include clearfix;
 
   dt, dd{
-    float: left;
-    width: 138px;
-    margin-bottom: 7px;
-    display: block;
+    margin-bottom: em(7px);
   }
 
   dt{
+    @include span(4 of 8 3/4);
     position: relative;
-    margin-right: 12px;
-    @extend .box;
-    @extend .box-brown;
 
     &:after{
       content: "\00bb";
       display: block;
       position: absolute;
       top: 1px;
-      left: 150px;
+      left: 100% + gutter(4 3/16);
     }
   }
 
   dd{
-    @extend .box;
-    @extend .box-green;
+    @include span(last 4 of 8 3/4);
   }
 }
+$base-font-size: $old-size;

@@ -1,53 +1,112 @@
-.container{
-  @include container();
+//@include susy-breakpoint($bp-app-xxl, $app-xxl){
+
+//}
+@include with-layout($app-xxl){
+  .container{
+    @include container();
+  }
+  header, footer{
+    @include span(full);
+  }
+
+  .content{
+    @include span(16);
+  }
+
+  .sidebar{
+    @include span(last 8);
+  }
+
+  // inside .content
+  @include nested(16){
+    .accordion-content{
+      @include span(full);
+      @include pad(1);
+      font-size: em(14px);
+    }
+
+    .accordion-header{
+      @include span(full);
+      font-size: em(14px);
+    }
+
+    .inner-left-col{
+      @include span(8);
+    }
+
+    .inner-right-col{
+      @include span(last 6);
+    }
+
+  }
 }
 
-header, footer{
-  @include span(100%);
+@include susy-breakpoint($bp-app-xl, $app-xl){
+  .container{
+    @include container();
+  }
+
+  .accordion-content, .accordion-header{
+    font-size: em(12px);
+  }
 }
 
-// CONTENT COLUMNS
-.content{
-  @include span(16);
+@include susy-breakpoint($bp-app-large, $app-large){
+  .container{
+    @include container();
+  }
+
+  .btn{
+    font-size: em(12px, 12px);
+  }
 }
 
-.accordion-content{
-  @include box-sizing(border-box);
-  @include span(last 16); // , true
-  @include pre(1);
-  @include post(1);
 
-  // See notes in .accordion-header width definition.
-  //width: span(16) + 2px;
-}
 
-.accordion-header{
-  @include box-sizing(border-box);
-  @include span(last 16); // , true
-
-  // Because of how jquery uses padding
-  // to put an icon on the left side of
-  // the accordion, we have to use border-box
-  // to make it size correctly, *but*
-  // then we need to increase the width by 2px
-  // for the borders so that inner columns can be sized
-  // correctly.
-  //width: span(16) + 2px;
-}
-
-.cols{
-  overflow: hidden;
-}
-
-.inner-left-col{
-  @include span(8);
-}
-
-.inner-right-col{
-  @include span(last 6); // , true
-}
-
-// SIDEBAR COLUMNS
-.sidebar{
-  @include span(last 8); // , true
-}
+//
+//// CONTENT COLUMNS
+//.content{
+//  @include span(16);
+//}
+//
+//.accordion-content{
+//  @include box-sizing(border-box);
+//  @include span(last 16); // , true
+//  @include pre(1);
+//  @include post(1);
+//
+//  // See notes in .accordion-header width definition.
+//  //width: span(16) + 2px;
+//}
+//
+//.accordion-header{
+//  @include box-sizing(border-box);
+//  @include span(last 16); // , true
+//
+//  // Because of how jquery uses padding
+//  // to put an icon on the left side of
+//  // the accordion, we have to use border-box
+//  // to make it size correctly, *but*
+//  // then we need to increase the width by 2px
+//  // for the borders so that inner columns can be sized
+//  // correctly.
+//  //width: span(16) + 2px;
+//}
+//
+//.cols{
+//  overflow: hidden;
+//}
+//
+//.inner-left-col{
+//  @include span(8);
+//}
+//
+//.inner-right-col{
+//  @include span(last 6); // , true
+//}
+//
+//// SIDEBAR COLUMNS
+//.sidebar{
+//  @include span(last 8); // , true
+//}
+//

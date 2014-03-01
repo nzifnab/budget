@@ -13,10 +13,10 @@
           = simple_format account.description
 
       %dl.properties.break-small
-        %dt= account.negative_overflow_label
-        %dd= account.negative_overflow_name
-        %dt Created on
-        %dd= account.formatted_created_at
+        %dt.box.box-brown= account.negative_overflow_label
+        %dd.box.box-green= account.negative_overflow_name
+        %dt.box.box-brown Created on
+        %dd.box.box-green= account.formatted_created_at
 
       = link_to 'Edit', edit_account_path(account), class: 'btn btn-blue', data: {remote: true, remote_hide: ".js-account-content-#{account.id}", remote_content_append: ".js-account-content-#{account.id}"}
 

@@ -1,8 +1,4 @@
-@function pxtoem($pixels){
-  $diff: $pixels - $app-font-size;
-  $ratio: $diff / $app-font-size;
-  @return #{1 + $ratio}em;
-}
+
 
 body{
   font-size: $app-font-size;
@@ -23,7 +19,7 @@ p{
 
 h2{
   font-weight: bold;
-  font-size: pxtoem(14);
+  font-size: 1em;
   margin-bottom: 8px;
 }
 
