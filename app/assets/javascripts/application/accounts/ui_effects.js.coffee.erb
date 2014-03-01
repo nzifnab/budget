@@ -14,11 +14,13 @@ class Effects
     @initClickShow()
 
   @initClickRemove: ->
-    $(document).on 'click', "[data-click-remove]", ->
+    $(document).on 'click', "[data-click-remove]", (e) ->
+      e.preventDefault()
       $($(this).data('click-remove')).remove()
 
   @initClickShow: ->
-    $(document).on 'click', "[data-click-show]", ->
+    $(document).on 'click', "[data-click-show]", (e) ->
+      e.preventDefault()
       $($(this).data('click-show')).show()
 
   @initRemoteHide: ->

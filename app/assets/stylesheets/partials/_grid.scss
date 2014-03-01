@@ -1,6 +1,3 @@
-//@include susy-breakpoint($bp-app-xxl, $app-xxl){
-
-//}
 @include with-layout($app-xxl){
   .container{
     @include container();
@@ -31,11 +28,11 @@
     }
 
     .inner-left-col{
-      @include span(8);
+      @include span(9);
     }
 
     .inner-right-col{
-      @include span(last 6);
+      @include span(last 7);
     }
 
   }
@@ -57,56 +54,7 @@
   }
 
   .btn{
-    font-size: em(12px, 12px);
+    font-size: em(11px, 12px);
   }
 }
 
-
-
-//
-//// CONTENT COLUMNS
-//.content{
-//  @include span(16);
-//}
-//
-//.accordion-content{
-//  @include box-sizing(border-box);
-//  @include span(last 16); // , true
-//  @include pre(1);
-//  @include post(1);
-//
-//  // See notes in .accordion-header width definition.
-//  //width: span(16) + 2px;
-//}
-//
-//.accordion-header{
-//  @include box-sizing(border-box);
-//  @include span(last 16); // , true
-//
-//  // Because of how jquery uses padding
-//  // to put an icon on the left side of
-//  // the accordion, we have to use border-box
-//  // to make it size correctly, *but*
-//  // then we need to increase the width by 2px
-//  // for the borders so that inner columns can be sized
-//  // correctly.
-//  //width: span(16) + 2px;
-//}
-//
-//.cols{
-//  overflow: hidden;
-//}
-//
-//.inner-left-col{
-//  @include span(8);
-//}
-//
-//.inner-right-col{
-//  @include span(last 6); // , true
-//}
-//
-//// SIDEBAR COLUMNS
-//.sidebar{
-//  @include span(last 8); // , true
-//}
-//
