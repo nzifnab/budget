@@ -40,18 +40,14 @@
   }
 
   // inside .sidebar
-  @include nested(4){
-    .col-one-third-small{
+  @include nested(3){
+    .col-one-third{
       @include span(1);
 
       &:last-child{
         @include span(last 1);
         margin-right: 0;
       }
-    }
-
-    .col-one-third-large{
-      @include span(2);
     }
   }
 }
@@ -63,6 +59,10 @@
 }
 
 @include susy-breakpoint($bp-app-large, $app-large){
+  .container{
+    @include container();
+  }
+
   .btn{
     font-size: em(11px, 12px);
   }
@@ -71,6 +71,14 @@
 @include susy-breakpoint($bp-app-medium-large, $app-medium-large){
   .container{
     font-size: em(11px);
+  }
+
+  ul.tabs li{
+    min-width: 21%;
+  }
+
+  .bp-break-medium-large{
+    display: block;
   }
 }
 

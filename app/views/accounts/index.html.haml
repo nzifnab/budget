@@ -17,15 +17,15 @@
     %ul.boxed-list
       %li.box.box-brown
         .cols.clickable{"data-click-toggle" => ".js-history-details-3"}
-          .col-one-third-small.bad ($233.99)
-          .col-one-third-large.text-center
+          .col-one-third.bad ($233.99)
+          .col-one-third.text-center
             = link_to "Details", "#", class: 'text-small js-prevent-default'
-          .col-one-third-small.text-right
+          .col-one-third.text-right
             %div{title: "Jan 8, 2014 8:34 AM"} Jan 8, 2014
         .js-history-details-3.break{style: 'display: none;'}
           .break-small
           .break-small
-            From:
+            %span.bp-break-medium-large From:
             = link_to "#" do
               Quick Fund Withdrawal
               ($499.99)

@@ -23,6 +23,7 @@
   @include background-image(linear-gradient(top, $header-gradient-start, $header-gradient-end));
 
   &:hover{
+    color: $light-on-dark;
     @include background-image(linear-gradient(top, #407544, #004504));
   }
   &:active{
@@ -36,6 +37,7 @@
   @include background-image(linear-gradient(top, $action-gradient-start, $action-gradient-end));
 
   &:hover{
+    color: $light-blue-on-dark;
     @include background-image(linear-gradient(top, $action-hover-gradient-start, $action-hover-gradient-end));
   }
 
@@ -51,6 +53,7 @@
   @include background-image(linear-gradient(top, $danger-gradient-start, $danger-gradient-end));
 
   &:hover{
+    color: $light-orange-on-dark;
     @include background-image(linear-gradient(top, $danger-hover-gradient-start, $danger-hover-gradient-end));
   }
 
@@ -66,6 +69,7 @@
   @include background-image(linear-gradient(top, $error-gradient-start, $error-gradient-end));
 
   &:hover{
+    color: $light-on-dark;
     @include background-image(linear-gradient(top, $error-hover-gradient-start, $error-hover-gradient-end));
   }
 
