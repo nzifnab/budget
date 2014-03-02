@@ -23,7 +23,7 @@ class AccountDecorator < Draper::Decorator
 
   def negative_overflow_label
     if !negative_overflow_id || negative_overflow_id == model.id
-      "Negatives allowed?"
+      "Negatives?"
     else
       "Negative overflow"
     end

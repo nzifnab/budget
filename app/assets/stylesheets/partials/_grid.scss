@@ -8,15 +8,15 @@
   }
 
   .content{
-    @include span(16);
+    @include span(15);
   }
 
   .sidebar{
-    @include span(last 8);
+    @include span(last 9);
   }
 
   // inside .content
-  @include nested(16){
+  @include nested(15){
     .accordion-content{
       @include span(full);
       @include pad(1);
@@ -27,12 +27,17 @@
     }
 
     .inner-left-col{
-      @include span(9);
+      @include span(8);
     }
 
     .inner-right-col{
       @include span(last 7);
     }
+
+  }
+
+  // inside .sidebar
+  @include nested(9){
 
   }
 }

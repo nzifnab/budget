@@ -78,6 +78,10 @@ $base-font-size: 14px;
   @include background-image(linear-gradient(top, #fcfcfa, #fafbf4 40px, $description-background));
 }
 
+.box-grey{
+  background-color: $content-gradient-end;
+}
+
 .box-no-shadow{
   @include box-shadow(none);
 }
@@ -105,7 +109,7 @@ dl.properties{
     @include span(4 of 8 3/4);
     position: relative;
 
-    &:after{
+    &::after{
       content: "\00bb";
       display: block;
       position: absolute;
@@ -118,4 +122,81 @@ dl.properties{
     @include span(last 4 of 8 3/4);
   }
 }
+
+.sidebar{
+  padding: em(10px) em(15px);
+}
+
+ul.tabs{
+  width: 100%;
+  float: left;
+  li{
+    float: left;
+    text-align: center;
+    font-size: em(16px);
+
+    a{
+      display: block;
+      padding: em(5px) em(10px);
+      margin: em(5px) em(6px) 3px em(0px);
+      border: solid black 1px;
+      min-width: em(70px);
+      @include border-top-radius(em(8px));
+      @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
+    }
+
+    &.tab-active a{
+      border-bottom: none;
+      position: relative;
+
+      &::after{
+        position: absolute;
+        top: 100%;
+        left: -1px;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 5px;
+        background-color: $header-hover-gradient-end;
+        border-left: 1px black solid;
+        border-right: 1px black solid;
+        // Doesn't line up with the tab's border unless I
+        // break it out of the border-box model so that it's size
+        // no longer includes the 1px borders, making it those 2px larger that
+        // it needs.
+        box-sizing: content-box;
+      }
+    }
+
+    &:not(.tab-active) a:hover{
+      @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
+    }
+
+    &:first-child{
+      margin-left: em(8px);
+    }
+  }
+
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
+
+  &::after{
+    content: '';
+    display: block;
+    width: 100%;
+    height: em(15px);
+    border-top: black 1px solid;
+    float: left;
+    @include border-top-radius(em(8px));
+    @include background-image(linear-gradient($header-hover-gradient-end, $content-gradient-end));
+  }
+}
+
+ul.boxed-list{
+  width: 100%;
+  float: left;
+}
+
 $base-font-size: $old-size;

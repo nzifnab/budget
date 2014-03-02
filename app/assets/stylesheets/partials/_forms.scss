@@ -8,14 +8,14 @@ $base-font-size: 14px;
 
   label{
     padding: em(3px) em(0px);
-    @include span(6 of 16);
+    @include span(6 of 15);
     text-align: right;
   }
 
   input[type=text], textarea{
-    @include span(5 of 16);
+    @include span(5 of 15);
     &.field-small{
-      @include span(2 of 16);
+      @include span(2 of 15);
     }
   }
 
@@ -43,11 +43,11 @@ $base-font-size: 14px;
 
 .fields-small{
   label{
-    @include span(3 of 6);
+    @include span(3 of 7);
   }
 
   input[type=text], textarea{
-    @include span(last 3 of 6);
+    @include span(last 4 of 7);
     margin-right: 0px;
   }
 

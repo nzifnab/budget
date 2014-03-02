@@ -115,7 +115,7 @@ class Account < ActiveRecord::Base
       errors.add(:amount, "Insufficient Funds")
       errors.add(:amount_extended, "Funds unavailable in account '#{name}'")
       errors.add(:negative_overflow_id, "Insufficient Funds")
-      errors.add(:negative_overflow_id_extended, "Account '#{name}' has a negative balance already.")
+      errors.add(:negative_overflow_id_extended, "Account '#{name_was}' has a negative balance already.")
     end
   end
 

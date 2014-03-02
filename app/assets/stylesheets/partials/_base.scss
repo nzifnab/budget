@@ -7,7 +7,7 @@ $base-font-size: 16px;
 $app-font-family: 'Arimo', sans-serif;
 $app-font-size: 1em;
 
-$grid: show;
+$grid: hide;
 
 $breakpoint-to-ems: true;
 $app-xxl: 80% 24 1/4 $grid;
@@ -18,7 +18,7 @@ $app-xl: 80% 24 1/4 $grid;
 $bp-app-large: max-width 1177px;
 $app-large: 80% 24 1/4 $grid;
 
-$bp-app-medium-large: max-width 920px;
+$bp-app-medium-large: max-width 985px;
 $app-medium-large: 80% 24 1/4 $grid;
 
 $bp-app-medium: max-width 869px;
