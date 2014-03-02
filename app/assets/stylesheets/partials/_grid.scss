@@ -1,3 +1,6 @@
+.cols{
+  overflow: hidden;
+}
 @include with-layout($app-xxl){
   .container{
     @include container();
@@ -37,8 +40,19 @@
   }
 
   // inside .sidebar
-  @include nested(9){
+  @include nested(4){
+    .col-one-third-small{
+      @include span(1);
 
+      &:last-child{
+        @include span(last 1);
+        margin-right: 0;
+      }
+    }
+
+    .col-one-third-large{
+      @include span(2);
+    }
   }
 }
 

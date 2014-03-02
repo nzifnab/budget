@@ -1,4 +1,9 @@
-
+a{
+  color: darkgreen;
+  &:hover{
+    color: $green;
+  }
+}
 
 body{
   font-size: $app-font-size;
@@ -18,9 +23,11 @@ p{
 }
 
 h1{
+  width: 100%;
+  float: left;
   font-weight: bold;
   font-size: em(18px, 14px);
-  margin-bottom: em(8px, 14px);
+  margin-bottom: em(10px, 14px);
 }
 
 h4{
@@ -39,6 +46,8 @@ h4{
 
 .break-small{
   margin-bottom: 15px;
+  float: left;
+  width: 100%;
 }
 
 .text-right{
@@ -51,4 +60,21 @@ h4{
 
 .no-bullets{
   list-style-type: none;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-small{
+  font-size: em(10px, 14px);
+  line-height: em(14px, 10px);
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.break{
+  @include break;
 }

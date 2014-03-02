@@ -15,17 +15,20 @@
       %li= link_to "Income", "#"
 
     %ul.boxed-list
-      -# %li.box
-      %li
-        .col_one_third.bad ($233.99)
-        .col_one_third
-          .raise
+      %li.box.box-brown
+        .cols.clickable{"data-click-toggle" => ".js-history-details-3"}
+          .col-one-third-small.bad ($233.99)
+          .col-one-third-large.text-center
+            = link_to "Details", "#", class: 'text-small js-prevent-default'
+          .col-one-third-small.text-right
+            %div{title: "Jan 8, 2014 8:34 AM"} Jan 8, 2014
+        .js-history-details-3.break{style: 'display: none;'}
+          .break-small
+          .break-small
+            From:
             = link_to "#" do
               Quick Fund Withdrawal
-              .bad ($499.99)
-          .lower
-            = link_to "Details", "#"
-        .col_one_third
-          %div{title: "Jan 8, 2014 8:34 AM"} Jan 8, 2014
-        .box.box-tan
-          Withdrew some money to pay for car repairs and eat a Llama.
+              ($499.99)
+              &raquo;
+          .box.box-tan.box-no-shadow.break
+            Withdrew some money to pay for car repairs and eat a Llama.
