@@ -1,6 +1,7 @@
 @include with-layout($app-xxl){
   .container{
     @include container();
+    font-size: em(14px);
   }
   header, footer{
     @include span(full);
@@ -19,12 +20,10 @@
     .accordion-content{
       @include span(full);
       @include pad(1);
-      font-size: em(14px);
     }
 
     .accordion-header{
       @include span(full);
-      font-size: em(14px);
     }
 
     .inner-left-col{
@@ -40,21 +39,28 @@
 
 @include susy-breakpoint($bp-app-xl, $app-xl){
   .container{
-    @include container();
-  }
-
-  .accordion-content, .accordion-header{
     font-size: em(12px);
   }
 }
 
 @include susy-breakpoint($bp-app-large, $app-large){
-  .container{
-    @include container();
-  }
-
   .btn{
     font-size: em(11px, 12px);
   }
 }
 
+@include susy-breakpoint($bp-app-medium-large, $app-medium-large){
+  .container{
+    font-size: em(11px);
+  }
+}
+
+@include susy-breakpoint($bp-app-medium, $app-medium){
+  .container{
+    @include container();
+  }
+
+  .content{
+    @include span(full);
+  }
+}

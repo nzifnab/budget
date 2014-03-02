@@ -8,7 +8,7 @@ $base-font-size: 14px;
 
   label{
     padding: em(3px) em(0px);
-    @include span(4 of 16);
+    @include span(6 of 16);
     text-align: right;
   }
 

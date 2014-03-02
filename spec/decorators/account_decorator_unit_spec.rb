@@ -71,7 +71,7 @@ describe AccountDecorator do
     it "labels it with 'Negatives overflow into' when the id is something else" do
       account.stub(id: 25)
       account.negative_overflow_id = 24
-      decorator.negative_overflow_label.should == "Negatives overflow into"
+      decorator.negative_overflow_label.should == "Negative overflow"
     end
   end
 

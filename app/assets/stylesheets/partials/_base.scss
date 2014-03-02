@@ -10,13 +10,19 @@ $app-font-size: 1em;
 $grid: show;
 
 $breakpoint-to-ems: true;
-$app-xxl: em(1200px) 24 1/4 $grid;
+$app-xxl: 80% 24 1/4 $grid;
 
-$bp-app-xl: max-width 1280px;
-$app-xl: em(960px) 24 1/4 $grid;
+$bp-app-xl: max-width 1365px;
+$app-xl: 80% 24 1/4 $grid;
 
-$bp-app-large: max-width 1030px;
-$app-large: em(780px) 24 1/4 $grid;
+$bp-app-large: max-width 1177px;
+$app-large: 80% 24 1/4 $grid;
+
+$bp-app-medium-large: max-width 920px;
+$app-medium-large: 80% 24 1/4 $grid;
+
+$bp-app-medium: max-width 869px;
+$app-medium: 90% 16 1/4 $grid;
 
 @include border-box-sizing;
 @import "./colors";
