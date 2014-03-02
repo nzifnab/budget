@@ -59,13 +59,13 @@ describe AccountDecorator do
   describe "#negative_overflow_label" do
     it "labels it with 'Negatives allowed?' when the id is nil" do
       account.negative_overflow_id = nil
-      decorator.negative_overflow_label.should == "Negatives allowed?"
+      decorator.negative_overflow_label.should == "Negatives?"
     end
 
     it "labels it with 'Negatives allowed?' when the id is the account's own id" do
       account.stub(id: 24)
       account.negative_overflow_id = 24
-      decorator.negative_overflow_label.should == "Negatives allowed?"
+      decorator.negative_overflow_label.should == "Negatives?"
     end
 
     it "labels it with 'Negatives overflow into' when the id is something else" do

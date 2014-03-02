@@ -95,48 +95,50 @@ describe "Account Management", js: true do
       end
     end
 
-    #it "let's me deposit funds into an account" do
-    #  account.save
-    #  visit accounts_path
-    #  accordion = open_accordion("Food")
-    #  within(accordion[:content]) do
-    #    fill_in "Amount", with: "80"
-    #    fill_in "Description", with: "Regurgitation"
-    #    click_button "Deposit"
-    #  end
-#
-    #  accordion = open_accordion("Food")
-    #  within(accordion[:header]) do
-    #    page.should have_content("$280.00")
-    #    within(".header-notice") do
-    #      page.should have_content("$80.00")
-    #    end
-    #  end
-    #end
-#
-    #it "doesn't let me withdraw if negatives are disallowed" do
-    #  account.negative_overflow_id = nil
-    #  account.amount = 30
-    #  account.save
-    #  visit accounts_path
-    #  accordion = open_accordion("Food")
-    #  within(accordion[:content]) do
-    #    fill_in "Amount", with: "31"
-    #    fill_in "Description", with: "Too much food!"
-    #    click_button "Withdraw"
-    #  end
-#
-    #  accordion = open_accordion("Food")
-    #  within(accordion[:header]) do
-    #    page.should have_content("$30.00")
-    #    page.should_not have_css(".header-notice")
-    #  end
-#
-    #  within(accordion[:content]) do
-    #    within(".form-error") do
-    #      page.should have_content("Not enough funds")
-    #    end
-    #  end
-    #end
+    it "let's me deposit funds into an account" do
+      account.save
+      visit accounts_path
+      accordion = open_accordion("Food")
+      within(accordion[:content]) do
+        fill_in "Amount", with: "80"
+        fill_in "Description", with: "Regurgitation"
+        click_button "Deposit"
+      end
+
+      within(".header-notice"){page.should have_content("$80.00")}
+      accordion = open_accordion("Food")
+      within(accordion[:header]) do
+        page.should have_content("$280.00")
+        within(".header-notice") do
+          page.should have_content("$80.00")
+        end
+      end
+    end
+
+    it "doesn't let me withdraw if negatives are disallowed" do
+      account.negative_overflow_id = nil
+      account.amount = 30
+      account.save
+      visit accounts_path
+      accordion = open_accordion("Food")
+      within(accordion[:content]) do
+        fill_in "Amount", with: "31"
+        fill_in "Description", with: "Too much food!"
+        click_button "Withdraw"
+      end
+
+      page.should have_content("Insufficient Funds")
+      accordion = open_accordion("Food")
+      within(accordion[:header]) do
+        page.should have_content("$30.00")
+        page.should_not have_css(".header-notice")
+      end
+
+      within(accordion[:content]) do
+        within(".form-error") do
+          page.should have_content("Insufficient Funds")
+        end
+      end
+    end
   end
 end
