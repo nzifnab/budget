@@ -1,0 +1,12 @@
+- if account.present?
+  %h1
+    .float-left= account.name
+    .float-right{class: account.amount_class}= account.display_amount
+- if account_histories.present?
+  %ul.tabs
+    %li.tab-active= link_to "All", "#"
+    %li= link_to "Quick Funds", "#"
+    %li= link_to "Income", "#"
+
+  %ul.boxed-list
+    = render account_histories, locals: {account: account}

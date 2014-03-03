@@ -1,0 +1,21 @@
+class AccountHistory
+  @className: "AccountHistory"
+
+  @renderSidebar: (html) ->
+    $(".sidebar").show().html(html)
+
+  @fetchHistoryForAccount: (accountId) ->
+    $.get(
+      "<%= Rails.application.routes.url_helpers.account_histories_path(format: 'json') %>",
+      {account_id: accountId},
+      (data, textStatus, xhr) =>
+        @renderSidebar(data.html)
+    )
+
+  @events: =>
+    $(".js-account-accordion").on "accordionbeforeactivate", (e, ui) =>
+      #ui.newHeader, ui.oldHeader, ui.newPanel, ui.oldPanel
+      if ui.newHeader? && ui.newPanel?
+        @fetchHistoryForAccount(ui.newHeader.data("account-id"))
+
+budget.register AccountHistory

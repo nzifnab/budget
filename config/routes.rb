@@ -4,6 +4,8 @@ Budgeteer::Application.routes.draw do
   resources :accounts, only: [:index, :create, :edit, :update], shallow: true do
     resources :quick_funds, only: [:create]
   end
+
+  resources :account_histories, only: [:index]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

@@ -4,7 +4,7 @@ class Account < ActiveRecord::Base
     class_name: "Account",
     foreign_key: "negative_overflow_id"
   )
-  has_many :account_histories, inverse_of: :account
+  has_many :account_histories, -> {order{created_at.desc}}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
 
   validates :name, presence: {message: "Required"}

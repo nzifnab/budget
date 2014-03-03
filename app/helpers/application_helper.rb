@@ -3,6 +3,11 @@ module ApplicationHelper
     date.strftime("%b %d, %Y")
   end
 
+  def nice_datetime(datetime)
+    return if datetime.blank?
+    datetime.strftime("%b %d, %Y %r")
+  end
+
   def nice_currency(currency)
     number_to_currency(currency, negative_format: "(%u%n)")
   end
