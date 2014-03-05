@@ -5,48 +5,4 @@
 
       = render partial: 'accounts/account', collection: accounts
 
-  .sidebar.box
-    %h1
-      .float-left Savings Account
-      .float-right.good $795.83
-    %ul.tabs
-      %li.tab-active= link_to "All", "#"
-      %li= link_to "Quick Funds", "#"
-      %li= link_to "Income", "#"
-
-    %ul.boxed-list
-      %li.box.box-brown
-        .cols.clickable{"data-click-toggle" => ".js-history-details-3"}
-          .col-one-third.bad ($233.99)
-          .col-one-third.text-center
-            = link_to "Details", "#", class: 'text-small js-prevent-default'
-          .col-one-third.text-right
-            %div{title: "Jan 8, 2014 8:34 AM"} Jan 8, 2014
-        .js-history-details-3.break{style: 'display: none;'}
-          .break-small
-          .break-small
-            %span.bp-break-medium-large From:
-            = link_to "#" do
-              Quick Fund Withdrawal
-              ($499.99)
-              &raquo;
-          .box.box-tan.box-no-shadow.break
-            Withdrew some money to pay for car repairs and eat a Llama.
-
-      %li.box.box-brown
-        .cols.clickable{"data-click-toggle" => ".js-history-details-4"}
-          .col-one-third.good $438.29
-          .col-one-third.text-center
-            = link_to "Details", "#", class: 'text-small js-prevent-default'
-          .col-one-third.text-right
-            %div{title: "Jan 9, 2014 10:05 PM"} Jan 9, 2014
-        .js-history-details-4.break{style: 'display: none;'}
-          .break-small
-          .break-small
-            %span.bp-break-medium-large From:
-            = link_to "#" do
-              Income
-              $1,483.29
-              &raquo;
-          .box.box-tan.box-no-shadow.break
-            Paycheck monlies
+  .sidebar.box{style: 'display: none;'}

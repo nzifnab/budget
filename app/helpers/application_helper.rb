@@ -27,9 +27,10 @@ module ApplicationHelper
       previous_label: "&laquo;",
       next_label: "&raquo;",
       inner_window: 1,
-      outer_window: 2,
+      outer_window: 1,
       "data-remote" => true,
-      renderer: AjaxLinkRenderer
+      renderer: AjaxLinkRenderer,
+      "data-remote-content-fill" => ".sidebar"
     }
     will_paginate collection, options
   end

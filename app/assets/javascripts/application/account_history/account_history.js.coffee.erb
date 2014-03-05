@@ -6,10 +6,10 @@ class AccountHistory
 
   @fetchHistoryForAccount: (accountId) ->
     $.get(
-      "<%= Rails.application.routes.url_helpers.account_histories_path(format: 'json') %>",
+      "<%= Rails.application.routes.url_helpers.account_histories_path %>",
       {account_id: accountId},
       (data, textStatus, xhr) =>
-        @renderSidebar(data.html)
+        @renderSidebar(data)
     )
 
   @events: =>
