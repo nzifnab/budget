@@ -15,7 +15,7 @@ class AccountHistory
   @events: =>
     $(".js-account-accordion").on "accordionbeforeactivate", (e, ui) =>
       #ui.newHeader, ui.oldHeader, ui.newPanel, ui.oldPanel
-      if ui.newHeader? && ui.newPanel?
+      if ui.newHeader.length > 0 && ui.newPanel.length > 0
         @fetchHistoryForAccount(ui.newHeader.data("account-id"))
 
 budget.register AccountHistory

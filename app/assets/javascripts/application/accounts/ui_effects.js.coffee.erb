@@ -60,6 +60,7 @@ class Effects
       active: false
 
   @refreshAccordion: (accordionId=null) ->
+    $(".js-account-accordion").accordion("option", "active", false)
     $(".js-account-accordion").accordion('refresh')
     if accordionId?
       $(".js-account-accordion").accordion('option', 'active', accordionId)

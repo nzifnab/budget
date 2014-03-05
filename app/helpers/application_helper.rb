@@ -21,4 +21,16 @@ module ApplicationHelper
       'neutral'
     end
   end
+
+  def pagination(collection)
+    options = {
+      previous_label: "&laquo;",
+      next_label: "&raquo;",
+      inner_window: 1,
+      outer_window: 2,
+      "data-remote" => true,
+      renderer: AjaxLinkRenderer
+    }
+    will_paginate collection, options
+  end
 end

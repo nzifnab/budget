@@ -10,6 +10,7 @@ gem 'haml'
 gem 'uglifier'
 gem 'jbuilder'
 gem 'squeel'
+gem 'will_paginate'
 
 
 
