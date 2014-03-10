@@ -2,7 +2,7 @@ Budgeteer::Application.routes.draw do
   root 'accounts#index'
 
   resources :accounts, only: [:index, :create, :edit, :update], shallow: true do
-    resources :quick_funds, only: [:create]
+    resources :quick_funds, only: [:create, :show]
   end
 
   resources :account_histories, only: [:index]

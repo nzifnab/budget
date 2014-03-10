@@ -6,11 +6,17 @@ class QuickFundsController < ApplicationController
     @quick_fund = @account.quick_funds.build(fund_params(params))
 
     if @quick_fund.save
-      render action: 'show'
+      # action create
     else
       @account.reset_amount
       render action: 'new', status: :unprocessable_entity
     end
+  end
+
+  def show
+    @quick_fund = budget.quick_fund(params[:id])
+    @account = budget.account(params[:account_id])
+    render layout: !request.xhr?
   end
 
   protected

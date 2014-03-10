@@ -9,7 +9,7 @@
     .break-small
     .break-small
       %span.bp-break-medium-large From:
-      = link_to '#' do
+      = link_to account_history.parent_path, "data-remote" => true, data: {remote_replace_left: ".sidebar-container"} do
         = account_history.name_with_type_and_price
         &raquo;
     .break

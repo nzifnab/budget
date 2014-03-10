@@ -1,25 +1,32 @@
-.btn{
+@mixin btn-base{
   display: inline-block;
   outline: none;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   font-size: 1em;
-  padding: em(5px, 14px) em(16px, 14px) em(6px, 14px);
   font-weight: bold;
+  font-weight: bold;
+  position: relative;
   @include text-shadow(0 1px 1px rgba(0, 0, 0, .3));
-  @include border-radius(0.5em);
-  @include box-shadow(0 1px 2px rgba(0, 0, 0, .2));
 
   &:active{
-    position: relative;
     top: 1px;
   }
+}
+
+.btn{
+  @include btn-base;
+  @include box-shadow(0 1px 2px rgba(0, 0, 0, .2));
+  padding: em(5px, 14px) em(16px, 14px) em(6px, 14px);
+  @include border-radius(0.5em);
 }
 
 .btn-pad-less{
   padding: em(4px, 14px) em(9px, 14px) em(5px, 14px);
 }
+
+
 
 .btn-green{
   color: $light-on-dark;
@@ -32,6 +39,45 @@
   }
   &:active{
     @include background-image(linear-gradient(top, $header-gradient-end, $header-gradient-start));
+  }
+}
+
+// The crazy decimals are because of TRIANGLE MATHS
+$tri-size: 19.09188309px;
+.nav-back{
+  @include btn-base;
+  height: em(27px, 14px);
+  padding: em(5px, 14px) em(9px, 14px);
+  position: relative;
+  margin-left: em($tri-size/2, 14px);
+  @include border-right-radius(0.5em);
+  @extend .btn-green;
+  border-left: none;
+
+  &:before{
+    @include background-image(linear-gradient(top, $header-gradient-start, $header-gradient-end));
+    @include box-shadow(0 1px 2px rgba(0, 0, 0, .2));
+    @include transform(rotate(45deg));
+    @include border-bottom-left-radius(0.3em);
+    width: em($tri-size, 14px);
+    height: em($tri-size, 14px);
+    content: '';
+    position: absolute;
+    left: em(-10px, 14px);
+    top: em(3px, 14px);
+    z-index: -1;
+  }
+
+  &:hover{
+    &:before{
+      @include background-image(linear-gradient(top, #407544, #004504));
+    }
+  }
+
+  &:active{
+    &:before{
+      @include background-image(linear-gradient(top, $header-gradient-end, $header-gradient-start));
+    }
   }
 }
 

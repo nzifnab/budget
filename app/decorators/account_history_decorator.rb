@@ -25,4 +25,10 @@ class AccountHistoryDecorator < ApplicationDecorator
     # elsif income_id.present?
     end
   end
+
+  def parent_path
+    if quick_fund_id.present? && quick_fund.present?
+      h.quick_fund_path(quick_fund_id, account_id: self.account_id, format: :html)
+    end
+  end
 end

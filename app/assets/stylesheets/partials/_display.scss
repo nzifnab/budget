@@ -149,7 +149,7 @@ ul.tabs{
       border-bottom: none;
       position: relative;
 
-      &::after{
+      &:after{
         position: absolute;
         top: 100%;
         left: -1px;
@@ -182,7 +182,7 @@ ul.tabs{
     color: inherit;
   }
 
-  &::after{
+  &:after{
     content: '';
     display: block;
     width: 100%;

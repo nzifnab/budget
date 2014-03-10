@@ -10,6 +10,7 @@ class Effects
   @globalEvents: =>
     @initRemoteHide()
     @initRemoteContentAppend()
+    @initRemoteReplaceLeft()
     @initClickRemove()
     @initClickShow()
     @initClickToggle()
@@ -39,6 +40,32 @@ class Effects
   @initRemoteHide: ->
     $(document).on 'ajax:complete', "[data-remote-hide]", ->
       $($(this).data('remote-hide')).hide()
+
+  @initRemoteReplaceLeft: ->
+    $(document).on(
+      {
+        'ajax:success': (e, data, status, xhr) ->
+          Effects.remoteReplaceLeft($(this), data)
+        'ajax:error': (e, xhr, status, error) ->
+          Effects.remoteReplaceLeft($(this), xhr.responseText)
+      }, "[data-remote-replace-left]"
+    )
+
+  @remoteReplaceLeft: ($element, data) ->
+    window.theData = data
+    $el = $($element.data('remote-replace-left'))
+    $parent = $el.parent()
+    $newContents = $(data)
+    <% if Rails.env.test? %>
+    $el.remove()
+    $newContents.appendTo($parent).show()
+    <% else %>
+    $el.hide 'slide', {direction: 'left'}, ->
+      $(this).remove()
+    # TODO: figure out why this one's not animating.
+    $newContents.appendTo($parent).show('slide', {direction: 'right'})
+    <% end %>
+
 
   @initRemoteContentAppend: ->
     $(document).on(
