@@ -86,6 +86,13 @@
     @include container();
   }
 
+  ul.tabs li{
+    min-width: em(56px, 12px);
+  }
+  //ul.tabs li{
+  //  min-width: em()
+  //}
+
   .btn{
     font-size: em(11px, 12px);
   }
@@ -97,7 +104,11 @@
   }
 
   ul.tabs li{
-    min-width: 21%;
+    min-width: em(50px, 11px);
+
+    a{
+      padding: em(3px, 11px) em(6px, 11px);
+    }
   }
 
   .bp-break-medium-large{

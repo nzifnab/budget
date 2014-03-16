@@ -14,10 +14,6 @@
     border-bottom-style: none;
   }
 
-  h3{
-    float: left;
-  }
-
   &.account-disabled{
     background-image: none;
     background-color: $disabled-grey;
@@ -138,7 +134,7 @@ ul.tabs{
     float: left;
     text-align: center;
     font-size: em(16px);
-    min-width: 25%;
+    min-width: em(90px);
 
     a{
       display: block;

@@ -21,6 +21,10 @@ class AccountDecorator < ApplicationDecorator
     h.nice_date(model.created_at)
   end
 
+  def truncated_name
+    h.truncate(name, length: 16)
+  end
+
   def negative_overflow_label
     if !negative_overflow_id || negative_overflow_id == model.id
       "Negatives?"

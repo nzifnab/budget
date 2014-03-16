@@ -1,8 +1,8 @@
 .sidebar-container
   - if account.present?
     %h1
-      .float-left= account.name
       .float-right{class: account.amount_class}= account.display_amount
+      = account.name
   - if account_histories.present?
     %ul.tabs
       %li.tab-active= link_to "All", "#"
