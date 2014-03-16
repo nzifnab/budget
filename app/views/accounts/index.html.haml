@@ -1,8 +1,13 @@
 .container
+  %ul.tabs
+    %li.accounts-tab.tab-active= link_to 'Accounts', '#'
+    %li.sidebar-tab.mobile-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_add_element_class: ".sidebar", click_add_class_value: "mobile-visible"}}
+
   .content
     .js-account-accordion
       = render partial: 'accounts/new_account', locals: {account: @account}
 
       = render partial: 'accounts/account', collection: accounts
 
-  .sidebar.box.hide
+  .sidebar.hide
+    .sidebar-content.box

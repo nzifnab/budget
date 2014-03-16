@@ -4,7 +4,7 @@
     .col-one-third{class: account_history.amount_class}= account_history.display_amount
     .col-one-third.text-center
       - if display_basic
-        = link_to account_histories_path(account_id: account_history.account_id), "data-remote" => true, data: {remote_replace_left: ".sidebar-container"} do
+        = link_to account_histories_path(account_id: account_history.account_id, format: 'json'), "data-remote" => true, data: {remote_replace_left: ".sidebar-container"} do
           = account_history.account_name
           &raquo;
       - else

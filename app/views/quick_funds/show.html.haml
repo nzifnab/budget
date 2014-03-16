@@ -1,10 +1,10 @@
-.sidebar-container
+.sidebar-container[quick_fund]
   %h1
     .float-left= quick_fund.name_with_type
     .float-right{class: quick_fund.amount_class}= quick_fund.display_amount
 
   .break-small
-    = link_to account.name, account_histories_path(account_id: account.id), "data-remote" => true, data: {remote_replace_right: ".sidebar-container"}, class: "nav-back float-left"
+    = link_to account.name, account_histories_path(account_id: account.id, format: :json), "data-remote" => true, data: {remote_replace_right: ".sidebar-container"}, class: "nav-back float-left"
 
   - if quick_fund.description.present?
     .box.box-tan.box-no-shadow= quick_fund.description

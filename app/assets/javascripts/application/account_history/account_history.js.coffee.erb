@@ -1,15 +1,19 @@
 class AccountHistory
   @className: "AccountHistory"
 
-  @renderSidebar: (html) ->
-    $(".sidebar").removeClass("hide").html(html)
+  @renderSidebar: (html, sidebarLabel, tabTooltip) ->
+    $(".sidebar").removeClass("hide")
+    $(".sidebar-content").html(html)
+    $(".sidebar-tab").removeClass("mobile-hide")
+    $(".sidebar-tab a").text(sidebarLabel) if sidebarLabel?
+    $(".sidebar-tab a").attr("title", tabTooltip) if tabTooltip?
 
   @fetchHistoryForAccount: (accountId) ->
     $.get(
-      "<%= Rails.application.routes.url_helpers.account_histories_path %>",
+      "<%= Rails.application.routes.url_helpers.account_histories_path(format: 'json') %>",
       {account_id: accountId},
       (data, textStatus, xhr) =>
-        @renderSidebar(data)
+        @renderSidebar(data.html, data.accountNameShort, data.accountName)
     )
 
   @events: =>

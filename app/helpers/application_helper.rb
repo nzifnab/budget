@@ -30,7 +30,7 @@ module ApplicationHelper
       outer_window: 1,
       "data-remote" => true,
       renderer: AjaxLinkRenderer,
-      "data-remote-content-fill" => ".sidebar"
+      "data-remote-content-fill" => ".sidebar-content"
     }
     will_paginate collection, options
   end

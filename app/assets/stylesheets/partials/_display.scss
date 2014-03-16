@@ -125,13 +125,15 @@ dl.properties{
   }
 }
 
-.sidebar{
+.sidebar-content{
   padding: em(10px) em(15px);
+  overflow: hidden;
 }
 
 ul.tabs{
   width: 100%;
   float: left;
+  margin-bottom: em(9px);
   li{
     float: left;
     text-align: center;
@@ -204,7 +206,15 @@ ul.boxed-list{
   li{
     margin-top: em(8px);
     padding: em(6px) em(8px);
+
+    &:first-child{
+      margin-top: 0;
+    }
   }
+}
+
+.sidebar-tab{
+  display: none;
 }
 
 $base-font-size: $old-size;

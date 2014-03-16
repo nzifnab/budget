@@ -13,7 +13,10 @@ class Effects
     @initRemoteReplace()
     @initClickRemove()
     @initClickShow()
+    @initClickHide()
     @initClickToggle()
+    @initClickModifyClasses()
+    @initTabTogglers()
     @initPreventDefault()
     @initRemoteContentFill()
     @styleDisableWithLinks()
@@ -37,6 +40,22 @@ class Effects
       e.preventDefault()
       $($(this).data('click-show')).show()
 
+  @initClickHide: ->
+    $(document).on 'click', "[data-click-hide]", (e) ->
+      e.preventDefault()
+      $($(this).data('click-hide')).hide()
+
+  @initClickModifyClasses: ->
+    $(document).on 'click', "[data-click-remove-element-class]", (e) ->
+      e.preventDefault()
+      $($(this).data('click-remove-element-class')).
+        removeClass($(this).data("click-remove-class-value"))
+
+    $(document).on 'click', "[data-click-add-element-class]", (e) ->
+      e.preventDefault()
+      $($(this).data('click-add-element-class')).
+        addClass($(this).data('click-add-class-value'))
+
   @initRemoteHide: ->
     $(document).on 'ajax:complete', "[data-remote-hide]", ->
       $($(this).data('remote-hide')).hide()
@@ -45,7 +64,7 @@ class Effects
     $(document).on(
       {
         'ajax:success': (e, data, status, xhr) ->
-          Effects.remoteReplaceSlide($(this), data, 'left')
+          Effects.remoteReplaceSlide($(this), data.html ? data, 'left')
         'ajax:error': (e, xhr, status, error) ->
           Effects.remoteReplaceSlide($(this), xhr.responseText, 'left')
       }, "[data-remote-replace-left]"
@@ -54,7 +73,7 @@ class Effects
     $(document).on(
       {
         'ajax:success': (e, data, status, xhr) ->
-          Effects.remoteReplaceSlide($(this), data, 'right')
+          Effects.remoteReplaceSlide($(this), data.html ? data, 'right')
         'ajax:error': (e, xhr, status, error) ->
           Effects.remoteReplaceSlide($(this), xhr.responseText, 'right')
       }, "[data-remote-replace-right]"
@@ -66,7 +85,7 @@ class Effects
     $newContents = $(data)
     <% if Rails.env.test? %>
     $el.remove()
-    $newContents.appendTo($parent)
+    $newContents.appendTo($container)
     <% else %>
     $slideContainer = $("<div></div>").addClass("slide-container").
       appendTo($container)
@@ -94,22 +113,6 @@ class Effects
         $slideContainer.remove()
     }
     <% end %>
-  #@remoteReplaceSlide: ($element, data, direction) ->
-  #  $el = $($element.data("remote-replace-#{direction}"))
-  #  $parent = $el.parent()
-  #  $newContents = $(data).hide()
-  #  <% if Rails.env.test? %>
-  #  $el.remove()
-  #  $newContents.appendTo($parent).show()
-  #  <% else %>
-  #  $el.hide 'slide', {direction: direction}, ->
-  #    $(this).remove()
-  #    # Bleh, since the animation wasn't working we'll just pop it in at the end.
-  #    $newContents.appendTo($parent).show()
-  #  # TODO: figure out why this one's not animating propertly :(
-  #  #$newContents.appendTo($parent).show('slide', {direction: if direction == 'left' then 'right' else 'left'})
-  #  <% end %>
-
 
   @initRemoteContentAppend: ->
     $(document).on(
@@ -125,7 +128,7 @@ class Effects
     $(document).on(
       {
         "ajax:success": (e, data, status, xhr) ->
-          Effects.remoteContentFill(this, data)
+          Effects.remoteContentFill(this, data.html)
         "ajax:error": (e, xhr, status, error) ->
           Effects.remoteContentFill(this, xhr.responseText)
       }, "[data-remote-content-fill]"
@@ -157,5 +160,20 @@ class Effects
     $(".js-account-accordion").accordion('refresh')
     if accordionId?
       $(".js-account-accordion").accordion('option', 'active', accordionId)
+
+  @initTabTogglers: ->
+    $(document).on 'click', ".accounts-tab", (e) ->
+      e.preventDefault()
+      $(".js-account-accordion").show()
+      $(".sidebar").removeClass("mobile-visible")
+      $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
+      $(this).addClass("tab-active")
+
+    $(document).on 'click', ".sidebar-tab", (e) ->
+      e.preventDefault()
+      $(".js-account-accordion").hide()
+      $(".sidebar").addClass("mobile-visible")
+      $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
+      $(this).addClass("tab-active")
 
 budget.register Effects

@@ -12,11 +12,13 @@
 
   .content{
     @include span(15);
+    padding-left: 2.5%;
   }
 
   .sidebar{
     @include span(last 9);
     overflow: hidden;
+    padding-right: 2.5%;
   }
 
   .sidebar-container{
@@ -103,6 +105,8 @@
   }
 }
 
+
+// super-mobile view begins here (drops sidebar, makes it a nav tab)
 @include susy-breakpoint($bp-app-medium, $app-medium){
   .container{
     @include container();
@@ -111,15 +115,29 @@
 
   .content{
     @include span(full);
+    padding-right: 2.5%;
   }
 
   .sidebar{
     @include span(full);
+    padding-left: 2.5%;
     display: none;
+  }
+
+  .sidebar-tab{
+    display: block;
   }
 
   .bp-break-medium-large{
     display: inline;
+  }
+
+  .mobile-visible{
+    display: block;
+  }
+
+  .mobile-hide{
+    display: none;
   }
 }
 

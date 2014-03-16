@@ -79,6 +79,6 @@ h4{
   @include break;
 }
 
-.hide{
+.hide, .mobile-hide{
   display: none;
 }

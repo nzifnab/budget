@@ -28,7 +28,7 @@ class AccountHistoryDecorator < ApplicationDecorator
 
   def parent_path
     if quick_fund_id.present? && quick_fund.present?
-      h.quick_fund_path(quick_fund_id, account_id: self.account_id, format: :html)
+      h.quick_fund_path(quick_fund_id, account_id: self.account_id, format: :json)
     end
   end
 
