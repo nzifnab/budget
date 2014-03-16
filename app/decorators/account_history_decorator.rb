@@ -31,4 +31,8 @@ class AccountHistoryDecorator < ApplicationDecorator
       h.quick_fund_path(quick_fund_id, account_id: self.account_id, format: :html)
     end
   end
+
+  def account_name
+    account.name
+  end
 end

@@ -22,7 +22,10 @@ $bp-app-medium-large: max-width 985px;
 $app-medium-large: 85% 24 1/4 $grid;
 
 $bp-app-medium: max-width 869px;
-$app-medium: 90% 16 1/4 $grid;
+$app-medium: 100% 16 1/4 $grid;
+
+$bp-app-small: max-width 535px;
+$app-small: 100% 16 1/4 $grid;
 
 @include border-box-sizing;
 @import "./colors";

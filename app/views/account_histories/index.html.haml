@@ -10,6 +10,7 @@
       %li= link_to "Income", "#"
 
     %ul.boxed-list
-      = render account_histories, locals: {account: account}
+      = render account_histories
 
     = pagination(account_histories)
+  .break

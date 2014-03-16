@@ -16,6 +16,23 @@
 
   .sidebar{
     @include span(last 9);
+    overflow: hidden;
+  }
+
+  .sidebar-container{
+    @include span(full);
+  }
+
+  .slide-container{
+    width: 210%;
+
+    .sidebar-container{
+      width: 47.5%;
+
+      &:first-child{
+        margin-right: 5%;
+      }
+    }
   }
 
   // inside .content
@@ -43,10 +60,14 @@
   @include nested(3){
     .col-one-third{
       @include span(1);
+      margin-right: 0;
+
+      &:first-child{
+        margin-right: gutter(3);
+      }
 
       &:last-child{
-        @include span(last 1);
-        margin-right: 0;
+        @include span(last 1.1);
       }
     }
   }
@@ -85,9 +106,26 @@
 @include susy-breakpoint($bp-app-medium, $app-medium){
   .container{
     @include container();
+    font-size: em(12px);
   }
 
   .content{
     @include span(full);
+  }
+
+  .sidebar{
+    @include span(full);
+    display: none;
+  }
+
+  .bp-break-medium-large{
+    display: inline;
+  }
+}
+
+@include susy-breakpoint($bp-app-small, $app-small){
+  .container{
+    font-size: em(11px);
+    min-width: em(400px, 11px);
   }
 }

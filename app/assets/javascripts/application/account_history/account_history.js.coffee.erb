@@ -2,7 +2,7 @@ class AccountHistory
   @className: "AccountHistory"
 
   @renderSidebar: (html) ->
-    $(".sidebar").show().html(html)
+    $(".sidebar").removeClass("hide").html(html)
 
   @fetchHistoryForAccount: (accountId) ->
     $.get(

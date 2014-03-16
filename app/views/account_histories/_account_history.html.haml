@@ -1,8 +1,14 @@
+- display_basic ||= false
 %li.box.box-brown[account_history]
-  .cols.clickable{"data-click-toggle" => ".js-history-details-#{account_history.id}"}
+  .cols{display_basic ? {} : {"data-click-toggle" => ".js-history-details-#{account_history.id}", class: "clickable"}}
     .col-one-third{class: account_history.amount_class}= account_history.display_amount
     .col-one-third.text-center
-      = link_to "Details", "#", class: 'text-small js-prevent-default'
+      - if display_basic
+        = link_to account_histories_path(account_id: account_history.account_id), "data-remote" => true, data: {remote_replace_left: ".sidebar-container"} do
+          = account_history.account_name
+          &raquo;
+      - else
+        = link_to "Details", "#", class: 'text-small js-prevent-default'
     .col-one-third.text-right{title: account_history.tooltip_date}= account_history.display_date
 
   .break{class: "js-history-details-#{account_history.id}", style: 'display: none;'}
@@ -12,6 +18,5 @@
       = link_to account_history.parent_path, "data-remote" => true, data: {remote_replace_left: ".sidebar-container"} do
         = account_history.name_with_type_and_price
         &raquo;
-    .break
-      - if account_history.description.present?
-        .box.box-tan.box-no-shadow= account_history.description
+    - if account_history.description.present?
+      .box.box-tan.box-no-shadow= account_history.description

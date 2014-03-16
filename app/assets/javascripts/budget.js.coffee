@@ -50,3 +50,39 @@ class Budget
     window.location = url
 
 window.budget = new Budget()
+
+
+
+
+
+$(document).on "click", ".js-prevent-default", (e) ->
+  e.preventDefault()
+
+$(document).on "click", "[data-click-slide]", (e) ->
+  $newContents = $($(this).data("click-slide"))
+  console.log $newContents
+  $el = $(this).parents(".sidebar-container")
+  $parent = $el.parent()
+  console.log $el
+  $el.hide 'slide', {direction: 'left'}
+  console.log $el.parent()
+  $newContents.appendTo($parent).show('slide', {direction: 'right'})
+
+
+
+
+
+
+
+$(document).on "click", ".js-prevent-default", (e) ->
+  e.preventDefault()
+
+$(document).on "click", "[data-click-slide]", (e) ->
+  $newContents = $($(this).data("click-slide"))
+  console.log $newContents
+  $el = $(this).parents(".sidebar-container")
+  $parent = $el.parent()
+  console.log $el
+  $el.hide 'slide', {direction: 'left'}
+  console.log $el.parent()
+  $newContents.appendTo($parent).show('slide', {direction: 'right'})

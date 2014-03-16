@@ -78,3 +78,7 @@ h4{
 .break{
   @include break;
 }
+
+.hide{
+  display: none;
+}

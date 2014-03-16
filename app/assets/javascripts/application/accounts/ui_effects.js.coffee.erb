@@ -10,7 +10,7 @@ class Effects
   @globalEvents: =>
     @initRemoteHide()
     @initRemoteContentAppend()
-    @initRemoteReplaceLeft()
+    @initRemoteReplace()
     @initClickRemove()
     @initClickShow()
     @initClickToggle()
@@ -41,30 +41,74 @@ class Effects
     $(document).on 'ajax:complete', "[data-remote-hide]", ->
       $($(this).data('remote-hide')).hide()
 
-  @initRemoteReplaceLeft: ->
+  @initRemoteReplace: ->
     $(document).on(
       {
         'ajax:success': (e, data, status, xhr) ->
-          Effects.remoteReplaceLeft($(this), data)
+          Effects.remoteReplaceSlide($(this), data, 'left')
         'ajax:error': (e, xhr, status, error) ->
-          Effects.remoteReplaceLeft($(this), xhr.responseText)
+          Effects.remoteReplaceSlide($(this), xhr.responseText, 'left')
       }, "[data-remote-replace-left]"
     )
 
-  @remoteReplaceLeft: ($element, data) ->
-    window.theData = data
-    $el = $($element.data('remote-replace-left'))
-    $parent = $el.parent()
+    $(document).on(
+      {
+        'ajax:success': (e, data, status, xhr) ->
+          Effects.remoteReplaceSlide($(this), data, 'right')
+        'ajax:error': (e, xhr, status, error) ->
+          Effects.remoteReplaceSlide($(this), xhr.responseText, 'right')
+      }, "[data-remote-replace-right]"
+    )
+
+  @remoteReplaceSlide: ($element, data, direction) ->
+    $el = $($element.data("remote-replace-#{direction}"))
+    $container = $el.parent()
     $newContents = $(data)
     <% if Rails.env.test? %>
     $el.remove()
-    $newContents.appendTo($parent).show()
+    $newContents.appendTo($parent)
     <% else %>
-    $el.hide 'slide', {direction: 'left'}, ->
-      $(this).remove()
-    # TODO: figure out why this one's not animating.
-    $newContents.appendTo($parent).show('slide', {direction: 'right'})
+    $slideContainer = $("<div></div>").addClass("slide-container").
+      appendTo($container)
+
+    distanceMult = 0.525;
+    if direction == 'right'
+      $slideContainer.css({
+        "position": "relative",
+        "left": "-110%"
+      })
+    $breaker = $("<div class='break'></div>")
+    elementsOrdered = if direction == 'left'
+      [$el, $newContents, $breaker]
+    else
+      [$newContents, $el, $breaker]
+
+    $slideContainer.append(elementsOrdered...)
+    $slideContainer.hide {
+      effect: 'slide',
+      direction: direction,
+      distance: ($slideContainer.outerWidth() * distanceMult),
+      complete: ->
+        $el.remove()
+        $container.append($newContents)
+        $slideContainer.remove()
+    }
     <% end %>
+  #@remoteReplaceSlide: ($element, data, direction) ->
+  #  $el = $($element.data("remote-replace-#{direction}"))
+  #  $parent = $el.parent()
+  #  $newContents = $(data).hide()
+  #  <% if Rails.env.test? %>
+  #  $el.remove()
+  #  $newContents.appendTo($parent).show()
+  #  <% else %>
+  #  $el.hide 'slide', {direction: direction}, ->
+  #    $(this).remove()
+  #    # Bleh, since the animation wasn't working we'll just pop it in at the end.
+  #    $newContents.appendTo($parent).show()
+  #  # TODO: figure out why this one's not animating propertly :(
+  #  #$newContents.appendTo($parent).show('slide', {direction: if direction == 'left' then 'right' else 'left'})
+  #  <% end %>
 
 
   @initRemoteContentAppend: ->

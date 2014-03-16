@@ -52,6 +52,8 @@ $base-font-size: 14px;
   @include border-radius(4px);
   padding: em(2px) em(4px);
   margin-bottom: em(8px);
+  float: left;
+  width: 100%;
 }
 
 .box-tan{
