@@ -12,4 +12,4 @@
   = f.check_box :enabled
 %li
   = f.label :negative_overflow_id, "Negative overflows into"
-  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :name, include_blank: ">> Disallow Negatives"
+  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: ">> Disallow Negatives"

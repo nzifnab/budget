@@ -4,7 +4,9 @@
     = quick_fund.name_with_type
 
   .break-small
-    = link_to account.truncated_name, account_histories_path(account_id: account.id, format: :json), "data-remote" => true, data: {remote_replace_right: ".sidebar-container"}, class: "nav-back float-left", title: account.name
+    = link_to account_histories_path(account_id: account.id, format: :json), "data-remote" => true, data: {remote_replace_right: ".sidebar-container"}, class: "btn btn-green float-left", title: account.name do
+      \&laquo;
+      = account.truncated_name
 
   - if quick_fund.description.present?
     .box.box-tan.box-no-shadow= quick_fund.description

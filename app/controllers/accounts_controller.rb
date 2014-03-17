@@ -50,8 +50,8 @@ class AccountsController < ApplicationController
 
   def negative_overflow_options(self_id)
     @negative_overflow_options ||= [
-      OpenStruct.new(id: self_id || 0, name: ">> Allow Negatives"),
-      *budget.negative_overflowable_accounts(self_id)
+      OpenStruct.new(id: self_id || 0, truncated_name: ">> Allow Negatives"),
+      *budget.negative_overflowable_accounts(self_id).decorate
     ]
   end
 end

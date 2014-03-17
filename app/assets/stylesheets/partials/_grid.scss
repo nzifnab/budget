@@ -79,6 +79,12 @@
   .container{
     font-size: em(12px);
   }
+
+  .fields{
+    input[type=text], textarea{
+      @include span(6 of 15);
+    }
+  }
 }
 
 @include susy-breakpoint($bp-app-large, $app-large){
@@ -89,12 +95,11 @@
   ul.tabs li{
     min-width: em(56px, 12px);
   }
-  //ul.tabs li{
-  //  min-width: em()
-  //}
 
-  .btn{
-    font-size: em(11px, 12px);
+  .fields {
+    input[type=text], textarea{
+      @include span(7 of 15);
+    }
   }
 }
 
@@ -113,6 +118,12 @@
 
   .bp-break-medium-large{
     display: block;
+  }
+
+  .fields{
+    input[type=text], textarea{
+      @include span(8 of 15);
+    }
   }
 }
 
@@ -150,11 +161,67 @@
   .mobile-hide{
     display: none;
   }
+
+  .fields{
+    input[type=text], textarea{
+      @include span(9 of 15);
+    }
+
+    .form-error{
+      float: right;
+      @include post(1 of 15);
+      margin-bottom: em(5px);
+    }
+
+    .field-small + .form-error{
+      clear: none;
+      float: left;
+      margin-bottom: 0;
+      margin-right: 0;
+    }
+  }
+
+  .fields-small{
+    label{
+      @include pre(2 of 7);
+      @include span(last 5 of 7);
+      text-align: left;
+    }
+
+    input[type=text], textarea{
+      @include pre(2 of 7);
+      @include span(last 5 of 7);
+    }
+  }
+
+  .btn{
+    font-size: em(11px, 12px);
+    padding-left: em(11px, 12px);
+    padding-right: em(11px, 12px);
+  }
 }
 
 @include susy-breakpoint($bp-app-small, $app-small){
   .container{
     font-size: em(11px);
-    min-width: em(400px, 11px);
+    min-width: em(300px, 11px);
+  }
+
+  .fields-small{
+    label{
+      @include pre(1 of 7);
+      @include span(last 6 of 7);
+    }
+
+    input[type=text], textarea{
+      @include pre(1 of 7);
+      @include span(last 6 of 7);
+    }
+  }
+
+  .btn{
+    font-size: em(9px, 11px);
+    padding-left: em(8px, 11px);
+    padding-right: em(8px, 11px);
   }
 }

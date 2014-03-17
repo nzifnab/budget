@@ -8,7 +8,7 @@ $base-font-size: 14px;
 
   label{
     padding: em(3px) em(0px);
-    @include span(6 of 15);
+    @include span(5 of 15);
     text-align: right;
   }
 
@@ -21,6 +21,10 @@ $base-font-size: 14px;
 
   input[type=checkbox], input[type=radio], select{
     float: left;
+  }
+
+  select{
+    font-size: 1em;
   }
 
   textarea{
@@ -58,72 +62,3 @@ $base-font-size: 14px;
   }
 }
 $base-font-size: $old-size;
-
-
-//.fields{
-//  @include clearfix;
-//
-//  li{
-//    @include clearfix;
-//    width: 100%;
-//    margin-bottom: 5px;
-//  }
-//
-//  label{
-//    padding: 3px 0px;
-//    @include span(4);
-//    text-align: right;
-//  }
-//
-//  input[type=text], textarea{
-//    @include span(5);
-//    &.field-small{
-//      @include span(2);
-//    }
-//  }
-//
-//  input[type=checkbox], input[type=radio], select{
-//    float: left
-//  }
-//
-//  textarea{
-//    height: 60px;
-//  }
-//
-//  .form-error{
-//    background-color: #ffab9e; // Old browsers
-//    @include background-image(linear-gradient(top, #ffab9e 0%,#f23c00 44%,#ce0000 100%));
-//    padding: 3px 6px;
-//    color: white;
-//    font-weight: bold;
-//    font-size: pxtoem(13);
-//    @include border-radius(4px);
-//    float: left;
-//    cursor: default;
-//  }
-//}
-//
-//.fields-small{
-//  li{
-//    @include span(last 6);
-//  }
-//
-//  label{
-//    @include span(3);
-//  }
-//
-//  input[type=text], textarea{
-//    @include span(last 2.8);
-//  }
-//
-//  .form-error{
-//    clear: left;
-//    float: right;
-//    margin-bottom: 5px;
-//  }
-//}
-//
-//.fields{
-//  list-style-type: none;
-//}
-//

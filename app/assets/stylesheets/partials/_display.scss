@@ -33,12 +33,12 @@
 $old-size: $base-font-size;
 $base-font-size: 14px;
 .header-notice{
-  position: absolute;
-  right: em(200px);
   background-color: $accordion-notice-color;
   padding: em(4px) em(8px);
-  top: em(2px);
+  margin-right: em(15px);
+  margin-top: em(-4px);
   border-radius: em(3px);
+  float: left;
 }
 
 .box{

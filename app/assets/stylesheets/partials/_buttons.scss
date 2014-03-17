@@ -42,19 +42,6 @@
   }
 }
 
-.nav-back{
-  @extend .btn;
-  @extend .btn-green;
-  padding: em(5px, 14px) em(9px, 14px) em(5px, 14px) em(17px, 14px);
-  position: relative;
-
-  &:before{
-    content: "\00ab";
-    position: absolute;
-    left: em(5px, 14px);
-  }
-}
-
 .btn-blue{
   color: $light-blue-on-dark;
   border: solid 1px #0076a3;
