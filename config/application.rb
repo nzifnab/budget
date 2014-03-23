@@ -11,7 +11,7 @@ if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
   Bundler.require(*Rails.groups(:assets => %w(development test)))
   # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)   
+  # Bundler.require(:default, :assets, Rails.env)
 end
 
 module Budgeteer
@@ -27,6 +27,7 @@ module Budgeteer
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    config.i18n.enforce_available_locales = true
 
     config.action_view.field_error_proc = Proc.new {|html_tag, instance|
       "#{html_tag}".html_safe

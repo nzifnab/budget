@@ -2,7 +2,7 @@ source "https://rubygems.org"
 ruby '2.0.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.3'
 gem 'pg'
 
 gem 'haml-rails'
@@ -21,22 +21,23 @@ gem 'will_paginate'
 gem 'turbolinks'
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.1.2'
+gem 'bcrypt-ruby'
+gem 'bcrypt', '~> 3.1.7'
 
 gem 'therubyracer'
 gem 'execjs'
 gem 'draper'
 
 group :assets do
-  gem 'compass', '~> 1.0.0.alpha.18'
+  gem 'compass'
+  gem 'sprockets', '2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
+  # https://github.com/Compass/compass-rails/issues/144
   gem 'compass-rails'
   gem 'coffee-rails'
-  # sass is on a RC right now -- upgrade this soon.
   gem 'sass-rails'
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
-  # new syntax and stuff
-  gem 'susy', "~> 2.0.0.rc.1"
+  gem 'susy'
   gem 'breakpoint'
 end
 

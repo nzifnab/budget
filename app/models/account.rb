@@ -6,6 +6,7 @@ class Account < ActiveRecord::Base
   )
   has_many :account_histories, -> {order{created_at.desc}}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
+  belongs_to :user, inverse_of: :accounts
 
   validates :name, presence: {message: "Required"}
   validates :priority, inclusion: {in: 1..10, message: "1 to 10"}

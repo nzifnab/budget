@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140224023334) do
+ActiveRecord::Schema.define(version: 20140317033438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "account_histories", force: true do |t|
-    t.decimal  "amount",           precision: 8, scale: 2
+    t.decimal  "amount",           precision: 10, scale: 2
     t.text     "description"
     t.integer  "overflow_from_id"
     t.integer  "account_id"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20140224023334) do
     t.text     "description"
     t.integer  "priority"
     t.boolean  "enabled"
-    t.decimal  "amount",               precision: 8, scale: 2
+    t.decimal  "amount",               precision: 10, scale: 2
     t.integer  "negative_overflow_id"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20140224023334) do
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
 
   create_table "quick_funds", force: true do |t|
-    t.decimal  "amount",      precision: 8, scale: 2
+    t.decimal  "amount",      precision: 10, scale: 2
     t.integer  "account_id"
     t.text     "description"
     t.string   "fund_type"
@@ -57,5 +57,15 @@ ActiveRecord::Schema.define(version: 20140224023334) do
   end
 
   add_index "quick_funds", ["account_id"], name: "index_quick_funds_on_account_id", using: :btree
+
+  create_table "users", force: true do |t|
+    t.text     "first_name"
+    t.text     "last_name"
+    t.text     "email"
+    t.string   "password_digest"
+    t.decimal  "undistributed_funds", precision: 10, scale: 2
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
