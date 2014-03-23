@@ -10,14 +10,15 @@
     %meta{name: "viewport", content: "width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"}
 
   %body
-    %header
-      .float-right
-        - if current_user
-          = current_user.email
-          &nbsp;&nbsp;|&nbsp;&nbsp;
-          = link_to "Logout", "#"
-        - else
-          = link_to "Login", session_path
+    .container
+      %header
+        .float-right
+          - if current_user
+            = current_user.email
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            = link_to "Logout", "#"
+          - else
+            = link_to "Login", session_path
 
-    = flash_messages
+        = flash_messages
     = yield
