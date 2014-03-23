@@ -196,6 +196,9 @@ GEM
     uglifier (2.4.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
+    valid_email (0.0.4)
+      activemodel
+      mail
     websocket-driver (0.3.2)
     will_paginate (3.0.5)
     xpath (2.0.0)
@@ -233,4 +236,5 @@ DEPENDENCIES
   therubyracer
   turbolinks
   uglifier
+  valid_email
   will_paginate

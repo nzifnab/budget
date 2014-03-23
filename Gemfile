@@ -11,6 +11,7 @@ gem 'uglifier'
 gem 'jbuilder'
 gem 'squeel'
 gem 'will_paginate'
+gem 'valid_email'
 
 
 
