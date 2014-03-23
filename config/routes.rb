@@ -1,5 +1,6 @@
 Budgeteer::Application.routes.draw do
-  root 'accounts#index'
+  root 'sessions#new'
+  #root 'accounts#index'
 
   resources :accounts, only: [:index, :create, :edit, :update], shallow: true do
     resources :quick_funds, only: [:create, :show]

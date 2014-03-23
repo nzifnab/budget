@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20140317033438) do
     t.text     "last_name"
     t.text     "email"
     t.string   "password_digest"
-    t.decimal  "undistributed_funds", precision: 10, scale: 2, default: 0.0
+    t.decimal  "undistributed_funds", precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
   end
