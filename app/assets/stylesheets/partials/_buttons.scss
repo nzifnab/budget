@@ -89,7 +89,7 @@
   }
 }
 
-.btn.disabled, .btn-disabled{
+.btn.disabled, .btn[disabled], .btn-disabled{
   background-image: none;
   background-color: #bbb;
   color: #000000;
