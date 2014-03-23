@@ -9,5 +9,5 @@
       = f.text_area :description
 
   .float-right
-    = f.submit "Withdraw", name: "fund_type", class: 'btn btn-orange'
-    = f.submit "Deposit", name: "fund_type", class: 'btn btn-green'
+    = f.submit "Withdraw", name: "fund_type", class: 'btn btn-orange', data: {disable_with: "Saving..."}
+    = f.submit "Deposit", name: "fund_type", class: 'btn btn-green', data: {disable_with: "Saving..."}

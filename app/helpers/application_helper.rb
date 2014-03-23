@@ -1,4 +1,15 @@
 module ApplicationHelper
+
+  def flash_messages
+    messages = []
+    flash.each do |key, value|
+      messages << content_tag(:div, class: "flash flash-#{key}") do
+        value
+      end
+    end
+    messages.join("\n").html_safe
+  end
+
   def nice_date(date)
     date.strftime("%b %d, %Y")
   end

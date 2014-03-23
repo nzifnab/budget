@@ -5,4 +5,13 @@ class User < ActiveRecord::Base
   validates :email, uniqueness: {case_sensitive: false}, email: true
 
   has_secure_password
+
+  def self.authenticate(params)
+    find_by_email(params[:email]).try(:authenticate, params[:password])
+  end
+
+  def update_last_login!
+    self.last_login_at = Time.zone.now
+    self.save!
+  end
 end

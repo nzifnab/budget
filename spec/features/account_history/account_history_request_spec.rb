@@ -1,7 +1,10 @@
 require 'spec_helper'
 
 describe "Account History", js: true do
-  let(:budget){Budget.new}
+  let(:budget){Budget.new(current_user)}
+  before(:each) do
+    login
+  end
 
   describe "Viewing account history" do
     let(:account){budget.new_account(name: "Emergency Fund", priority: 9, enabled: true, negative_overflow_id: 0)}

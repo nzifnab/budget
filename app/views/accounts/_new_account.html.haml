@@ -6,4 +6,4 @@
       = render partial: 'accounts/form', locals: {f: f}
       %li
         %label
-        = f.submit "Save Account", class: 'btn btn-green'
+        = f.submit "Save Account", class: 'btn btn-green', data: {disable_with: "Saving..."}

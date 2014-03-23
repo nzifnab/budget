@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe "Account Management", js: true do
-  let(:budget){Budget.new}
+  let(:budget){Budget.new(current_user)}
+  before(:each) do
+    login
+  end
+
   describe "Creating a new account" do
 
     before(:each) do

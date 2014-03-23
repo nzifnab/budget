@@ -1,4 +1,8 @@
 class Budget
+  def initialize(user)
+    @user = user
+  end
+
   def new_account(params={})
     Account.new(params)
   end
