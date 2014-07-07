@@ -10,16 +10,9 @@ class AccountHistory < ActiveRecord::Base
   before_create :save_account
 
   def amount=(val)
-    self[:amount] = val
+    super
     if new_record?
-      account.amount = account.amount.to_d + amount.to_d
-      if account.requires_negative_overflow?
-        remaining_funds = account.amount
-        self[:amount] = self[:amount] - remaining_funds
-        account.amount = 0
-
-        quick_fund.distribute_funds(remaining_funds, account.negative_overflow_account)
-      end
+      self[:amount] = account.apply_history_amount(quick_fund, val)
     end
     val
   end

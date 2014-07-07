@@ -48,6 +48,20 @@ class Account < ActiveRecord::Base
       where{id != my{id}}
   end
 
+  def apply_history_amount(quick_fund, val)
+    history_amount = val.to_d
+    self.amount = self.amount.to_d + history_amount
+
+    if requires_negative_overflow?
+      remaining_funds = self.amount
+      history_amount -= remaining_funds
+      self.amount = 0
+
+      quick_fund.distribute_funds(remaining_funds, negative_overflow_account)
+    end
+    history_amount
+  end
+
   def negative_overflow_recursion_error?
     tester = nil
     if negative_overflow_id.present?
