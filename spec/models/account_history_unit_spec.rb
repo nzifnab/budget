@@ -33,6 +33,7 @@ describe AccountHistory do
       end
 
       it "Changes the history's amount to the amount that account's changed" do
+        # account.amount == 30
         history.amount = -50
         history.amount.should == -30
       end
