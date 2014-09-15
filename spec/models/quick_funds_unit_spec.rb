@@ -43,7 +43,7 @@ describe QuickFund do
         quick_fund.fund_type = "Withdraw"
         quick_fund.amount = 110
         quick_fund.should_not be_valid
-        quick_fund.errors_on(:amount)[0].should == "Insufficient Funds"
+        quick_fund.errors[:amount][0].should == "Insufficient Funds"
       end
 
       it "set's description on the history" do

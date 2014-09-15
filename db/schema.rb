@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323022130) do
+ActiveRecord::Schema.define(version: 20140707010619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,11 +37,17 @@ ActiveRecord::Schema.define(version: 20140323022130) do
     t.text     "description"
     t.integer  "priority"
     t.boolean  "enabled"
-    t.decimal  "amount",               precision: 10, scale: 2
+    t.decimal  "amount",                  precision: 10, scale: 2
     t.integer  "negative_overflow_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "prerequisite_account_id"
+    t.decimal  "cap"
+    t.decimal  "add_per_month"
+    t.text     "add_per_month_type"
+    t.decimal  "monthly_cap"
+    t.integer  "overflow_into_id"
   end
 
   add_index "accounts", ["negative_overflow_id"], name: "index_accounts_on_negative_overflow_id", using: :btree

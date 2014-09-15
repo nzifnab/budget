@@ -14,7 +14,7 @@ Budgeteer::Application.routes.draw do
   match '/login' => 'sessions#new', as: :session, via: :get
   match '/login' => 'sessions#create', via: :post
   unless Rails.env.production?
-    match '/__backdoor_login__/:id' => 'sessions#backdoor', as: 'backdoor_login', via: :get
+    match '/__backdoor_login__/:id' => 'sessions#backdoor', as: :backdoor_login, via: :get
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
