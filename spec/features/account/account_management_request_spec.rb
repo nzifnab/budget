@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe "Account Management", js: true do
+RSpec.describe "Account Management", js: true do
   let(:budget){Budget.new(current_user)}
   before(:each) do
     login
@@ -26,28 +24,28 @@ describe "Account Management", js: true do
         click_button "Save Account"
       end
 
-      page.should_not have_selector("##{accordion[:content][:id]}", visible: true)
-      accordion[:content].should_not be_visible
+      expect(page).not_to have_selector("##{accordion[:content][:id]}", visible: true)
+      expect(accordion[:content]).not_to be_visible
 
       # find all of them so we can assert it was inserted in the right spot
-      page.should have_selector(".accordion-header", text: "Checking Account")
+      expect(page).to have_selector(".accordion-header", text: "Checking Account")
       headers = page.all(".accordion-header")
-      headers.size.should == 5
-      headers[0].should have_content("New Account")
-      headers[1].should have_content("Savings Account")
-      headers[2].should have_content("Checking Account")
-      headers[3].should have_content("Insurance")
-      headers[4].should have_content("Disabled Account")
+      expect(headers.size).to eq 5
+      expect(headers[0]).to have_content("New Account")
+      expect(headers[1]).to have_content("Savings Account")
+      expect(headers[2]).to have_content("Checking Account")
+      expect(headers[3]).to have_content("Insurance")
+      expect(headers[4]).to have_content("Disabled Account")
 
       checking_accordion = find_accordion("Checking Account")
-      checking_accordion[:content].should be_visible
+      expect(checking_accordion[:content]).to be_visible
 
       within(checking_accordion[:content]) do
-        page.should have_content("Wells Fargo checking account")
+        expect(page).to have_content("Wells Fargo checking account")
       end
       within(checking_accordion[:header]) do
-        page.should have_content("$0.00")
-        page.should have_content("(7) Checking Account")
+        expect(page).to have_content("$0.00")
+        expect(page).to have_content("(7) Checking Account")
       end
     end
   end
@@ -60,9 +58,9 @@ describe "Account Management", js: true do
       accordion = open_accordion("Savings Account")
       within(accordion[:content]) do
         click_link "Edit"
-        find_field("Name").value.should == "Savings Account"
-        find_field("Priority").value.should == "10"
-        find_field("account_description").value.should == ""
+        expect(find_field("Name").value).to eq "Savings Account"
+        expect(find_field("Priority").value).to eq "10"
+        expect(find_field("account_description").value).to eq ""
         fill_in "account_description", with: "Important Money"
         fill_in "Name", with: "Emergency Funds"
         click_button "Update"
@@ -72,7 +70,7 @@ describe "Account Management", js: true do
       # element to the page
       accordion = open_accordion("Emergency Funds")
       within(accordion[:content]) do
-        page.should have_content("Important Money")
+        expect(page).to have_content("Important Money")
       end
     end
   end
@@ -92,9 +90,9 @@ describe "Account Management", js: true do
 
       accordion = open_accordion("Food")
       within(accordion[:header]) do
-        page.should have_content("$175.00")
+        expect(page).to have_content("$175.00")
         within(".header-notice") do
-          page.should have_content("($25.00)")
+          expect(page).to have_content("($25.00)")
         end
       end
     end
@@ -109,12 +107,12 @@ describe "Account Management", js: true do
         click_button "Deposit"
       end
 
-      within(".header-notice"){page.should have_content("$80.00")}
+      within(".header-notice"){expect(page).to have_content("$80.00")}
       accordion = open_accordion("Food")
       within(accordion[:header]) do
-        page.should have_content("$280.00")
+        expect(page).to have_content("$280.00")
         within(".header-notice") do
-          page.should have_content("$80.00")
+          expect(page).to have_content("$80.00")
         end
       end
     end
@@ -131,16 +129,16 @@ describe "Account Management", js: true do
         click_button "Withdraw"
       end
 
-      page.should have_content("Insufficient Funds")
+      expect(page).to have_content("Insufficient Funds")
       accordion = open_accordion("Food")
       within(accordion[:header]) do
-        page.should have_content("$30.00")
-        page.should_not have_css(".header-notice")
+        expect(page).to have_content("$30.00")
+        expect(page).not_to have_css(".header-notice")
       end
 
       within(accordion[:content]) do
         within(".form-error") do
-          page.should have_content("Insufficient Funds")
+          expect(page).to have_content("Insufficient Funds")
         end
       end
     end

@@ -1,5 +1,3 @@
-require 'spec_helper'
-
-describe Budget do
+RSpec.describe Budget do
 
 end

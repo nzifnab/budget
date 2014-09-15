@@ -1,4 +1,3 @@
-require 'rspec/autorun'
 require 'ostruct'
 
 ENV['RAILS_ENV'] ||= 'test'

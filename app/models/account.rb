@@ -63,7 +63,7 @@ class Account < ActiveRecord::Base
   end
 
   def negative_overflow_recursion_error?
-    tester = nil
+    tester = false
     if negative_overflow_id.present?
       tester = Account.where{id == my{self.negative_overflow_id}}
 

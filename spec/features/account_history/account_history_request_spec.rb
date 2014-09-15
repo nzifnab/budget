@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe "Account History", js: true do
+RSpec.describe "Account History", js: true do
   let(:budget){Budget.new(current_user)}
   before(:each) do
     login
@@ -24,25 +22,25 @@ describe "Account History", js: true do
       accordion = open_accordion("Emergency Fund")
       within(".sidebar") do
         within("h1") do
-          page.should have_content("Emergency Fund")
-          page.should have_content("$20.00")
+          expect(page).to have_content("Emergency Fund")
+          expect(page).to have_content("$20.00")
         end
 
         within("#account_history_#{@history1.id}") do
-          page.should have_content("$45.83")
+          expect(page).to have_content("$45.83")
           click_link "Details"
-          page.should have_content("Quick Fund Deposit")
+          expect(page).to have_content("Quick Fund Deposit")
         end
 
         within("#account_history_#{@history2.id}") do
-          page.should have_content("($25.83)")
+          expect(page).to have_content("($25.83)")
           click_link "Details"
-          page.should have_content("Quick Fund Withdrawal")
+          expect(page).to have_content("Quick Fund Withdrawal")
           click_link "Quick Fund Withdrawal"
         end
 
         within("#quick_fund_#{@quick_fund2.id}") do
-          page.should have_content("Car broke down!")
+          expect(page).to have_content("Car broke down!")
         end
       end
     end

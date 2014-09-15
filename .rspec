@@ -2,3 +2,4 @@
 --format progress
 --profile
 --order rand
+--require rails_helper

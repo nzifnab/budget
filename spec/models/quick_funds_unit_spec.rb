@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe QuickFund do
+RSpec.describe QuickFund do
   describe "#before_validation" do
     let(:account){Account.new(amount: 100, id: 200)}
 
@@ -17,38 +15,38 @@ describe QuickFund do
       let(:history){quick_fund.account_histories.first}
 
       it "builds a new account history object for the withdrawn funds" do
-        quick_fund.should be_valid
-        quick_fund.account_histories.size.should == 1
+        expect(quick_fund).to be_valid
+        expect(quick_fund.account_histories.size).to eq 1
       end
 
       it "set's the amount on history to positive for deposit" do
-        quick_fund.should be_valid
-        quick_fund.amount.should == 28
-        history.amount.should == 28
+        expect(quick_fund).to be_valid
+        expect(quick_fund.amount).to eq 28
+        expect(history.amount).to eq 28
       end
 
       it "set's the amount to negative for withdrawal" do
         quick_fund.fund_type = "Withdraw"
-        quick_fund.should be_valid
-        quick_fund.amount.should == 28
-        history.amount.should == -28
+        expect(quick_fund).to be_valid
+        expect(quick_fund.amount).to eq 28
+        expect(history.amount).to eq -28
       end
 
       it "set's the account to the one having funds withdrawn" do
-        quick_fund.should be_valid
-        history.account.should == account
+        expect(quick_fund).to be_valid
+        expect(history.account).to eq account
       end
 
       it "bubbles validation errors into quick_fund" do
         quick_fund.fund_type = "Withdraw"
         quick_fund.amount = 110
-        quick_fund.should_not be_valid
-        quick_fund.errors[:amount][0].should == "Insufficient Funds"
+        expect(quick_fund).not_to be_valid
+        expect(quick_fund.errors[:amount][0]).to eq "Insufficient Funds"
       end
 
       it "set's description on the history" do
-        quick_fund.should be_valid
-        history.description.should == "My Funds"
+        expect(quick_fund).to be_valid
+        expect(history.description).to eq "My Funds"
       end
     end
 
