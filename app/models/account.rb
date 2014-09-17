@@ -66,41 +66,104 @@ class Account < ActiveRecord::Base
     tester = false
     if negative_overflow_id.present?
       tester = Account.where{id == my{self.negative_overflow_id}}
+      max_recursion = MAX_OVERFLOW_RECURSION_COUNT
+      my_id = self.id || 0
+      my_negative_overflow_id = negative_overflow_id || 0
+      tester = tester.joins{
+        last_account = self
+        max_recursion.times do |num|
+          current_account = last_account.negative_overflow_account
+          last_account = current_account.
+            on{
+              (
+                (
+                  (last_account.id == my_id) &
+                  (current_account.id == my_negative_overflow_id)
+                ) |
+                (
+                  (last_account.id != my_id) &
+                  (last_account.negative_overflow_id == current_account.id)
+                )
+              ) &
+              (
+                (
+                  (last_account.id == my_id) &
+                  (my_negative_overflow_id != last_account.id)
+                ) |
+                (
+                  (last_account.id != my_id) &
+                  (last_account.negative_overflow_id != last_account.id)
+                )
+              )
+            }
+        end
+        last_account
+        #negative_overflow_account.negative_overflow_account.negative_overflow_account
+      }.references(:all)
 
-      last_account_alias = "accounts"
-      # well this spiraled out of control...
-      MAX_OVERFLOW_RECURSION_COUNT.times do |num|
-        # Each 'join check' also has to consider the fact
-        # that this is an unsaved record, so it checks for
-        # joined records based on the unsaved value for this account,
-        # or a regular join condition for other accounts.
-        tester = tester.joins(
-          """
-          INNER JOIN accounts a#{num}
-            ON (
-              (
-                #{last_account_alias}.id = #{self.id || 0}
-                AND a#{num}.id = #{negative_overflow_id || 0}
-              )
-              OR (
-                #{last_account_alias}.id != #{self.id || 0}
-                AND #{last_account_alias}.negative_overflow_id = a#{num}.id
-              )
-            )
-            AND (
-              (
-                #{last_account_alias}.id = #{self.id || 0}
-                AND #{negative_overflow_id || 0} != #{last_account_alias}.id
-              )
-              OR (
-                #{last_account_alias}.id != #{self.id || 0}
-                AND #{last_account_alias}.negative_overflow_id != #{last_account_alias}.id
-              )
-            )
-          """
-        )
-        last_account_alias = "a#{num}"
-      end
+      #last_account = "accounts"
+      #my_account_id = self.id || 0
+      #neg_overflow_id = negative_overflow_id || 0
+      ## well this spiraled out of control...
+      #MAX_OVERFLOW_RECURSION_COUNT.times do |num|
+      #  # Each 'join check' also has to consider the fact
+      #  # that this is an unsaved record, so it checks for
+      #  # joined records based on the unsaved value for this account,
+      #  # or a regular join condition for other accounts.
+      #  current_account = "a#{num}"
+      #  tester = tester.joins{
+      #    accounts.as(current_account).
+      #      on{
+      #        (
+      #          (
+      #            (last_account.id == my_account_id) &
+      #            (current_account.id == neg_overflow_id)
+      #          ) |
+      #          (
+      #            (last_account.id != my_account_id) &
+      #            (last_account.negative_overflow_id == current_account.id)
+      #          )
+      #        ) &
+      #        (
+      #          (
+      #            (last_account.id == my_account_id) &
+      #            (neg_overflow_id != last_account.id)
+      #          ) |
+      #          (
+      #            (last_account.id != my_account_id) &
+      #            (last_account.negative_overflow_id != last_account.id)
+      #          )
+      #        )
+      #      }
+      #  }
+      #  last_account = current_account
+      #  #tester = tester.joins(
+      #  #  """
+      #  #  INNER JOIN accounts a#{num}
+      #  #    ON (
+      #  #      (
+      #  #        #{last_account}.id = #{self.id || 0}
+      #  #        AND a#{num}.id = #{negative_overflow_id || 0}
+      #  #      )
+      #  #      OR (
+      #  #        #{last_account}.id != #{self.id || 0}
+      #  #        AND #{last_account}.negative_overflow_id = a#{num}.id
+      #  #      )
+      #  #    )
+      #  #    AND (
+      #  #      (
+      #  #        #{last_account}.id = #{self.id || 0}
+      #  #        AND #{negative_overflow_id || 0} != #{last_account}.id
+      #  #      )
+      #  #      OR (
+      #  #        #{last_account}.id != #{self.id || 0}
+      #  #        AND #{last_account}.negative_overflow_id != #{last_account}.id
+      #  #      )
+      #  #    )
+      #  #  """
+      #  #)
+      #  #last_account = "a#{num}"
+      #end
     end
     tester && tester.exists?
   end
