@@ -44,8 +44,8 @@ ActiveRecord::Schema.define(version: 20140707010619) do
     t.datetime "updated_at"
     t.integer  "prerequisite_account_id"
     t.decimal  "cap"
-    t.decimal  "add_per_month"
-    t.text     "add_per_month_type"
+    t.decimal  "add_per_month",                                    default: 0.0
+    t.text     "add_per_month_type",                               default: "$"
     t.decimal  "monthly_cap"
     t.integer  "overflow_into_id"
   end

@@ -26,4 +26,7 @@ Budgeteer::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  # How this is not the default is beyond me.
+  config.action_controller.action_on_unpermitted_parameters = :raise
 end

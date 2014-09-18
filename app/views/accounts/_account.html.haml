@@ -13,6 +13,20 @@
           = simple_format account.description
 
       %dl.properties.break-small
+        %dt.box.box-brown Add Per Month
+        %dd.box.box-green= account.display_add_per_month
+        - if account.monthly_cap.present?
+          %dt.box.box-brown Monthly Cap
+          %dd.box.box-green= nice_currency(account.monthly_cap)
+        - if account.cap.present?
+          %dt.box.box-brown Account Cap
+          %dd.box.box-green= nice_currency(account.cap)
+        - if account.prerequisite_account_id.present?
+          %dt.box.box-brown Prerequisite
+          %dd.box.box-green= account.prerequisite_name
+        - if account.overflow_into_id.present?
+          %dt.box.box-brown Income Overflow
+          %dd.box.box-green= account.overflow_into_name
         %dt.box.box-brown= account.negative_overflow_label
         %dd.box.box-green= account.negative_overflow_name
         %dt.box.box-brown Created on

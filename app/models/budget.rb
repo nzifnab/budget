@@ -15,11 +15,13 @@ class Budget
       accounts.priority.desc,
       accounts.amount.desc
     ]}.includes(
-      :negative_overflow_account
+      :negative_overflow_account,
+      :prerequisite_account,
+      :overflow_into_account
     )
   end
 
-  def negative_overflowable_accounts(self_id)
+  def accounts_except(self_id)
     user.accounts.order{accounts.name.asc}.
       where{(id != self_id) & (enabled == true)}
   end

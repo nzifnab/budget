@@ -1,7 +1,7 @@
 require 'ostruct'
 class AccountsController < ApplicationController
   decorates_assigned :account, :accounts, :account_with_errors
-  helper_method :negative_overflow_options
+  helper_method :negative_overflow_options, :select_account_options
 
   def index
     @account = budget.new_account(enabled: true)
@@ -44,14 +44,22 @@ class AccountsController < ApplicationController
       :description,
       :priority,
       :enabled,
-      :negative_overflow_id
+      :negative_overflow_id,
+      :add_per_month,
+      :add_per_month_type,
+      :monthly_cap,
+      :cap,
+      :prerequisite_account_id,
+      :overflow_into_id
     )
   end
 
   def negative_overflow_options(self_id)
-    @negative_overflow_options ||= [
-      OpenStruct.new(id: self_id || 0, truncated_name: ">> Allow Negatives"),
-      *budget.negative_overflowable_accounts(self_id).decorate
-    ]
+    @negative_overflow_options ||= select_account_options(self_id).
+      unshift(OpenStruct.new(id: self_id || 0, truncated_name: "&mdash; Allow Negatives &mdash;".html_safe))
+  end
+
+  def select_account_options(self_id)
+    @select_account_options ||= budget.accounts_except(self_id).decorate
   end
 end

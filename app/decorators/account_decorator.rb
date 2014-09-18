@@ -43,6 +43,24 @@ class AccountDecorator < ApplicationDecorator
     end
   end
 
+  def prerequisite_name
+    prerequisite_account.try(:name)
+  end
+
+  def overflow_into_name
+    overflow_into_account.try(:name)
+  end
+
+  def display_add_per_month
+    if add_per_month_type == '$'
+      h.nice_currency(add_per_month)
+    elsif add_per_month_type == '%'
+      h.nice_percent(add_per_month)
+    else
+      add_per_month
+    end
+  end
+
   def js_sort_parts
     num = []
     # This is intended to be sorted as a string,

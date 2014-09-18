@@ -8,8 +8,28 @@
   = f.label :priority
   = f.text_field :priority, class: 'field-small'
 %li
-  = f.label :enabled
-  = f.check_box :enabled
+  = f.label :add_per_month, "Add Per Month"
+  = f.select :add_per_month_type, ["$", "%"]
+  = f.text_field :add_per_month
+%li
+  = f.label :monthly_cap
+  .field-prepend
+    $
+  = f.text_field :monthly_cap
+%li
+  = f.label :cap, "Account Cap"
+  .field-prepend
+    $
+  = f.text_field :cap
+%li
+  = f.label :prerequisite_account_id, "Prerequisite"
+  = f.collection_select :prerequisite_account_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
+%li
+  = f.label :overflow_into_id, "Income overflows into"
+  = f.collection_select :overflow_into_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
 %li
   = f.label :negative_overflow_id, "Negative overflows into"
-  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: ">> Disallow Negatives"
+  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; Disallow Negatives &mdash;".html_safe
+%li
+  = f.label :enabled
+  = f.check_box :enabled

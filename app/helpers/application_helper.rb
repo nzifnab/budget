@@ -23,6 +23,10 @@ module ApplicationHelper
     number_to_currency(currency, negative_format: "(%u%n)")
   end
 
+  def nice_percent(value)
+    number_to_percentage(value, precision: 2)
+  end
+
   def amount_class(amount)
     if amount > 0
       'good'
