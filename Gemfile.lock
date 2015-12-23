@@ -243,7 +243,6 @@ DEPENDENCIES
   sass-rails
   squeel
   susy
-  teaspoon
   teaspoon-jasmine
   therubyracer
   turbolinks

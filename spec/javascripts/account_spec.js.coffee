@@ -127,10 +127,10 @@ describe "Account", ->
         @account = new Account()
 
       it "sets the header to that of the 'New Account' container", ->
-        expect(@account.$headerDom()).toBe($("#new-account-header"))
+        expect(@account.$headerDom()[0]).toBe($("#new-account-header")[0])
 
       it "sets the content to that of the 'New Account' container", ->
-        expect(@account.$contentDom()).toBe($("#new-account-content"))
+        expect(@account.$contentDom()[0]).toBe($("#new-account-content")[0])
 
   describe "#render", ->
     beforeEach ->
@@ -211,7 +211,7 @@ describe "Account", ->
     it "returns the first account that has a lower sortWeight", ->
       @account._sortWeight = "107000"
       insertion = @account.insertLocation()
-      expect(insertion.$headerDom()).toBe($("#account2-header"))
+      expect(insertion.$headerDom()[0]).toBe($("#account2-header")[0])
 
     it "sets the insertionDirection to 'before' when a location is matched", ->
       @account._sortWeight = "107000"
@@ -221,7 +221,7 @@ describe "Account", ->
     it "returns the last account if there are no lower sort weights", ->
       @account._sortWeight = "0069500"
       insertion = @account.insertLocation()
-      expect(insertion.$headerDom()).toBe($("#account5-header"))
+      expect(insertion.$headerDom()[0]).toBe($("#account5-header")[0])
 
     it "sets the content to be added 'after' when there are no lower priorities", ->
       @account._sortWeight = "0069500"
@@ -232,7 +232,7 @@ describe "Account", ->
       @account.sortWeight = "10500"
       $(".js-account").remove()
       insertion = @account.insertLocation()
-      expect(insertion.$headerDom()).toBe($("#new-account-header"))
+      expect(insertion.$headerDom()[0]).toBe($("#new-account-header")[0])
 
     it "sets the content to be added 'after' when there are no accounts", ->
       @account.sortWeight = "10500"
@@ -243,7 +243,7 @@ describe "Account", ->
     it "sorts properly even for very large account amounts", ->
       @account._sortWeight = "10351800957283972800"
       insertion = @account.insertLocation()
-      expect(insertion.$headerDom()).toBe($("#account3-header"))
+      expect(insertion.$headerDom()[0]).toBe($("#account3-header")[0])
       expect(@account.insertionDirection).toBe('before')
 
 
@@ -254,7 +254,7 @@ describe "Account", ->
 
       it "returns the first account in the list", ->
         insertion = @account.insertLocation()
-        expect(insertion.$headerDom()).toBe($("#account1-header"))
+        expect(insertion.$headerDom()[0]).toBe($("#account1-header")[0])
 
       it "sets the insertionDirection to 'before'", ->
         @account.insertLocation()

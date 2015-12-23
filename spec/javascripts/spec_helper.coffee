@@ -1,12 +1,13 @@
 # Teaspoon includes some support files, but you can use anything from your own support path too.
 # require support/jasmine-jquery-1.7.0
 # require support/jasmine-jquery-2.0.0
+# require support/jasmine-jquery-2.1.0
 # require support/sinon
 # require support/your-support-file
 #
 # PhantomJS (Teaspoons default driver) doesn't have support for Function.prototype.bind, which has caused confusion.
 # Use this polyfill to avoid the confusion.
-#= require support/bind-poly
+#= require support/phantomjs-shims
 #
 # Deferring execution
 # If you're using CommonJS, RequireJS or some other asynchronous library you can defer execution. Call
@@ -30,7 +31,7 @@
 # may get better load performance if you require the specific files that are being used in the spec that tests them.
 
 #= require jquery
-#= require support/jasmine-jquery-1.5.8
+#= require support/jasmine-jquery
 #= require support/sinon
 #= require support/jasmine-sinon
 #= require budget
