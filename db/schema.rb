@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20140707010619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "account_histories", force: true do |t|
+  create_table "account_histories", force: :cascade do |t|
     t.decimal  "amount",           precision: 10, scale: 2
     t.text     "description"
     t.integer  "overflow_from_id"
@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20140707010619) do
   add_index "account_histories", ["overflow_from_id"], name: "index_account_histories_on_overflow_from_id", using: :btree
   add_index "account_histories", ["quick_fund_id"], name: "index_account_histories_on_quick_fund_id", using: :btree
 
-  create_table "accounts", force: true do |t|
+  create_table "accounts", force: :cascade do |t|
     t.text     "name"
     t.text     "description"
     t.integer  "priority"
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20140707010619) do
   add_index "accounts", ["negative_overflow_id"], name: "index_accounts_on_negative_overflow_id", using: :btree
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
 
-  create_table "quick_funds", force: true do |t|
+  create_table "quick_funds", force: :cascade do |t|
     t.decimal  "amount",      precision: 10, scale: 2
     t.integer  "account_id"
     t.text     "description"
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 20140707010619) do
 
   add_index "quick_funds", ["account_id"], name: "index_quick_funds_on_account_id", using: :btree
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.text     "first_name"
     t.text     "last_name"
     t.text     "email"

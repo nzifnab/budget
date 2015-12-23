@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-ruby '2.1.2'
+ruby '2.2.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.6'
@@ -31,16 +31,16 @@ gem 'draper'
 
 # TEMPORARY due to mail validator issue:
 # https://github.com/hallelujah/valid_email/issues/33
-gem 'mail', '~> 2.5.0'
+#gem 'mail', '~> 2.5.0'
 
 group :assets do
-  gem 'sprockets', '~> 2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
+  #gem 'sprockets', '~> 2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
   # https://github.com/Compass/compass-rails/issues/144...
   # AND until the argument # is fixed: https://github.com/sstephenson/sprockets/issues/540
-  gem 'compass', '~> 1.0.1'
-  gem 'compass-rails', '~> 2.0.0'
+  gem 'compass'#, '~> 1.0.1'
+  gem 'compass-rails'#, '~> 2.0.0'
   gem 'coffee-rails'
-  gem 'sass-rails', '4.0.1' # 4.0.2 and 4.0.3 force a lower version of sass
+  gem 'sass-rails'#, '4.0.1' # 4.0.2 and 4.0.3 force a lower version of sass
                             # which causes compass to go from 1.x to 0.12
   # Use jquery as the JavaScript library
   gem 'jquery-rails'
@@ -55,7 +55,7 @@ group :development, :test do
   gem 'poltergeist'
   gem 'launchy'
   gem 'database_cleaner'
-  gem 'teaspoon'
+  gem 'teaspoon-jasmine'
 end
 
 # Use unicorn as the app server
