@@ -164,7 +164,7 @@
 
   .fields{
     input[type=text], textarea{
-      @include span(9 of 15);
+      @include span(8 of 15);
     }
 
     .form-error{
@@ -205,6 +205,12 @@
   .container{
     font-size: em(11px);
     min-width: em(300px, 11px);
+  }
+
+  .fields{
+    input[type=text]{
+      @include span(7 of 15);
+    }
   }
 
   .fields-small{

@@ -17,10 +17,19 @@ $base-font-size: 14px;
     &.field-small{
       @include span(2 of 15);
     }
+    font-size: 1em;
+  }
+
+  input[type=text]{
+    padding-left: 0.2em;
   }
 
   input[type=checkbox], input[type=radio], select{
     float: left;
+  }
+
+  input[type=text], select, .field-prepend{
+    height: em(25px);
   }
 
   select{
@@ -29,6 +38,14 @@ $base-font-size: 14px;
 
   textarea{
     height: em(60px);
+  }
+
+  .field-prepend{
+    border: #B0B0B0 1px solid;
+    padding: 0.15em 0.5em;
+    float: left;
+    margin-right: -3px;
+    background-color: $gray-overlay;
   }
 
   .form-error{

@@ -106,6 +106,7 @@ dl.properties{
   dt{
     @include span(4 of 8 3/4);
     position: relative;
+    clear: both;
 
     &::after{
       content: "\00bb";
