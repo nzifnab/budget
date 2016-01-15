@@ -1,6 +1,6 @@
 $base-font-size: 16px;
 @function em($target, $context: $base-font-size){
-  @if $target == 0 {@return 0};
+  @if $target == 0 or $target == 0px {@return 0};
   @return $target / $context + 0em;
 }
 
@@ -11,25 +11,28 @@ $grid: hide;
 
 $breakpoint-to-ems: true;
 $app-xxl: 80% 24 1/4 $grid;
+$xxl-font-size: 14px;
 
 $bp-app-xl: max-width 1365px;
 $app-xl: 80% 24 1/4 $grid;
+$xl-font-size: 12px;
 
 $bp-app-large: max-width 1177px;
 $app-large: 85% 24 1/4 $grid;
+$large-font-size: 12px;
 
 $bp-app-medium-large: max-width 985px;
 $app-medium-large: 85% 24 1/4 $grid;
+$medium-large-font-size: 11px;
 
 // mobile-esque starts here.  Drops sidebar, makes it a tab.
 $bp-app-medium: max-width 869px;
 $app-medium: 100% 16 1/4 $grid;
+$medium-font-size: 15px;
 
 $bp-app-small: max-width 535px;
 $app-small: 100% 16 1/4 $grid;
+$small-font-size: 15px;
 
 @include border-box-sizing;
 @import "./colors";
-@import "./fonts";
-
-

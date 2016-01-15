@@ -109,6 +109,40 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 
 
 --
+-- Name: incomes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE incomes (
+    id integer NOT NULL,
+    amount numeric,
+    user_id integer,
+    description text,
+    income_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: incomes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE incomes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: incomes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE incomes_id_seq OWNED BY incomes.id;
+
+
+--
 -- Name: quick_funds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -205,6 +239,13 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY incomes ALTER COLUMN id SET DEFAULT nextval('incomes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY quick_funds ALTER COLUMN id SET DEFAULT nextval('quick_funds_id_seq'::regclass);
 
 
@@ -229,6 +270,14 @@ ALTER TABLE ONLY account_histories
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: incomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY incomes
+    ADD CONSTRAINT incomes_pkey PRIMARY KEY (id);
 
 
 --
@@ -322,4 +371,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140317033438');
 INSERT INTO schema_migrations (version) VALUES ('20140323022130');
 
 INSERT INTO schema_migrations (version) VALUES ('20140707010619');
+
+INSERT INTO schema_migrations (version) VALUES ('20160115031516');
 

@@ -1,3 +1,5 @@
+$old-size: $base-font-size;
+$base-font-size: $xxl-font-size;
 
 .accordion-header{
   position: relative;
@@ -30,8 +32,6 @@
   border-color: #333;
 }
 
-$old-size: $base-font-size;
-$base-font-size: 14px;
 .header-notice{
   background-color: $accordion-notice-color;
   padding: em(4px) em(8px);
@@ -52,22 +52,30 @@ $base-font-size: 14px;
   width: 100%;
 }
 
+.box-red{
+  border-color: #ffb7b7;
+  background-color: #CC3333;
+  color: #FFF2F2;
+  font-weight: bold;
+  @include box-shadow(2px 2px 3px #ECB7B7);
+}
+
 .box-tan{
   border-color: #666666;
   background-color: $description-background;
-  @include box-shadow(4px 4px 5px $description-background);
+  @include box-shadow(4px 4px 5px $description-background + #000022);
 }
 
 .box-brown{
   border-color: #cccccc;
   background-color: $property-background;
-  @include box-shadow(4px 4px 5px $property-background);
+  @include box-shadow(4px 4px 5px $property-background + #000022);
 }
 
 .box-green{
   border-color: #aadfd8;
   background-color: $property-value-background;
-  @include box-shadow(4px 4px 5px $property-value-background);
+  @include box-shadow(4px 4px 5px $property-value-background + #000022);
 }
 
 .box-tan-gradient{

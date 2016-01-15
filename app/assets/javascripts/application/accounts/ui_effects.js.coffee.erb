@@ -165,14 +165,14 @@ class Effects
     $(document).on 'click', ".accounts-tab", (e) ->
       e.preventDefault()
       $(".js-account-accordion").show()
-      $(".sidebar").removeClass("mobile-visible")
+      $(".sidebar").removeClass("tablet-visible")
       $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
       $(this).addClass("tab-active")
 
     $(document).on 'click', ".sidebar-tab", (e) ->
       e.preventDefault()
       $(".js-account-accordion").hide()
-      $(".sidebar").addClass("mobile-visible")
+      $(".sidebar").addClass("tablet-visible")
       $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
       $(this).addClass("tab-active")
 

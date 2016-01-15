@@ -1,7 +1,8 @@
 .container
   %ul.tabs
     %li.accounts-tab.tab-active= link_to 'Accounts', '#'
-    %li.sidebar-tab.mobile-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_add_element_class: ".sidebar", click_add_class_value: "mobile-visible"}}
+    -# Button that links to account history sidebar - tablet and smaller widths only.
+    %li.sidebar-tab.tablet-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_add_element_class: ".sidebar", click_add_class_value: "tablet-visible"}}
 
   .content
     .js-account-accordion

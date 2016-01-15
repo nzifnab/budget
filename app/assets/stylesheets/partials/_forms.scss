@@ -1,5 +1,6 @@
 $old-size: $base-font-size;
-$base-font-size: 14px;
+$base-font-size: $xxl-font-size;
+
 .fields{
   li{
     @include span(last 100%);

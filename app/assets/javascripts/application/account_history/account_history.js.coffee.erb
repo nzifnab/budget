@@ -2,11 +2,15 @@ class AccountHistory
   @className: "AccountHistory"
 
   @renderSidebar: (html, sidebarLabel, tabTooltip) ->
-    $(".sidebar").removeClass("hide")
-    $(".sidebar-content").html(html)
-    $(".sidebar-tab").removeClass("mobile-hide")
-    $(".sidebar-tab a").text(sidebarLabel) if sidebarLabel?
-    $(".sidebar-tab a").attr("title", tabTooltip) if tabTooltip?
+    if html?
+      $(".sidebar").removeClass("hide")
+      $(".sidebar-content").html(html)
+      $(".sidebar-tab").removeClass("tablet-hide")
+      $(".sidebar-tab a").text(sidebarLabel) if sidebarLabel?
+      $(".sidebar-tab a").attr("title", tabTooltip) if tabTooltip?
+    else
+      $(".sidebar").addClass("hide")
+      $(".sidebar-tab").addClass("tablet-hide")
 
   @fetchHistoryForAccount: (accountId) ->
     $.get(
