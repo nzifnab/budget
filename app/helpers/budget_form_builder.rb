@@ -5,8 +5,11 @@ class BudgetFormBuilder < ActionView::Helpers::FormBuilder
       if errors.present?
         extended_error = object.errors.messages[:"#{attribute}_extended"]
         extended_error = extended_error.present? ? extended_error.first : "This field was invalid"
-        @template.content_tag(:div, class: 'form-error', title: extended_error) do
-          errors.first
+
+        @template.content_tag(:div, class: 'form-error-container') do
+          @template.content_tag(:div, class: 'form-error', title: extended_error) do
+            errors.first
+          end
         end
       end
     end

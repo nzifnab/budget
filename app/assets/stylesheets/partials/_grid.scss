@@ -79,18 +79,6 @@
   .container{
     font-size: em($xl-font-size);
   }
-
-  .fields{
-    input[type=text], textarea{
-      @include span(6 of 15);
-    }
-  }
-
-  .fields-small{
-    input[type=text], textarea{
-      @include span(last 4 of 7);
-    }
-  }
 }
 
 @include susy-breakpoint($bp-app-large, $app-large){
@@ -101,18 +89,6 @@
 
   ul.tabs li{
     min-width: em(56px, $large-font-size);
-  }
-
-  .fields {
-    input[type=text], textarea{
-      @include span(7 of 15);
-    }
-  }
-
-  .fields-small{
-    input[type=text], textarea{
-      @include span(last 4 of 7);
-    }
   }
 }
 
@@ -132,22 +108,10 @@
   .bp-break-medium-large{
     display: block;
   }
-
-  .fields{
-    input[type=text], textarea{
-      @include span(7 of 15);
-    }
-  }
-
-  .fields-small{
-    input[type=text], textarea{
-      @include span(last 4 of 7);
-    }
-  }
 }
 
 
-// super-mobile view begins here (drops sidebar, makes it a nav tab)
+// tablet view begins here (drops sidebar, makes it a nav tab)
 @include susy-breakpoint($bp-app-medium, $app-medium){
   .desktop-float-right, .desktop-float-left{
     float: none;
@@ -187,17 +151,17 @@
 
   .fields{
     input[type=text], textarea{
-      @include span(8 of 15);
+      &.field-small{
+        @include span(last 3 of 15);
+      }
     }
 
-    .form-error{
+    .form-error-container{
       float: right;
-      @include post(2 of 15);
       margin-bottom: em(5px, $medium-font-size);
     }
 
-    .field-small + .form-error{
-      clear: none;
+    .field-small + .form-error-container{
       float: left;
       margin-bottom: 0;
       margin-right: 0;
@@ -210,12 +174,8 @@
       text-align: left;
     }
 
-    input[type=text], textarea{
-      @include span(full);
-    }
-
-    .form-error{
-      clear: none;
+    .form-error-container{
+      width: auto;
       float: left;
       margin-bottom: 0;
       margin-right: 0;
@@ -235,6 +195,7 @@
   }
 }
 
+// mobile/phone view begins here
 @include susy-breakpoint($bp-app-small, $app-small){
   .container{
     font-size: em($small-font-size);
@@ -246,11 +207,11 @@
       @include span(full);
       text-align: left;
     }
-  }
 
-  .fields-small{
-    input[type=text]{
-      @include span(full);
+    input[type=text], textarea{
+      &.field-small{
+        @include span(last 4 of 15);
+      }
     }
   }
 

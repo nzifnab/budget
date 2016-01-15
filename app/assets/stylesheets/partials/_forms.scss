@@ -5,7 +5,7 @@ $base-font-size: $xxl-font-size;
   li{
     @include span(last 100%);
     margin-bottom: em(5px);
-    display: flex;
+    @include display-flex;
     flex-wrap: wrap;
   }
 
@@ -16,11 +16,12 @@ $base-font-size: $xxl-font-size;
   }
 
   input[type=text], textarea{
-    //&.field-small{
-    //  @include span(2 of 15);
-    //}
+    &.field-small{
+      @include span(last 2 of 15);
+      @include flex(initial);
+    }
     font-size: 1em;
-    flex: 2
+    @include flex(2);
   }
 
   input[type=text]{
@@ -51,17 +52,21 @@ $base-font-size: $xxl-font-size;
     background-color: $gray-overlay;
   }
 
+  .form-error-container{
+    margin-top: em(2px);
+    margin-left: gutter(15);
+    float: left;
+  }
+
   .form-error{
     background-color: #ffab9e; // Old browsers
     @include background-image(linear-gradient(top, #ffab9e 0%, #f23c00 44%, #ce0000 100%));
-    padding: em(3px) em(6px);
+    padding: em(3px, 13px) em(6px, 13px);
     color: white;
     font-weight: bold;
     font-size: em(13px);
-    @include border-radius(em(4px));
-    float: left;
+    @include border-radius(em(4px, 13px));
     cursor: default;
-    margin-top: em(2px);
   }
 }
 
@@ -71,15 +76,19 @@ $base-font-size: $xxl-font-size;
   }
 
   input[type=text], textarea{
-    //@include span(last 4 of 7);
     @include flex(2);
     margin-right: 0px;
   }
 
-  .form-error{
-    @include break;
-    float: right;
+  .form-error-container{
+    @include span(full);
     margin-bottom: em(5px);
+    margin-left: gutter(7);
+  }
+
+  .form-error{
+    float: right;
   }
 }
 $base-font-size: $old-size;
+
