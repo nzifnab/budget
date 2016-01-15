@@ -5,6 +5,8 @@ $base-font-size: $xxl-font-size;
   li{
     @include span(last 100%);
     margin-bottom: em(5px);
+    display: flex;
+    flex-wrap: wrap;
   }
 
   label{
@@ -14,11 +16,11 @@ $base-font-size: $xxl-font-size;
   }
 
   input[type=text], textarea{
-    @include span(5 of 15);
-    &.field-small{
-      @include span(2 of 15);
-    }
+    //&.field-small{
+    //  @include span(2 of 15);
+    //}
     font-size: 1em;
+    flex: 2
   }
 
   input[type=text]{
@@ -69,7 +71,8 @@ $base-font-size: $xxl-font-size;
   }
 
   input[type=text], textarea{
-    @include span(last 4 of 7);
+    //@include span(last 4 of 7);
+    @include flex(2);
     margin-right: 0px;
   }
 

@@ -242,12 +242,9 @@
   }
 
   .fields{
-    input[type=text]{
-      @include span(7 of 15);
-    }
-
-    .form-error{
-      @include post(3 of 15);
+    label{
+      @include span(full);
+      text-align: left;
     }
   }
 
