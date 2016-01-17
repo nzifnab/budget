@@ -157,14 +157,22 @@
     }
 
     .form-error-container{
-      float: right;
       margin-bottom: em(5px, $medium-font-size);
+      @include span(full);
     }
 
     .field-small + .form-error-container{
-      float: left;
       margin-bottom: 0;
       margin-right: 0;
+    }
+
+    .form-error{
+      float: left;
+      margin-left: span(5 of 15) + gutter(15);
+    }
+
+    &:not(.fields-small) .btn-mobile{
+      margin-left: span(5 of 15) + gutter(15);
     }
   }
 
@@ -174,11 +182,9 @@
       text-align: left;
     }
 
-    .form-error-container{
-      width: auto;
-      float: left;
-      margin-bottom: 0;
-      margin-right: 0;
+    .form-error{
+      float: right;
+      margin-left: 0;
     }
   }
 
@@ -213,6 +219,14 @@
         @include span(last 4 of 15);
       }
     }
+
+    .form-error{
+      margin-left: 0;
+    }
+
+    &:not(.fields-small) .btn-mobile{
+      margin-left: 0;
+    }
   }
 
   .mobile-visible{
@@ -221,6 +235,10 @@
 
   .mobile-hide{
     display: none;
+  }
+
+  ul.tabs{
+    font-size: 0.8em;
   }
 
   // inside .content
