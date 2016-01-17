@@ -47,7 +47,7 @@ class AccountsController < ApplicationController
       :negative_overflow_id,
       :add_per_month,
       :add_per_month_type,
-      :monthly_cap,
+      #:monthly_cap,
       :cap,
       :prerequisite_account_id,
       :overflow_into_id

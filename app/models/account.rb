@@ -16,9 +16,35 @@ class Account < ActiveRecord::Base
   belongs_to :user, inverse_of: :accounts
   has_many :account_histories, -> {order{created_at.desc}}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
+  has_many(
+    :overflowed_from_accounts,
+    class_name: "Account",
+    foreign_key: "overflow_into_id"
+  )
 
   validates :name, presence: {message: "Required"}
   validates :priority, inclusion: {in: 1..10, message: "1 to 10"}
+  validates :add_per_month_type, presence: {
+    message: "Required",
+    if: ->{ add_per_month.present?}
+  }, inclusion: {
+    in: ['%', '$'],
+    allow_blank: true,
+    message: "'%' or '$' only"
+  }
+  validates :add_per_month, numericality: {
+    greater_than_or_equal_to: 0,
+    allow_blank: true,
+    message: "Positive number only",
+    if: ->{add_per_month_type == '$'}
+  }
+  validates :add_per_month, numericality: {
+    less_than_or_equal_to: 100,
+    greater_than_or_equal_to: 0,
+    allow_blank: true,
+    message: "0% to 100%",
+    if: ->{add_per_month_type == '%'}
+  }
 
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
@@ -27,7 +53,7 @@ class Account < ActiveRecord::Base
   validate :deny_negative_amount_with_no_overflow
   validate :cannot_overflow_to_disabled_account
   validate :cannot_receive_overflow_when_disabled
-  validate :cannot_overflow_as_disabled_account
+  #validate :cannot_overflow_as_disabled_account
   validate :cannot_exceed_max_overflow_recursion
 
   MAX_OVERFLOW_RECURSION_COUNT = 3
@@ -36,6 +62,14 @@ class Account < ActiveRecord::Base
 
   def disabled?
     !enabled?
+  end
+
+  def allow_negative?
+    if negative_overflow_id.present?
+      negative_overflow_id == 0 || negative_overflow_id == self.id
+    else
+      negative_overflow_account == self
+    end
   end
 
   def reset_amount
@@ -47,7 +81,7 @@ class Account < ActiveRecord::Base
   end
 
   def requires_negative_overflow?
-    amount.to_d < 0 && negative_overflow_id && negative_overflow_id != self.id
+    amount.to_d < 0 && negative_overflow_id && !allow_negative?
   end
 
   def negative_overflowed_from_accounts
@@ -135,7 +169,7 @@ class Account < ActiveRecord::Base
 
   # validate
   def deny_negative_amount_with_no_overflow
-    if amount.to_d < 0 && negative_overflow_id != self.id
+    if amount.to_d < 0 && !allow_negative?
       errors.add(:amount, "Insufficient Funds")
       errors.add(:amount_extended, "Funds unavailable in account '#{name}'")
       errors.add(:negative_overflow_id, "Insufficient Funds")
@@ -145,9 +179,14 @@ class Account < ActiveRecord::Base
 
   # validate
   def cannot_overflow_to_disabled_account
-    if negative_overflow_account.present? && negative_overflow_account != self && negative_overflow_account.disabled?
+    if !allow_negative? && negative_overflow_account.present? && negative_overflow_account.disabled?
       errors.add(:negative_overflow_id, "Invalid")
       errors.add(:negative_overflow_id_extended, "The account '#{negative_overflow_account.name}' has been disabled, and may not be selected.")
+    end
+
+    if overflow_into_account.present? && overflow_into_account.disabled?
+      errors.add(:overflow_into_id, "Invalid")
+      errors.add(:overflow_into_id_extended, "The account '#{overflow_into_account.name}' has been disabled, and may not be selected.")
     end
   end
 
@@ -157,15 +196,20 @@ class Account < ActiveRecord::Base
       errors.add(:enabled, "Invalid")
       errors.add(:enabled_extended, "The account '#{negative_overflowed_from_accounts.first.name}' is using this account as a negative overflow, so this account cannot be disabled.")
     end
+
+    if disabled? && overflowed_from_accounts.size > 0
+      errors.add(:enabled, "Invalid")
+      errors.add(:enabled_extended, "The account '#{overflowed_from_accounts.first.name}' is using this account as an overflow, so this account cannot be disabled.")
+    end
   end
 
   # validate
-  def cannot_overflow_as_disabled_account
-    if disabled? && negative_overflow_id && negative_overflow_id != self.id && negative_overflow_id != 0
-      errors.add(:negative_overflow_id, "Disabled")
-      errors.add(:negative_overflow_id_extended, "Cannot set a negative overflow for a disabled account.")
-    end
-  end
+  #def cannot_overflow_as_disabled_account
+  #  if disabled? && negative_overflow_id && !allow_negative?
+  #    errors.add(:negative_overflow_id, "Disabled")
+  #    errors.add(:negative_overflow_id_extended, "Cannot set a negative overflow for a disabled account.")
+  #  end
+  #end
 
   # validate
   def cannot_exceed_max_overflow_recursion

@@ -22,6 +22,7 @@ class BudgetFormBuilder < ActionView::Helpers::FormBuilder
     password_field
     collection_select
     check_box
+    select
   ].each do |method_name|
     alias_method :"budget_old_#{method_name}", :"#{method_name}"
 
