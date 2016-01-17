@@ -188,6 +188,12 @@ class Account < ActiveRecord::Base
       errors.add(:overflow_into_id, "Invalid")
       errors.add(:overflow_into_id_extended, "The account '#{overflow_into_account.name}' has been disabled, and may not be selected.")
     end
+
+    # Can't income_overflow into self either.
+    if overflow_into_account == self
+      errors.add(:overflow_into_id, "Invalid")
+      errors.add(:overflow_into_id_extended, "An account cannot have income overflow into itself.")
+    end
   end
 
   # validate
@@ -202,14 +208,6 @@ class Account < ActiveRecord::Base
       errors.add(:enabled_extended, "The account '#{overflowed_from_accounts.first.name}' is using this account as an overflow, so this account cannot be disabled.")
     end
   end
-
-  # validate
-  #def cannot_overflow_as_disabled_account
-  #  if disabled? && negative_overflow_id && !allow_negative?
-  #    errors.add(:negative_overflow_id, "Disabled")
-  #    errors.add(:negative_overflow_id_extended, "Cannot set a negative overflow for a disabled account.")
-  #  end
-  #end
 
   # validate
   def cannot_exceed_max_overflow_recursion

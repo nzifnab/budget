@@ -151,6 +151,12 @@ RSpec.describe Account do
           account.overflow_into_account = nil
           expect(account).to be_valid
         end
+
+        it 'is invalid if the overflow account is itself' do
+          account.enabled = true
+          account.overflow_into_account = account
+          expect(account).not_to be_valid
+        end
       end
     end
 
