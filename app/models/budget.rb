@@ -9,6 +9,10 @@ class Budget
     user.accounts.build(params)
   end
 
+  def new_income(params={})
+    user.incomes.build(params)
+  end
+
   def accounts
     user.accounts.order{[
       accounts.enabled.desc,

@@ -9,10 +9,13 @@ Budgeteer::Application.routes.draw do
     resources :quick_funds, only: [:create, :show]
   end
 
+  resources :incomes, only: [:index, :create]
+
   resources :account_histories, only: [:index]
 
   match '/login' => 'sessions#new', as: :session, via: :get
   match '/login' => 'sessions#create', via: :post
+  match '/logout' => 'sessions#destroy', as: :logout, via: :delete
   unless Rails.env.production?
     match '/__backdoor_login__/:id' => 'sessions#backdoor', as: :backdoor_login, via: :get
   end
