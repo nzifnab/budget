@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe AccountHistory do
   describe "#amount=" do
     let(:account) do

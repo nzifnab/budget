@@ -14,7 +14,7 @@ class Account < ActiveRecord::Base
     foreign_key: "overflow_into_id"
   )
   belongs_to :user, inverse_of: :accounts
-  has_many :account_histories, -> {order{created_at.desc}}, inverse_of: :account
+  has_many :account_histories, -> {order(created_at: :desc)}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
   has_many(
     :overflowed_from_accounts,
@@ -86,9 +86,9 @@ class Account < ActiveRecord::Base
 
   def negative_overflowed_from_accounts
     Account.
-      where{negative_overflow_id == my{id}}.
-      where{negative_overflow_id != nil}.
-      where{id != my{id}}
+      where(negative_overflow_id: self.id).
+      where.not(negative_overflow_id: nil).
+      where.not(id: self.id)
   end
 
   def apply_history_amount(quick_fund, val)
@@ -108,7 +108,7 @@ class Account < ActiveRecord::Base
   def negative_overflow_recursion_error?
     tester = false
     if negative_overflow_id.present?
-      tester = Account.where{id == my{self.negative_overflow_id}}
+      tester = Account.where(id: self.negative_overflow_id)
 
       last_account_alias = "accounts"
       # well this spiraled out of control...

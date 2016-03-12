@@ -82,8 +82,8 @@ CREATE TABLE accounts (
     updated_at timestamp without time zone,
     prerequisite_account_id integer,
     cap numeric,
-    add_per_month numeric,
-    add_per_month_type text,
+    add_per_month numeric DEFAULT 0,
+    add_per_month_type text DEFAULT '$'::text,
     monthly_cap numeric,
     overflow_into_id integer
 );
@@ -195,7 +195,7 @@ CREATE TABLE users (
     last_name text,
     email text,
     password_digest character varying(255),
-    undistributed_funds numeric(10,2) DEFAULT 0.0,
+    undistributed_funds numeric(10,2) DEFAULT 0,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     last_login_at timestamp without time zone

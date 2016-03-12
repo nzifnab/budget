@@ -1,3 +1,4 @@
+require 'rails_helper'
 RSpec.describe Account do
   context "validations" do
     describe "Basic validations" do

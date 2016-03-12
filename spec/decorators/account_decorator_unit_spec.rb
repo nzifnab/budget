@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe AccountDecorator do
   let(:account){Account.new}
   let(:decorator){AccountDecorator.decorate(account)}
