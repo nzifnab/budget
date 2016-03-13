@@ -20,6 +20,7 @@ module ApplicationHelper
   end
 
   def nice_currency(currency)
+    currency ||= 0
     number_to_currency(currency, negative_format: "(%u%n)")
   end
 

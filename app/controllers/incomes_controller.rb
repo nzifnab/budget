@@ -3,7 +3,7 @@ class IncomesController < ApplicationController
 
   def index
     @income = budget.new_income
-    @incomes = budget.incomes
+    @incomes = budget.incomes.page(params[:page]).per_page(15)
   end
 
   def create
