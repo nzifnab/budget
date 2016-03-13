@@ -19,11 +19,19 @@ class QuickFund < ActiveRecord::Base
     history
   end
 
+  def withdrawal?
+    fund_type.to_s.downcase == "withdraw"
+  end
+
+  def deposit?
+    fund_type.to_s.downcase == "deposit"
+  end
+
   protected
 
     # before_validation on: :create
     def build_account_history
-      funds = fund_type.to_s.downcase == "withdraw" ? -amount.to_d : amount.to_d
+      funds = withdrawal? ? -amount.to_d : amount.to_d
       distribute_funds(funds, account)
     end
 

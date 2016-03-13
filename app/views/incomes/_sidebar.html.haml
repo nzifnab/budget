@@ -1,0 +1,9 @@
+.sidebar-container.box-content
+  %h1 Income
+
+  - if incomes.present?
+    %ul.boxed-list
+      = render incomes, locals: {auto_open: auto_open}
+
+    = pagination(incomes)
+  .break

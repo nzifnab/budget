@@ -1,0 +1,20 @@
+- auto_open ||= nil
+%li.box.box-brown[income]
+  .cols{"data-click-toggle" => ".js-income-details-#{income.id}", class: "clickable"}
+    .col-one-third{class: amount_class(1)}= income.display_amount
+    .col-one-third.text-center
+      = link_to "Details", "#", class: 'text-small js-prevent-default'
+    .col-one-third.text-right{title: income.tooltip_date}
+      = income.display_date
+
+  .break{class: "js-income-details-#{income.id}", style: (auto_open == income.id ? '' : 'display: none;')}
+    .break-small
+    .break-small
+      %table
+        %thead
+          %th
+            %td
+              Account
+            %td
+              Amount
+          = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history

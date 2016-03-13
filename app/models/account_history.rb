@@ -1,7 +1,7 @@
 class AccountHistory < ActiveRecord::Base
   belongs_to :account, inverse_of: :account_histories
   belongs_to :quick_fund, inverse_of: :account_histories
-  # belongs_to :income, inverse_of: :account_histories
+  belongs_to :income, inverse_of: :account_histories
   belongs_to :overflow_from_account,
     class_name: "Account",
     foreign_key: "overflow_from_id"
@@ -12,9 +12,17 @@ class AccountHistory < ActiveRecord::Base
   def amount=(val)
     super
     if new_record?
-      self[:amount] = account.apply_history_amount(quick_fund, val)
+      self[:amount] = account.apply_history_amount(originator, val)
     end
     val
+  end
+
+  def originator
+    if new_record?
+      quick_fund || income
+    else
+      quick_fund_id ? quick_fund : income
+    end
   end
 
   protected

@@ -91,7 +91,7 @@ class Account < ActiveRecord::Base
       where.not(id: self.id)
   end
 
-  def apply_history_amount(quick_fund, val)
+  def apply_history_amount(quick_fund_or_income, val)
     history_amount = val.to_d
     self.amount = self.amount.to_d + history_amount
 
@@ -100,7 +100,7 @@ class Account < ActiveRecord::Base
       history_amount -= remaining_funds
       self.amount = 0
 
-      quick_fund.distribute_funds(remaining_funds, negative_overflow_account)
+      quick_fund_or_income.distribute_funds(remaining_funds, negative_overflow_account)
     end
     history_amount
   end

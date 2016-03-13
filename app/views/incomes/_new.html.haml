@@ -1,0 +1,7 @@
+= form_for income.model, format: 'json', remote: true, html: {class: 'js-new-income'} do |f|
+  %ul.fields
+    = render partial: 'incomes/form', locals: {f: f}
+
+    %li
+      %label
+      = f.submit "Distribute Funds", class: 'btn btn-green btn-mobile', data: {disable_with: "Saving..."}
