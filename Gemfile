@@ -56,6 +56,7 @@ group :development, :test do
   gem 'launchy'
   gem 'database_cleaner'
   gem 'teaspoon-jasmine'
+  gem 'active_record_query_trace'
 end
 
 # Use unicorn as the app server

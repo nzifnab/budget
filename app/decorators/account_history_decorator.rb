@@ -33,6 +33,6 @@ class AccountHistoryDecorator < ApplicationDecorator
   end
 
   def account_name
-    account.name
+    account ? account.name : "<<Undistributed Funds>>"
   end
 end

@@ -60,6 +60,11 @@ class Account < ActiveRecord::Base
 
   attr_accessor :fund_change
 
+  def self.by_distribution_priority
+    order(priority: :desc)
+      .order("accounts.cap ASC NULLS LAST")
+  end
+
   def disabled?
     !enabled?
   end
@@ -84,6 +89,17 @@ class Account < ActiveRecord::Base
     amount.to_d < 0 && negative_overflow_id && !allow_negative?
   end
 
+  def prereq_fulfilled?
+    return true unless prerequisite_account
+    pprerequisite_account.amount >= prerequisite_account.cap
+  end
+
+  def amount_to_use(funds, priority_funds)
+    per_month = (add_per_month_type == '%' ? priority_funds * (add_per_month / 100.to_d) : add_per_month)
+
+    return [funds, per_month].min
+  end
+
   def negative_overflowed_from_accounts
     Account.
       where(negative_overflow_id: self.id).
@@ -103,6 +119,16 @@ class Account < ActiveRecord::Base
       quick_fund_or_income.distribute_funds(remaining_funds, negative_overflow_account)
     end
     history_amount
+  end
+
+  def apply_income_amount(income:, funds:, priority_funds:)
+    if prereq_fulfilled?
+      funds_to_distribute = amount_to_use(funds, priority_funds)
+      self.amount += funds_to_distribute
+      income.build_history(self, funds_to_distribute)
+      funds -= funds_to_distribute
+    end
+    funds
   end
 
   def negative_overflow_recursion_error?

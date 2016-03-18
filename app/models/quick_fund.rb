@@ -15,7 +15,7 @@ class QuickFund < ActiveRecord::Base
       account: acc,
       description: description
     )
-    history.amount = funds
+    history.amount_for_quick_fund = funds
     history
   end
 

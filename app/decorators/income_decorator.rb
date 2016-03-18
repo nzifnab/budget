@@ -1,4 +1,6 @@
 class IncomeDecorator < ApplicationDecorator
+  decorates_association :account_histories
+
   delegate_all
 
   def display_amount

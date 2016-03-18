@@ -33,4 +33,15 @@ Budgeteer::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
+
+  # If you need a stacktrace of where a query in the log originated from...
+  # use this!
+  #ActiveRecordQueryTrace.enabled = true
+
+  # options are :app (default), :full, and :rails - does the same thing you'd see
+  # from a stacktrace in a browser w/ app/full/rails
+  #ActiveRecordQueryTrace.level = :app
+
+  # Setting to '0' includes entire trace
+  #ActiveRecordQueryTrace.lines = 3
 end
