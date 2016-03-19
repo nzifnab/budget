@@ -95,6 +95,14 @@ class Account < ActiveRecord::Base
     prerequisite_account.amount >= prerequisite_account.cap
   end
 
+  # TODO: PERFORMANCE: Cache amount_received_this_month/year
+  # on account, with a cached_date for the earliest recorded
+  # value so it knows if it needs to bust the cache.
+  # Otherwise this is gonna be some wonky 2(n+1) queries.
+  # ALTERNATIVELY: Collect this data all in one go
+  # before distribution iteration begins. But that might
+  # have to happen when i refactor distribution into it's own class:
+  # IncomeDistribution.
   def amount_received_this_month
     account_histories.where(
       "created_at >= :this_month",
@@ -104,28 +112,57 @@ class Account < ActiveRecord::Base
       sum(:amount)
   end
 
+  def amount_received_this_year
+    account_histories.where(
+      "created_at >= :this_year",
+      this_year: Time.zone.now.beginning_of_year
+    ).
+      where("income_id IS NOT NULL").
+      sum(:amount)
+  end
+
   def month_amount_remaining(funds)
     if add_per_month_type == '%'
-      funds * (add_per_month.to_d / 100.to_d)
+      compare_vals = []
+      compare_vals << funds * (add_per_month.to_d / 100.to_d)
+      compare_vals << [0, monthly_cap.to_d - amount_received_this_month].max if monthly_cap
+      compare_vals.min
     else
       [0, add_per_month.to_d - amount_received_this_month].max
     end
   end
 
+  def year_amount_remaining
+    [0, annual_cap.to_d - amount_received_this_year].max if annual_cap
+  end
+
+  # TODO: HACK: Make this distribution code it's own class,
+  # which can, in the class, handle this explanation messaging.
+  # Really doesn't belong here.
   def amount_to_use(funds, priority_funds)
     # Cannot exceed per_month amount
     monthly_remaining = month_amount_remaining(priority_funds)
+    yearly_remaining = year_amount_remaining
     compare_vals = [{
       expl: nil,
       val: funds
     }, {
       expl: if add_per_month_type == '$' && monthly_remaining < add_per_month
         "#{decorate.h.nice_currency(add_per_month - monthly_remaining)} previously added this month"
+      elsif add_per_month_type == '%' && monthly_remaining < (priority_funds * (add_per_month.to_d / 100.to_d))
+        "#{decorate.h.nice_currency(monthly_cap)} monthly cap"
       else
         nil
       end,
       val: monthly_remaining
     }]
+    # Cannot exceed annual cap
+    if yearly_remaining
+      compare_vals << {
+        expl: "#{decorate.h.nice_currency(annual_cap)} annual cap",
+        val: yearly_remaining
+      }
+    end
     # Cannot exceed the cap
     if cap
       compare_vals << {

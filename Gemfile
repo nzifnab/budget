@@ -59,6 +59,10 @@ group :development, :test do
   gem 'active_record_query_trace'
 end
 
+group :test do
+  gem 'timecop'
+end
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

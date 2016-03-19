@@ -328,6 +328,128 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it 'obeys the monthly_cap value for % distribution' do
+      # Adds value in the month together
+      percentage_account.account_histories.create!(
+        amount: 50,
+        income_id: 999
+      )
+      percentage_account.account_histories.create!(
+        amount: 35,
+        income_id: 998
+      )
+      # Ignores values created in previous months
+      percentage_account.account_histories.create!(
+        created_at: Time.zone.now.beginning_of_month - 1.minute,
+        amount: 45,
+        income_id: 997
+      )
+      # Ignores non-income histories
+      percentage_account.account_histories.create!(
+        amount: 82,
+        quick_fund_id: 800
+      )
+      percentage_account.update_attributes(
+        amount: 10,
+        monthly_cap: 115
+      )
+
+      test_distribution(
+        accounts: [:percentage, :catchall],
+        amount: 300,
+
+        expect: {
+          amounts: {
+            percentage: 40,
+            catchall: 270
+          },
+          undistributed: 0,
+          history: [
+            {
+              amount: 30,
+              explanation: "Distributed at priority level 6: 30.00% of $300.00 ($115.00 monthly cap)"
+            },
+            {
+              amount: 270,
+              explanation: "Distributed at priority level 5: 100.00% of $270.00"
+            }
+          ]
+        }
+      )
+    end
+
+    it 'obeys the yearly cap for % and flat accounts' do
+      # Adds value in the month together
+      Timecop.freeze("March 3, 2016".to_datetime) do
+        flat_value_account.account_histories.create!(
+          amount: 90,
+          income_id: 999
+        )
+        flat_value_account.account_histories.create!(
+          amount: 160,
+          income_id: 998
+        )
+
+        # Not Counted
+        flat_value_account.account_histories.create!(
+          created_at: Time.zone.now.beginning_of_year - 1.minute,
+          income_id: 997,
+          amount: 249
+        )
+
+        percentage_account.account_histories.create!(
+          amount: 50,
+          income_id: 999
+        )
+        percentage_account.account_histories.create!(
+          amount: 77,
+          income_id: 998
+        )
+
+        # Not Counted
+        percentage_account.account_histories.create!(
+          amount: 35,
+          quick_fund_id: 44
+        )
+
+        flat_value_account.update_attributes(
+          annual_cap: 650
+        )
+        percentage_account.update_attributes(
+          annual_cap: 200
+        )
+      end
+
+      Timecop.freeze("May 7, 2016".to_datetime) do
+        test_distribution(
+          accounts: [:flat_value, :percentage],
+          amount: 2_000,
+
+          expect: {
+            amounts: {
+              flat_value: 400,
+              percentage: 73
+            },
+            undistributed: 1527,
+            history: [
+              {
+                amount: 400,
+                explanation: "Distributed at priority level 7: $600.00 of $2,000.00 ($650.00 annual cap)"
+              },
+              {
+                amount: 73,
+                explanation: "Distributed at priority level 6: 30.00% of $1,600.00 ($200.00 annual cap)"
+              },
+              {
+                amount: 1527,
+                explanation: "Undistributed Funds"
+              }
+            ]
+          }
+        )
+      end
+    end
+
     def test_distribution(options)
       options[:accounts].each do |account_name|
         public_send("#{account_name}_account").tap{|a| a.user = user}.save!
@@ -335,6 +457,28 @@ RSpec.describe Income, type: :model do
 
       income.amount = options[:amount]
       income.save!
+
+      history_amounts = options[:expect][:history]
+      histories = income.account_histories.order(id: :asc)
+      expect(
+        history_size: histories.size
+      ).to eq(
+        history_size: history_amounts.size
+      )
+      histories.each do |history|
+        history_hash = history_amounts.shift
+        expect(
+          [
+            history.amount,
+            history.explanation
+          ]
+        ).to eq(
+          [
+            history_hash[:amount],
+            history_hash[:explanation]
+          ]
+        )
+      end
 
       options[:expect][:amounts].each do |account_name, amount|
         account = public_send("#{account_name}_account")
@@ -356,18 +500,7 @@ RSpec.describe Income, type: :model do
         undistributed: options[:expect][:undistributed]
       )
 
-      history_amounts = options[:expect][:history]
-      histories = income.account_histories.order(id: :asc)
-      expect(
-        history_size: histories.size
-      ).to eq(
-        history_size: history_amounts.size
-      )
-      histories.each do |history|
-        history_hash = history_amounts.shift
-        expect(history.amount).to eq(history_hash[:amount])
-        expect(history.explanation).to eq(history_hash[:explanation])
-      end
+
     end
   end
 end

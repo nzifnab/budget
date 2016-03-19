@@ -86,7 +86,8 @@ CREATE TABLE accounts (
     add_per_month numeric DEFAULT 0,
     add_per_month_type text DEFAULT '$'::text,
     monthly_cap numeric,
-    overflow_into_id integer
+    overflow_into_id integer,
+    annual_cap numeric(8,2)
 );
 
 
@@ -376,4 +377,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140707010619');
 INSERT INTO schema_migrations (version) VALUES ('20160115031516');
 
 INSERT INTO schema_migrations (version) VALUES ('20160319025652');
+
+INSERT INTO schema_migrations (version) VALUES ('20160319043433');
 
