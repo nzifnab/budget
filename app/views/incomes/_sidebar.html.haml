@@ -4,7 +4,7 @@
 
   - if incomes.present?
     %ul.boxed-list
-      = render incomes, locals: {auto_open: auto_open}
+      = render incomes, auto_open: auto_open
 
     = pagination(incomes)
   .break

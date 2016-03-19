@@ -64,14 +64,8 @@ class Account < ActiveRecord::Base
     where(enabled: true)
   end
 
+  # More reasons this belongs in a background job...
   def self.by_distribution_priority(prerequisite_account=nil)
-    #preload_recursion = {}
-    #node = preload_recursion
-    #(MAX_OVERFLOW_RECURSION_COUNT + 1).times do |i|
-    #  node[:overflow_into_account] = {}
-    #  node = node[:overflow_into_account]
-    #end
-
     accounts = enabled.order(priority: :desc)
       .order("accounts.cap ASC NULLS LAST")
       .order(id: :asc)
@@ -255,14 +249,7 @@ class Account < ActiveRecord::Base
       )
       funds -= funds_to_distribute
 
-      # 0 = a - b + c
-      #
-      # b - c
-      # 0 + b - c = a
-
       if @excess_funds && overflow_into_account.try(:enabled?)
-        #funds -= @excess_funds
-        #funds += overflow_into_account.apply_overflow_amount(
         funds -= @excess_funds
         @excess_funds = overflow_into_account.apply_overflow_amount(
           income: income,

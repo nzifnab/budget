@@ -7,4 +7,4 @@
 
 .sidebar
   .js-sidebar-content.box
-    = render partial: 'incomes/sidebar', locals: {incomes: incomes}
+    = render partial: 'incomes/sidebar', locals: {incomes: incomes, auto_open: params[:income_id].to_i}

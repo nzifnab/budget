@@ -23,3 +23,6 @@
 10. Any funds remaining after complete distribution has been completed will be placed in `User#undistributed_funds`
 
 11. It skips all disabled accounts for distribution
+
+TODO:
+12. Should be able to select a date for the income distribution.

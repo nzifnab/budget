@@ -9,10 +9,11 @@ class IncomesController < ApplicationController
   def create
     @income = budget.new_income(income_params)
     if @income.save
-      @incomes = budget.incomes
-      render action: 'show'
+      @incomes = budget.incomes.page(params[:page]).per_page(15)
+      redirect_to incomes_path(income_id: @income.id)
     else
-      render action: 'new', status: :unprocessable_entity
+      @incomes = budget.incomes.page(params[:page]).per_page(15)
+      render action: 'index', status: :unprocessable_entity
     end
   end
 

@@ -48,7 +48,7 @@ RSpec.describe AccountDecorator do
   end
 
   describe "#formatted_created_at" do
-    let(:time_now){"January 3rd, 2013".to_datetime}
+    let(:time_now){"January 3rd, 2013 3:00 PM".to_datetime}
 
     it "returns a properly formatted time" do
       account.created_at = time_now

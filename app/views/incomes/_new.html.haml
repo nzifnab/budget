@@ -1,4 +1,5 @@
-= form_for income.model, format: 'json', remote: true, html: {class: 'js-new-income'} do |f|
+-#= form_for income.model, format: 'json', remote: true, html: {class: 'js-new-income'} do |f|
+= form_for income.model do |f|
   %ul.fields
     = render partial: 'incomes/form', locals: {f: f}
 

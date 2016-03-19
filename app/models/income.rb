@@ -45,7 +45,8 @@ class Income < ActiveRecord::Base
     history = account_histories.create!(
       account: account,
       explanation: expl,
-      amount: funds
+      amount: funds,
+      description: description
     )
     history
   end

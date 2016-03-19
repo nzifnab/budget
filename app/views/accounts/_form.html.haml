@@ -9,14 +9,18 @@
   = f.text_field :priority, class: 'field-small'
 %li
   = f.label :add_per_month, "Add Per Month"
-  = f.select :add_per_month_type, ["$", "%"]
+  = f.select :add_per_month_type, [["$", {"data-hide" => ".js-monthly-cap", "data-clear-fields" => true}], ["%", {"data-show" => ".js-monthly-cap"}]], {}, "data-select-toggler" => true
   = f.text_field :add_per_month
--#%li
--#  = f.label :monthly_cap
--#  .field-prepend
--#    $
--#  = f.text_field :monthly_cap
-
+%li.js-monthly-cap{style: f.object.percentage? ? '' : 'display:none;'}
+  = f.label :monthly_cap, "Monthly Cap"
+  .field-prepend
+    $
+  = f.text_field :monthly_cap
+%li
+  = f.label :annual_cap, "Annual Cap"
+  .field-prepend
+    $
+  = f.text_field :annual_cap
 %li
   = f.label :cap, "Account Cap"
   .field-prepend

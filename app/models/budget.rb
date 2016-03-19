@@ -26,12 +26,17 @@ class Budget
   end
 
   def accounts_except(self_id)
-    user.accounts.order(name: :asc).
-      where(
-        "id != :self_id AND enabled = :true",
-        self_id: self_id,
-        true: true
-      )
+    accounts = user.accounts.order(name: :asc)
+      .where(enabled: true)
+
+    if self_id
+      accounts = accounts.
+        where(
+          "id != :self_id",
+          self_id: self_id
+        )
+    end
+    accounts
   end
 
   def incomes

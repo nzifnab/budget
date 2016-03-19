@@ -15,6 +15,7 @@ class Effects
     @initClickShow()
     @initClickHide()
     @initClickToggle()
+    @initSelectToggling()
     @initClickModifyClasses()
     @initTabTogglers()
     @initPreventDefault()
@@ -44,6 +45,20 @@ class Effects
     $(document).on 'click', "[data-click-hide]", (e) ->
       e.preventDefault()
       $($(this).data('click-hide')).hide()
+
+
+  @initSelectToggling: ->
+    $(document).on "change", "select[data-select-toggler]", (e) ->
+      e.preventDefault()
+      $option = $(this).find("option:selected")
+      if $option.data('hide')
+        $element = $($option.data('hide')).hide()
+      if $option.data('show')
+        $element = $($option.data('show')).show()
+      if $option.data('toggle')
+        $element = $($option.data('toggle')).toggle()
+      if $option.data('clear-fields')
+        $element.find("input, textarea, select").val('')
 
   @initClickModifyClasses: ->
     $(document).on 'click', "[data-click-remove-element-class]", (e) ->
@@ -78,6 +93,7 @@ class Effects
           Effects.remoteReplaceSlide($(this), xhr.responseText, 'right')
       }, "[data-remote-replace-right]"
     )
+
 
   @remoteReplaceSlide: ($element, data, direction) ->
     $el = $($element.data("remote-replace-#{direction}"))
