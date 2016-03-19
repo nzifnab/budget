@@ -60,6 +60,10 @@ class Account < ActiveRecord::Base
 
   attr_accessor :fund_change
 
+  def self.enabled
+    where(enabled: true)
+  end
+
   def self.by_distribution_priority(prerequisite_account=nil)
     #preload_recursion = {}
     #node = preload_recursion
@@ -68,7 +72,7 @@ class Account < ActiveRecord::Base
     #  node = node[:overflow_into_account]
     #end
 
-    accounts = order(priority: :desc)
+    accounts = enabled.order(priority: :desc)
       .order("accounts.cap ASC NULLS LAST")
       .order(id: :asc)
 
@@ -240,7 +244,7 @@ class Account < ActiveRecord::Base
   # Returns the unused funds
   def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "")
     deco = self.decorate
-    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} of #{deco.h.nice_currency(priority_funds)}"
+    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{deco.h.nice_currency(priority_funds)} funds"
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
       self.amount += funds_to_distribute
@@ -256,7 +260,7 @@ class Account < ActiveRecord::Base
       # b - c
       # 0 + b - c = a
 
-      if @excess_funds && overflow_into_account
+      if @excess_funds && overflow_into_account.try(:enabled?)
         #funds -= @excess_funds
         #funds += overflow_into_account.apply_overflow_amount(
         funds -= @excess_funds
@@ -269,7 +273,9 @@ class Account < ActiveRecord::Base
         funds += @excess_funds
       end
 
-      if @excess_funds
+      # If this account has excess funds to distribute, hit the cap,
+      # and has now fulfilled the prerequisites of other accounts...
+      if @excess_funds && cap && amount >= cap
         funds -= @excess_funds
         @excess_funds = income.distribute_via_prerequisite(
           from_account: self,

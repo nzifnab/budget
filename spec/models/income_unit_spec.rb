@@ -82,7 +82,7 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 52_948,
-              explanation: "Distributed at priority level 5: 100.00% of $52,948.00"
+              explanation: "Distributed at priority level 5: 100.00% per month of $52,948.00 funds"
             }
           ]
         }
@@ -103,7 +103,6 @@ RSpec.describe Income, type: :model do
             {
               amount: 3_000,
               explanation: "Distributed at priority level 6: 30.00% per month of $10,000.00 funds"
-              explanation: "Distributed at priority level 6: 30.00% of $10,000.00"
             },
             {
               amount: 7_000,
@@ -128,7 +127,6 @@ RSpec.describe Income, type: :model do
             {
               amount: 600,
               explanation: "Distributed at priority level 7: $600.00 per month of $4,500.00 funds"
-              #explanation: "Distributed at priority level 7: $600.00 of $4,500.00"
             },
             {
               amount: 3_900,
@@ -162,11 +160,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 360,
-              explanation: "Distributed at priority level 7: 30.00% of $1,200.00"
+              explanation: "Distributed at priority level 7: 30.00% per month of $1,200.00 funds"
             },
             {
               amount: 450,
-              explanation: "Distributed at priority level 3: $600.00 of $840.00 ($450.00 cap)"
+              explanation: "Distributed at priority level 3: $600.00 per month of $840.00 funds ($450.00 cap)"
             },
             {
               amount: 390,
@@ -199,11 +197,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 450,
-              explanation: "Distributed at priority level 7: $600.00 of $1,200.00 ($450.00 cap)"
+              explanation: "Distributed at priority level 7: $600.00 per month of $1,200.00 funds ($450.00 cap)"
             },
             {
               amount: 225,
-              explanation: "Distributed at priority level 3: 30.00% of $750.00"
+              explanation: "Distributed at priority level 3: 30.00% per month of $750.00 funds"
             },
             {
               amount: 525,
@@ -236,11 +234,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 600,
-              explanation: "Distributed at priority level 6: 30.00% of $2,000.00"
+              explanation: "Distributed at priority level 6: 30.00% per month of $2,000.00 funds"
             },
             {
               amount: 1_400,
-              explanation: "Distributed at priority level 5: 100.00% of $1,400.00"
+              explanation: "Distributed at priority level 5: 100.00% per month of $1,400.00 funds"
             }
           ]
         }
@@ -270,11 +268,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 600,
-              explanation: "Distributed at priority level 6: 30.00% of $2,000.00"
+              explanation: "Distributed at priority level 6: 30.00% per month of $2,000.00 funds"
             },
             {
               amount: 1_400,
-              explanation: "Distributed at priority level 5: 100.00% of $1,400.00"
+              explanation: "Distributed at priority level 5: 100.00% per month of $1,400.00 funds"
             }
           ]
         }
@@ -304,11 +302,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 600,
-              explanation: "Distributed at priority level 7: $600.00 of $2,000.00"
+              explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds"
             },
             {
               amount: 420,
-              explanation: "Distributed at priority level 6: 30.00% of $1,400.00"
+              explanation: "Distributed at priority level 6: 30.00% per month of $1,400.00 funds"
             },
             {
               amount: 980,
@@ -354,11 +352,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 350,
-              explanation: "Distributed at priority level 7: $600.00 of $700.00 ($250.00 previously added this month)"
+              explanation: "Distributed at priority level 7: $600.00 per month of $700.00 funds ($250.00 previously added this month)"
             },
             {
               amount: 105,
-              explanation: "Distributed at priority level 6: 30.00% of $350.00"
+              explanation: "Distributed at priority level 6: 30.00% per month of $350.00 funds"
             },
             {
               amount: 245,
@@ -408,11 +406,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 30,
-              explanation: "Distributed at priority level 6: 30.00% of $300.00 ($115.00 monthly cap)"
+              explanation: "Distributed at priority level 6: 30.00% per month of $300.00 funds ($115.00 monthly cap)"
             },
             {
               amount: 270,
-              explanation: "Distributed at priority level 5: 100.00% of $270.00"
+              explanation: "Distributed at priority level 5: 100.00% per month of $270.00 funds"
             }
           ]
         }
@@ -477,11 +475,11 @@ RSpec.describe Income, type: :model do
             history: [
               {
                 amount: 400,
-                explanation: "Distributed at priority level 7: $600.00 of $2,000.00 ($650.00 annual cap)"
+                explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds ($650.00 annual cap)"
               },
               {
                 amount: 73,
-                explanation: "Distributed at priority level 6: 30.00% of $1,600.00 ($200.00 annual cap)"
+                explanation: "Distributed at priority level 6: 30.00% per month of $1,600.00 funds ($200.00 annual cap)"
               },
               {
                 amount: 1527,
@@ -517,11 +515,11 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 400,
-              explanation: "Distributed at priority level 7: $600.00 of $4,000.00 ($1,050.00 cap)"
+              explanation: "Distributed at priority level 7: $600.00 per month of $4,000.00 funds ($1,050.00 cap)"
             },
             {
               amount: 260,
-              explanation: "Distributed at priority level 6: 30.00% of $3,600.00 ($510.00 cap)"
+              explanation: "Distributed at priority level 6: 30.00% per month of $3,600.00 funds ($510.00 cap)"
             },
             {
               amount: 3340,
@@ -556,15 +554,15 @@ RSpec.describe Income, type: :model do
           history: [
             { # flat value
               amount: 600,
-              explanation: "Distributed at priority level 7: $600.00 of $2,000.00"
+              explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds"
             },
             { # percentage
               amount: 420,
-              explanation: "Distributed at priority level 6: 30.00% of $1,400.00"
+              explanation: "Distributed at priority level 6: 30.00% per month of $1,400.00 funds"
             },
             { # overflow_to_percent
               amount: 250,
-              explanation: "Distributed at priority level 4: $300.00 of $980.00 ($450.00 cap)"
+              explanation: "Distributed at priority level 4: $300.00 per month of $980.00 funds ($450.00 cap)"
             },
             { # percentage
               amount: 50,
@@ -573,7 +571,7 @@ RSpec.describe Income, type: :model do
             { # 25% is 170
               # overflow_to_flat
               amount: 100,
-              explanation: "Distributed at priority level 3: 25.00% of $680.00 ($400.00 cap)"
+              explanation: "Distributed at priority level 3: 25.00% per month of $680.00 funds ($400.00 cap)"
             }, # $580 left
             {
               # flat_value
@@ -616,16 +614,16 @@ RSpec.describe Income, type: :model do
           history: [
             { # flat_value
               amount: 600,
-              explanation: "Distributed at priority level 7: $600.00 of $2,000.00"
+              explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds"
             },
             { # overflow_to_flat
               amount: 200, # hit monthly_cap
-              explanation: "Distributed at priority level 3: 25.00% of $1,400.00 ($200.00 monthly cap)"
+              explanation: "Distributed at priority level 3: 25.00% per month of $1,400.00 funds ($200.00 monthly cap)"
             },
             { # double_overflow
               # sending $1,200
               amount: 450, # hit cap
-              explanation: "Distributed at priority level 2: $700.00 of $1,200.00 ($1,000.00 cap)"
+              explanation: "Distributed at priority level 2: $700.00 per month of $1,200.00 funds ($1,000.00 cap)"
             },
             { # overflow_to_flat
               # sending $250
@@ -670,15 +668,15 @@ RSpec.describe Income, type: :model do
           history: [
             { # percentage
               amount: 100,
-              explanation: "Distributed at priority level 6: 30.00% of $1,500.00 ($150.00 cap)"
+              explanation: "Distributed at priority level 6: 30.00% per month of $1,500.00 funds ($150.00 cap)"
             },
             { # flat_value
               amount: 350,
-              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 6 with $350.00 - Distributed at priority level 7: $600.00 of $350.00"
+              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 6 with $350.00 - Distributed at priority level 7: $600.00 per month of $350.00 funds"
             },
             { # catchall
               amount: 300,
-              explanation: "Distributed at priority level 5: 100.00% of $1,050.00 ($300.00 cap)"
+              explanation: "Distributed at priority level 5: 100.00% per month of $1,050.00 funds ($300.00 cap)"
             },
             {
               amount: 750,
@@ -698,22 +696,164 @@ RSpec.describe Income, type: :model do
     it 'when the account caps, it sends remaining funds to previously-skipped same-priority accounts where this one was a prerequisite' do
       # include same-priority with lower cap,
       # and same-priority with nil cap (which gets iterated after anyway)
-      pending "NYI"
-      raise "NYI"
+      # and same-priority with higher cap
+
+      # same-priority with lower cap, should redistribute
+      catchall_account.update_attributes(
+        prerequisite_account: percentage_account,
+        priority: 5,
+        cap: 450,
+        amount: 10
+      )
+      # same priority with higher cap, doesn't redistribute since it's
+      # on the way for the regular chain
+      flat_value_account.update_attributes(
+        prerequisite_account: percentage_account,
+        priority: 5,
+        cap: 700,
+        amount: 250
+      )
+      # same priority with nil cap, doesn't redistribute
+      final_account.update_attributes(
+        prerequisite_account: percentage_account,
+        priority: 5
+      )
+
+      percentage_account.update_attributes(
+        cap: 475,
+        amount: 50,
+        add_per_month: 35,
+        priority: 5
+      )
+
+      test_distribution(
+        accounts: [:catchall, :flat_value, :final, :percentage],
+        amount: 2_000,
+
+        expect: {
+          history: [
+            { # percentage
+              amount: 425,
+              explanation: "Distributed at priority level 5: 35.00% per month of $2,000.00 funds ($475.00 cap)"
+            },
+            { # catchall
+              amount: 275,
+              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 5 with $275.00 - Distributed at priority level 5: 100.00% per month of $275.00 funds"
+            },
+            { # flat_value
+              # send $1,100
+              amount: 450,
+              explanation: "Distributed at priority level 5: $600.00 per month of $2,000.00 funds ($700.00 cap)"
+            },
+            { # final
+              amount: 850,
+              explanation: "Distributed at priority level 5: $8,000.00 per month of $2,000.00 funds"
+            }
+          ],
+          amounts: {
+            catchall: 285,
+            flat_value: 700,
+            final: 850,
+            percentage: 475
+          },
+          undistributed: 0
+        }
+      )
     end
 
     it 'on prerequisite-fulfilled higher-priority redistribution, an account that hits the cap will release the funds to be distributed along the normal chain' do
-      pending "NYI"
-      raise "NYI"
+      # lower-priority has prerequisite
+      catchall_account.update_attributes(
+        prerequisite_account: percentage_account,
+        cap: 3000
+      )
+      # higher-priority has prerequisite
+      flat_value_account.update_attributes(
+        prerequisite_account: percentage_account,
+        cap: 500
+      )
+      percentage_account.update_attributes(
+        cap: 150,
+        amount: 50
+      )
+
+      test_distribution(
+        accounts: [:catchall, :flat_value, :percentage],
+        amount: 3_000,
+
+        expect: {
+          history: [
+            { # percentage
+              amount: 100,
+              explanation: "Distributed at priority level 6: 30.00% per month of $3,000.00 funds ($150.00 cap)"
+            },
+            { # flat_value
+              # sent $800
+              amount: 500,
+              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 6 with $800.00 - Distributed at priority level 7: $600.00 per month of $800.00 funds ($500.00 cap)"
+            },
+            { # catchall
+              amount: 2400,
+              explanation: "Distributed at priority level 5: 100.00% per month of $2,400.00 funds"
+            }
+          ],
+          undistributed: 0,
+          amounts: {
+            flat_value: 500,
+            percentage: 150,
+            catchall: 2400
+          }
+        }
+      )
     end
 
     it "doesn't send to prerequisite-fulfilled accounts if the monthly_cap was hit, but not the hard cap" do
+      # lower-priority has prerequisite
+      catchall_account.update_attributes(
+        prerequisite_account: percentage_account,
+        cap: 3000
+      )
+      # higher-priority has prerequisite
+      flat_value_account.update_attributes(
+        prerequisite_account: percentage_account,
+        cap: 500
+      )
+      percentage_account.update_attributes(
+        monthly_cap: 250,
+        cap: 350,
+        amount: 50
+      )
 
+      test_distribution(
+        accounts: [:catchall, :flat_value, :percentage],
+        amount: 2_000,
+
+        expect: {
+          history: [
+            { # percentage
+              amount: 250,
+              explanation: "Distributed at priority level 6: 30.00% per month of $2,000.00 funds ($250.00 monthly cap)"
+            },
+            {
+              amount: 1750,
+              explanation: "Undistributed Funds"
+            }
+          ],
+          undistributed: 1750,
+          amounts: {
+            flat_value: 0,
+            percentage: 300,
+            catchall: 0
+          }
+        }
+      )
     end
+
+
 
     def test_distribution(options)
       options[:accounts].each do |account_name|
-        public_send("#{account_name}_account").tap{|a| a.user = user}.save!
+        public_send("#{account_name}_account").tap{|a| a.update_attribute(:user_id, user.id)}
       end
 
       income.amount = options[:amount]
@@ -731,7 +871,7 @@ RSpec.describe Income, type: :model do
           ]
         ).to eq(
           [
-            history_hash[:amount],
+            history_hash[:amount].to_d,
             history_hash[:explanation]
           ]
         )
