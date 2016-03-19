@@ -42,7 +42,8 @@ CREATE TABLE account_histories (
     quick_fund_id integer,
     income_id integer,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    explanation text
 );
 
 
@@ -373,4 +374,6 @@ INSERT INTO schema_migrations (version) VALUES ('20140323022130');
 INSERT INTO schema_migrations (version) VALUES ('20140707010619');
 
 INSERT INTO schema_migrations (version) VALUES ('20160115031516');
+
+INSERT INTO schema_migrations (version) VALUES ('20160319025652');
 

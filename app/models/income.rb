@@ -18,16 +18,16 @@ class Income < ActiveRecord::Base
         priority_funds: priority_funds
       )
     end
-    build_history(nil, funds)
+    build_history(nil, funds, "Undistributed Funds")
   end
 
-  def build_history(account, funds)
+  def build_history(account, funds, expl=nil)
     return unless funds > 0
     history = account_histories.build(
       account: account,
-      description: description
+      explanation: expl,
+      amount: funds
     )
-    history.amount = funds
     history
   end
 

@@ -91,13 +91,53 @@ class Account < ActiveRecord::Base
 
   def prereq_fulfilled?
     return true unless prerequisite_account
-    pprerequisite_account.amount >= prerequisite_account.cap
+    return false if !prerequisite_account.cap
+    prerequisite_account.amount >= prerequisite_account.cap
+  end
+
+  def amount_received_this_month
+    account_histories.where(
+      "created_at >= :this_month",
+      this_month: Time.zone.now.beginning_of_month
+    ).
+      where("income_id IS NOT NULL").
+      sum(:amount)
+  end
+
+  def month_amount_remaining(funds)
+    if add_per_month_type == '%'
+      funds * (add_per_month.to_d / 100.to_d)
+    else
+      [0, add_per_month.to_d - amount_received_this_month].max
+    end
   end
 
   def amount_to_use(funds, priority_funds)
-    per_month = (add_per_month_type == '%' ? priority_funds * (add_per_month / 100.to_d) : add_per_month)
+    # Cannot exceed per_month amount
+    monthly_remaining = month_amount_remaining(priority_funds)
+    compare_vals = [{
+      expl: nil,
+      val: funds
+    }, {
+      expl: if add_per_month_type == '$' && monthly_remaining < add_per_month
+        "#{decorate.h.nice_currency(add_per_month - monthly_remaining)} previously added this month"
+      else
+        nil
+      end,
+      val: monthly_remaining
+    }]
+    # Cannot exceed the cap
+    if cap
+      compare_vals << {
+        expl: "#{decorate.display_cap} cap",
+        val: [0, (cap - amount)].max
+      }
+    end
 
-    return [funds, per_month].min
+    explanation_and_val = compare_vals.min_by{|a| a[:val]}
+    expl = explanation_and_val[:expl]
+    @expl << " (#{expl})" if @expl && expl
+    return explanation_and_val[:val]
   end
 
   def negative_overflowed_from_accounts
@@ -122,10 +162,15 @@ class Account < ActiveRecord::Base
   end
 
   def apply_income_amount(income:, funds:, priority_funds:)
+    deco = self.decorate
+    @expl = "Distributed at priority level #{priority}: #{deco.display_add_per_month} of #{deco.h.nice_currency(priority_funds)}"
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
       self.amount += funds_to_distribute
-      income.build_history(self, funds_to_distribute)
+      income.build_history(
+        self, funds_to_distribute,
+        @expl
+      )
       funds -= funds_to_distribute
     end
     funds
