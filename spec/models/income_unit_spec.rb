@@ -6,19 +6,58 @@ RSpec.describe Income, type: :model do
       name: "Catchall",
       add_per_month: 100,
       add_per_month_type: "%",
-      priority: 5
+      priority: 5,
+      enabled: true
     )}
     let(:percentage_account){Account.create!(
       name: "Percentage",
       add_per_month: 30,
       add_per_month_type: "%",
-      priority: 6
+      priority: 6,
+      enabled: true
     )}
     let(:flat_value_account){Account.create!(
       name: "Flat Value",
       add_per_month: 600,
       add_per_month_type: "$",
-      priority: 7
+      priority: 7,
+      enabled: true
+    )}
+    let(:overflow_to_percent_account){Account.create!(
+      name: "Overflow to Percent",
+      cap: 450,
+      add_per_month: 300,
+      add_per_month_type: "$",
+      priority: 4,
+      overflow_into_account: percentage_account,
+      enabled: true
+    )}
+    let(:overflow_to_flat_account){Account.create!(
+      name: "Overflow to Flat",
+      cap: 400,
+      monthly_cap: 200,
+      add_per_month: 25,
+      add_per_month_type: "%",
+      priority: 3,
+      overflow_into_account: flat_value_account,
+      enabled: true
+    )}
+    let(:double_overflow_account){Account.create!(
+      name: "Double Overflow",
+      cap: 1_000,
+      add_per_month: 700,
+      add_per_month_type: "$",
+      priority: 2,
+      overflow_into_account: overflow_to_flat_account,
+      enabled: true
+    )}
+
+    let(:final_account){Account.create!(
+      name: "Final",
+      add_per_month: 8_000,
+      add_per_month_type: "$",
+      priority: 1,
+      enabled: true
     )}
 
     let(:user){User.new(id: 55)}
@@ -63,6 +102,7 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 3_000,
+              explanation: "Distributed at priority level 6: 30.00% per month of $10,000.00 funds"
               explanation: "Distributed at priority level 6: 30.00% of $10,000.00"
             },
             {
@@ -87,7 +127,8 @@ RSpec.describe Income, type: :model do
           history: [
             {
               amount: 600,
-              explanation: "Distributed at priority level 7: $600.00 of $4,500.00"
+              explanation: "Distributed at priority level 7: $600.00 per month of $4,500.00 funds"
+              #explanation: "Distributed at priority level 7: $600.00 of $4,500.00"
             },
             {
               amount: 3_900,
@@ -413,10 +454,12 @@ RSpec.describe Income, type: :model do
         )
 
         flat_value_account.update_attributes(
-          annual_cap: 650
+          annual_cap: 650,
+          monthly_cap: 450
         )
         percentage_account.update_attributes(
-          annual_cap: 200
+          annual_cap: 200,
+          monthly_cap: 150
         )
       end
 
@@ -450,6 +493,224 @@ RSpec.describe Income, type: :model do
       end
     end
 
+    it 'obeys the cap on accounts' do
+      flat_value_account.update_attributes(
+        cap: 1050,
+        amount: 650
+      )
+      percentage_account.update_attributes(
+        cap: 510,
+        amount: 250
+      )
+      user.undistributed_funds = 150
+
+      test_distribution(
+        accounts: [:flat_value, :percentage],
+        amount: 4_000,
+
+        expect: {
+          amounts: {
+            flat_value: 1050,
+            percentage: 510
+          },
+          undistributed: 3490,
+          history: [
+            {
+              amount: 400,
+              explanation: "Distributed at priority level 7: $600.00 of $4,000.00 ($1,050.00 cap)"
+            },
+            {
+              amount: 260,
+              explanation: "Distributed at priority level 6: 30.00% of $3,600.00 ($510.00 cap)"
+            },
+            {
+              amount: 3340,
+              explanation: "Undistributed Funds"
+            }
+          ]
+        }
+      )
+    end
+
+    it 'sends remaining funds beyond the cap into the overflow_into_account' do
+      overflow_to_percent_account.update_attributes(
+        amount: 200
+      )
+      overflow_to_flat_account.update_attributes(
+        amount: 300
+      )
+
+      test_distribution(
+        accounts: [:percentage, :flat_value, :overflow_to_percent, :overflow_to_flat],
+        amount: 2_000,
+
+        expect: {
+          amounts: {
+            percentage: 470,
+            flat_value: 670,
+            overflow_to_percent: 450,
+            overflow_to_flat: 400
+          },
+          undistributed: 510,
+
+          history: [
+            { # flat value
+              amount: 600,
+              explanation: "Distributed at priority level 7: $600.00 of $2,000.00"
+            },
+            { # percentage
+              amount: 420,
+              explanation: "Distributed at priority level 6: 30.00% of $1,400.00"
+            },
+            { # overflow_to_percent
+              amount: 250,
+              explanation: "Distributed at priority level 4: $300.00 of $980.00 ($450.00 cap)"
+            },
+            { # percentage
+              amount: 50,
+              explanation: "Distributed at priority level 4: $50.00 (Overflowed from 'Overflow to Percent')"
+            }, # $680 left
+            { # 25% is 170
+              # overflow_to_flat
+              amount: 100,
+              explanation: "Distributed at priority level 3: 25.00% of $680.00 ($400.00 cap)"
+            }, # $580 left
+            {
+              # flat_value
+              amount: 70,
+              explanation: "Distributed at priority level 3: $70.00 (Overflowed from 'Overflow to Flat')"
+            }, # $510 left
+            {
+              # undistributed
+              amount: 510,
+              explanation: "Undistributed Funds"
+            }
+          ]
+        }
+      )
+    end
+
+    it 'can handle a triple overflow' do
+      double_overflow_account.update_attributes(
+        amount: 550
+      )
+      flat_value_account.update_attributes(
+        cap: 700
+      )
+      overflow_to_flat_account.update_attributes(
+        amount: 55
+      )
+
+      test_distribution(
+        accounts: [:flat_value, :overflow_to_flat, :double_overflow, :final],
+        amount: 2_000,
+
+        expect: {
+          amounts: {
+            flat_value: 700,
+            overflow_to_flat: 400,
+            double_overflow: 1000,
+            final: 505
+          },
+          undistributed: 0,
+          history: [
+            { # flat_value
+              amount: 600,
+              explanation: "Distributed at priority level 7: $600.00 of $2,000.00"
+            },
+            { # overflow_to_flat
+              amount: 200, # hit monthly_cap
+              explanation: "Distributed at priority level 3: 25.00% of $1,400.00 ($200.00 monthly cap)"
+            },
+            { # double_overflow
+              # sending $1,200
+              amount: 450, # hit cap
+              explanation: "Distributed at priority level 2: $700.00 of $1,200.00 ($1,000.00 cap)"
+            },
+            { # overflow_to_flat
+              # sending $250
+              amount: 145,
+              explanation: "Distributed at priority level 2: $250.00 (Overflowed from 'Double Overflow', $400.00 cap)"
+            },
+            { # flat_value
+              # sending $105
+              amount: 100,
+              explanation: "Distributed at priority level 2: $105.00 (Overflowed from 'Overflow to Flat', $700.00 cap)"
+            },
+            {
+              amount: 505,
+              explanation: "Distributed at priority level 1: $8,000.00 per month of $505.00 funds"
+              #explanation: "Distributed at priority level 1: $8,000.00 of $505.00"
+            }
+          ]
+        }
+      )
+    end
+
+    it 'when the account caps, it sends remaining funds to higher-priority accounts where this one was a prerequisite' do
+      # lower-priority has prerequisite
+      catchall_account.update_attributes(
+        prerequisite_account: percentage_account,
+        cap: 300
+      )
+      # higher-priority has prerequisite
+      flat_value_account.update_attributes(
+        prerequisite_account: percentage_account
+      )
+      percentage_account.update_attributes(
+        cap: 150,
+        amount: 50
+      )
+
+      test_distribution(
+        accounts: [:catchall, :flat_value, :percentage],
+        amount: 1_500,
+
+        expect: {
+          history: [
+            { # percentage
+              amount: 100,
+              explanation: "Distributed at priority level 6: 30.00% of $1,500.00 ($150.00 cap)"
+            },
+            { # flat_value
+              amount: 350,
+              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 6 with $350.00 - Distributed at priority level 7: $600.00 of $350.00"
+            },
+            { # catchall
+              amount: 300,
+              explanation: "Distributed at priority level 5: 100.00% of $1,050.00 ($300.00 cap)"
+            },
+            {
+              amount: 750,
+              explanation: "Undistributed Funds"
+            }
+          ],
+          undistributed: 750,
+          amounts: {
+            flat_value: 350,
+            percentage: 150,
+            catchall: 300
+          }
+        }
+      )
+    end
+
+    it 'when the account caps, it sends remaining funds to previously-skipped same-priority accounts where this one was a prerequisite' do
+      # include same-priority with lower cap,
+      # and same-priority with nil cap (which gets iterated after anyway)
+      pending "NYI"
+      raise "NYI"
+    end
+
+    it 'on prerequisite-fulfilled higher-priority redistribution, an account that hits the cap will release the funds to be distributed along the normal chain' do
+      pending "NYI"
+      raise "NYI"
+    end
+
+    it "doesn't send to prerequisite-fulfilled accounts if the monthly_cap was hit, but not the hard cap" do
+
+    end
+
     def test_distribution(options)
       options[:accounts].each do |account_name|
         public_send("#{account_name}_account").tap{|a| a.user = user}.save!
@@ -459,12 +720,8 @@ RSpec.describe Income, type: :model do
       income.save!
 
       history_amounts = options[:expect][:history]
+      hash_size = history_amounts.size
       histories = income.account_histories.order(id: :asc)
-      expect(
-        history_size: histories.size
-      ).to eq(
-        history_size: history_amounts.size
-      )
       histories.each do |history|
         history_hash = history_amounts.shift
         expect(
@@ -479,6 +736,11 @@ RSpec.describe Income, type: :model do
           ]
         )
       end
+      expect(
+        history_size: histories.size
+      ).to eq(
+        history_size: hash_size
+      )
 
       options[:expect][:amounts].each do |account_name, amount|
         account = public_send("#{account_name}_account")

@@ -60,9 +60,32 @@ class Account < ActiveRecord::Base
 
   attr_accessor :fund_change
 
-  def self.by_distribution_priority
-    order(priority: :desc)
+  def self.by_distribution_priority(prerequisite_account=nil)
+    #preload_recursion = {}
+    #node = preload_recursion
+    #(MAX_OVERFLOW_RECURSION_COUNT + 1).times do |i|
+    #  node[:overflow_into_account] = {}
+    #  node = node[:overflow_into_account]
+    #end
+
+    accounts = order(priority: :desc)
       .order("accounts.cap ASC NULLS LAST")
+      .order(id: :asc)
+
+    if prerequisite_account
+      accounts = accounts.where(prerequisite_account_id: prerequisite_account.id).
+        where("""
+          (priority >= :priority) OR
+          (priority = :priority AND cap < :cap) OR
+          (priority = :priority AND cap >= :cap AND accounts.id < :id) OR
+          (priority = :priority AND cap IS NULL AND :cap IS NULL AND accounts.id < :id)
+        """,
+          priority: prerequisite_account.priority,
+          cap: prerequisite_account.cap,
+          id: prerequisite_account.id
+        )
+    end
+    accounts
   end
 
   def disabled?
@@ -103,6 +126,8 @@ class Account < ActiveRecord::Base
   # before distribution iteration begins. But that might
   # have to happen when i refactor distribution into it's own class:
   # IncomeDistribution.
+  # ALTERNATIVELY: Do distribution in the background... of course,
+  # that'll require a running worker :(
   def amount_received_this_month
     account_histories.where(
       "created_at >= :this_month",
@@ -121,48 +146,57 @@ class Account < ActiveRecord::Base
       sum(:amount)
   end
 
-  def month_amount_remaining(funds)
-    if add_per_month_type == '%'
-      compare_vals = []
-      compare_vals << funds * (add_per_month.to_d / 100.to_d)
-      compare_vals << [0, monthly_cap.to_d - amount_received_this_month].max if monthly_cap
-      compare_vals.min
-    else
-      [0, add_per_month.to_d - amount_received_this_month].max
-    end
+  def month_amount_remaining
+    # Returns Infinity if there is no monthly_cap for a %
+    val = percentage? ? monthly_cap.presence : add_per_month.to_d
+    val ? [0, val - amount_received_this_month].max : "Infinity".to_d
   end
 
   def year_amount_remaining
-    [0, annual_cap.to_d - amount_received_this_year].max if annual_cap
+    annual_cap ? [0, annual_cap.to_d - amount_received_this_year].max : "Infinity".to_d
+  end
+
+  def monthly_amount(amount_at_start_of_priority)
+    if percentage?
+      amount_at_start_of_priority * (add_per_month.to_d / 100.to_d)
+    else
+      add_per_month.to_d
+    end
+  end
+
+  def cash?
+    !percentage?
+  end
+
+  def percentage?
+    add_per_month_type == '%'
   end
 
   # TODO: HACK: Make this distribution code it's own class,
   # which can, in the class, handle this explanation messaging.
   # Really doesn't belong here.
   def amount_to_use(funds, priority_funds)
+    @excess_funds = nil
     # Cannot exceed per_month amount
-    monthly_remaining = month_amount_remaining(priority_funds)
+    funds_to_add = monthly_amount(priority_funds)
+    monthly_remaining = month_amount_remaining
     yearly_remaining = year_amount_remaining
-    compare_vals = [{
-      expl: nil,
-      val: funds
-    }, {
-      expl: if add_per_month_type == '$' && monthly_remaining < add_per_month
-        "#{decorate.h.nice_currency(add_per_month - monthly_remaining)} previously added this month"
-      elsif add_per_month_type == '%' && monthly_remaining < (priority_funds * (add_per_month.to_d / 100.to_d))
+    compare_vals = []
+    compare_vals << {val: funds}
+    compare_vals << {val: funds_to_add}
+    compare_vals << {
+      val: monthly_remaining,
+      expl: if percentage? && monthly_remaining < funds_to_add
         "#{decorate.h.nice_currency(monthly_cap)} monthly cap"
-      else
-        nil
-      end,
-      val: monthly_remaining
-    }]
+      elsif cash? && monthly_remaining < funds_to_add
+        "#{decorate.h.nice_currency(add_per_month - monthly_remaining)} previously added this month"
+      end
+    }
     # Cannot exceed annual cap
-    if yearly_remaining
-      compare_vals << {
-        expl: "#{decorate.h.nice_currency(annual_cap)} annual cap",
-        val: yearly_remaining
-      }
-    end
+    compare_vals << {
+      val: yearly_remaining,
+      expl: "#{decorate.h.nice_currency(annual_cap)} annual cap"
+    }
     # Cannot exceed the cap
     if cap
       compare_vals << {
@@ -174,7 +208,12 @@ class Account < ActiveRecord::Base
     explanation_and_val = compare_vals.min_by{|a| a[:val]}
     expl = explanation_and_val[:expl]
     @expl << " (#{expl})" if @expl && expl
-    return explanation_and_val[:val]
+    val = explanation_and_val[:val]
+
+    @excess_funds = [monthly_remaining, funds_to_add, funds].compact.min - val
+    @excess_funds = nil if @excess_funds <= 0
+
+    val
   end
 
   def negative_overflowed_from_accounts
@@ -198,17 +237,77 @@ class Account < ActiveRecord::Base
     history_amount
   end
 
-  def apply_income_amount(income:, funds:, priority_funds:)
+  # Returns the unused funds
+  def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "")
     deco = self.decorate
-    @expl = "Distributed at priority level #{priority}: #{deco.display_add_per_month} of #{deco.h.nice_currency(priority_funds)}"
+    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} of #{deco.h.nice_currency(priority_funds)}"
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
       self.amount += funds_to_distribute
+      save!
       income.build_history(
         self, funds_to_distribute,
         @expl
       )
       funds -= funds_to_distribute
+
+      # 0 = a - b + c
+      #
+      # b - c
+      # 0 + b - c = a
+
+      if @excess_funds && overflow_into_account
+        #funds -= @excess_funds
+        #funds += overflow_into_account.apply_overflow_amount(
+        funds -= @excess_funds
+        @excess_funds = overflow_into_account.apply_overflow_amount(
+          income: income,
+          from_account: self,
+          funds: @excess_funds,
+          from_priority: priority
+        )
+        funds += @excess_funds
+      end
+
+      if @excess_funds
+        funds -= @excess_funds
+        @excess_funds = income.distribute_via_prerequisite(
+          from_account: self,
+          funds: @excess_funds,
+          from_priority: priority
+        )
+        funds += @excess_funds
+      end
+    end
+    funds
+  end
+
+  # Returns the unused funds
+  def apply_overflow_amount(income:, from_account:, funds:, from_priority:)
+    desc = "Distributed at priority level #{from_priority}: #{decorate.h.nice_currency(funds)} (Overflowed from '#{from_account.name}'"
+    funds_to_distribute = if cap && (funds + amount) > cap
+      desc << ", #{decorate.h.nice_currency(cap)} cap"
+      cap - amount
+    else
+      funds
+    end
+
+    self.amount += funds_to_distribute
+    save!
+    desc << ")"
+    income.build_history(
+      self, funds_to_distribute,
+      desc
+    )
+    funds -= funds_to_distribute
+
+    if funds > 0 && overflow_into_account
+      funds = overflow_into_account.apply_overflow_amount(
+        income: income,
+        from_account: self,
+        funds: funds,
+        from_priority: from_priority
+      )
     end
     funds
   end
