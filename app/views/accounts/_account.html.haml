@@ -20,9 +20,12 @@
       %dl.properties.break-small
         %dt.box.box-brown Add Per Month
         %dd.box.box-green= account.display_add_per_month
-        -#- if account.monthly_cap.present?
-        -#  %dt.box.box-brown Monthly Cap
-        -#  %dd.box.box-green= nice_currency(account.monthly_cap)
+        - if account.monthly_cap.present?
+          %dt.box.box-brown Monthly Cap
+          %dd.box.box-green= nice_currency(account.monthly_cap)
+        - if account.annual_cap.present?
+          %dt.box.box-brown Annual Cap
+          %dd.box.box-green= nice_currency(account.annual_cap)
         - if account.cap.present?
           %dt.box.box-brown Account Cap
           %dd.box.box-green= nice_currency(account.cap)
