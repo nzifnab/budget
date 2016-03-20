@@ -41,20 +41,18 @@ group :production do
   gem 'rails_12factor'
 end
 
-group :assets do
-  #gem 'sprockets', '~> 2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
-  # https://github.com/Compass/compass-rails/issues/144...
-  # AND until the argument # is fixed: https://github.com/sstephenson/sprockets/issues/540
-  gem 'compass'#, '~> 1.0.1'
-  gem 'compass-rails'#, '~> 2.0.0'
-  gem 'coffee-rails'
-  gem 'sass-rails'#, '4.0.1' # 4.0.2 and 4.0.3 force a lower version of sass
-                            # which causes compass to go from 1.x to 0.12
-  # Use jquery as the JavaScript library
-  gem 'jquery-rails'
-  gem 'susy'
-  gem 'breakpoint'
-end
+#gem 'sprockets', '~> 2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
+# https://github.com/Compass/compass-rails/issues/144...
+# AND until the argument # is fixed: https://github.com/sstephenson/sprockets/issues/540
+gem 'compass'#, '~> 1.0.1'
+gem 'compass-rails'#, '~> 2.0.0'
+gem 'coffee-rails'
+gem 'sass-rails'#, '4.0.1' # 4.0.2 and 4.0.3 force a lower version of sass
+                          # which causes compass to go from 1.x to 0.12
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+gem 'susy'
+gem 'breakpoint'
 
 group :development, :test do
   gem 'rspec-rails'
