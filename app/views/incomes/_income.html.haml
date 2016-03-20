@@ -12,9 +12,10 @@
     .break-small
       %table
         %thead
-          %th
-            %td
+          %tr
+            %th
               Account
-            %td
+            %th
               Amount
+        %tbody
           = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history

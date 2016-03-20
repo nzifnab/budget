@@ -3,6 +3,10 @@ class IncomeDecorator < ApplicationDecorator
 
   delegate_all
 
+  def name_with_price
+    "Income #{display_amount}"
+  end
+
   def display_amount
     h.nice_currency(model.amount)
   end
