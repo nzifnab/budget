@@ -29,5 +29,5 @@
         %li{class: current_action?('incomes#index') ? 'tab-active' : nil}= link_to 'Income', incomes_path
 
         -# Button that links to account history sidebar - tablet and smaller widths only.
-        %li.sidebar-tab.tablet-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_add_element_class: ".sidebar", click_add_class_value: "tablet-visible"}}
+        %li.sidebar-tab.tablet-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_remove_element_class: ".sidebar", click_remove_class_value: "tablet-hide"}}
       = yield
