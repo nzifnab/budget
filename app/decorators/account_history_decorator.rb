@@ -22,9 +22,9 @@ class AccountHistoryDecorator < ApplicationDecorator
 
   def name_with_type_and_price
     if quick_fund_id.present?
-      quick_fund.name_with_type_and_price
+      quick_fund.try(:name_with_type_and_price)
     elsif income_id.present?
-      income.name_with_price
+      income.try(:name_with_price)
     end
   end
 
@@ -37,6 +37,6 @@ class AccountHistoryDecorator < ApplicationDecorator
   end
 
   def account_name
-    account ? account.name : "<<Undistributed Funds>>"
+    account ? account.name : "Undistributed Funds"
   end
 end
