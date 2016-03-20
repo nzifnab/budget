@@ -71,7 +71,8 @@ $base-font-size: $xxl-font-size;
 
 .fields-small{
   label{
-    @include span(3 of 7);
+    //@include span(2 of 7);
+    padding-right: em(3px);
   }
 
   input[type=text], textarea{
