@@ -14,7 +14,7 @@
 
 6. `add_per_month` distribution shall not exceed the `cap` on that account.
 
-7. Overflow beyond an account's `cap` that would have otherwise satisfied the account's `monthly_cap` can be distributed into that account's `overflow_into`. If there is no `monthly_cap` on the account, then any amount beyond the `cap` that remains in `add_per_month` can be distributed into the `overflow_into`. These overflowed amounts *do* count towards monthly_cap and annual_cap values for the overflowed_into account.
+7. Overflow beyond an account's `cap` or `annual_cap` that would have otherwise satisfied the account's `monthly_cap` can be distributed into that account's `overflow_into`. If there is no `monthly_cap` on the account, then any amount beyond the `cap` that remains in `add_per_month` can be distributed into the `overflow_into`. These overflowed amounts *do* count towards monthly_cap and annual_cap values for the overflowed_into account.
 
 8. The rules for an overflow_into's `cap` apply, but the `monthly_cap` and `annual_cap` does not. Any additional overflow for this `cap` should then continue overflowing to the next `overflow_into` until either the total original `add_per_month` amount has been exhausted, or a `cap` is reached with no `overflow_into` specified.
 

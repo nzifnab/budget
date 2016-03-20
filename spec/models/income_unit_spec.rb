@@ -849,6 +849,47 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it "doesn't send to prerequisite-fulfilled accounts if the prerequisite was *already* fulfilled" do
+      # higher-priority has prerequisite
+      percentage_account.update_attributes(
+        prerequisite_account: flat_value_account,
+        add_per_month: 15,
+        priority: 10,
+        name: "Investments"
+      )
+      flat_value_account.update_attributes(
+        add_per_month: 15,
+        add_per_month_type: '%',
+        cap: 8000,
+        amount: 8000,
+        priority: 10,
+        name: "Emergency Fund"
+      )
+
+      test_distribution(
+        accounts: [:flat_value, :percentage],
+        amount: 5_500,
+
+        expect: {
+          history: [
+            {
+              amount: 825,
+              explanation: "Distributed at priority level 10: 15.00% per month of $5,500.00 funds"
+            },
+            {
+              amount: 4675,
+              explanation: "Undistributed Funds"
+            }
+          ],
+          undistributed: 4675,
+          amounts: {
+            flat_value: 8000,
+            percentage: 825
+          }
+        }
+      )
+    end
+
 
 
     def test_distribution(options)
