@@ -6,7 +6,7 @@ $base-font-size: $xxl-font-size;
     @include span(last 100%);
     margin-bottom: em(5px);
     @include display-flex;
-    flex-wrap: wrap;
+    //flex-wrap: wrap;
   }
 
   label{
@@ -71,8 +71,7 @@ $base-font-size: $xxl-font-size;
 
 .fields-small{
   label{
-    //@include span(2 of 7);
-    padding-right: em(3px);
+    @include span(2 of 7);
   }
 
   input[type=text], textarea{

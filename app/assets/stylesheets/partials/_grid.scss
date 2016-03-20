@@ -177,6 +177,9 @@
   }
 
   .fields-small{
+    li{
+      flex-wrap: wrap;
+    }
     label{
       @include span(full);
       text-align: left;
@@ -209,6 +212,9 @@
   }
 
   .fields{
+    li{
+      flex-wrap: wrap;
+    }
     label{
       @include span(full);
       text-align: left;
