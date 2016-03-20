@@ -2,7 +2,7 @@
 
 1. Income is distributed from highest priority (10) to lowest (1), followed by `cap` ascending (`nil`s last).
 
-~~2. If `prerequisite_account` is set, then that account's `amount` must `==` it's `cap` before this account can have any distribution performed (skip this account)~~
+2. ~~If `prerequisite_account` is set, then that account's `amount` must `==` it's `cap` before this account can have any distribution performed (skip this account)~~
 
 2. If `prerequisite_account` is set, and that account's `amount < cap`, then skip this account.
 
@@ -24,5 +24,4 @@
 
 11. It skips all disabled accounts for distribution
 
-TODO:
-12. Should be able to select a date for the income distribution.
+12. TODO: Should be able to select a date for the income distribution.
