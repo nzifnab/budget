@@ -890,6 +890,47 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it 'sends remaining funds beyond the cap into the overflow_into_account, even if the account is capped' do
+      overflow_to_percent_account.update_attributes(
+        cap: 0,
+        amount: 0,
+        add_per_month: 100,
+        add_per_month_type: "%",
+        priority: 1,
+        name: "Remaining Funds - Redirect to Invest"
+      )
+      percentage_account.update_attributes(
+        add_per_month: 0,
+        add_per_month_type: "$",
+        name: "Investments"
+      )
+
+      test_distribution(
+        accounts: [:flat_value, :percentage, :overflow_to_percent],
+        amount: 2_000,
+
+        expect: {
+          amounts: {
+            flat_value: 600,
+            overflow_to_percent: 0,
+            percentage: 1400
+          },
+          undistributed: 0,
+
+          history: [
+            { # flat value
+              amount: 600,
+              explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds"
+            },
+            { # percentage (redirected from overflow_to_percent)
+              amount: 1400,
+              explanation: "Distributed at priority level 1: $1,400.00 (Overflowed from 'Remaining Funds - Redirect to Invest')"
+            }
+          ]
+        }
+      )
+    end
+
 
 
     def test_distribution(options)

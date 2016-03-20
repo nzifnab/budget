@@ -207,10 +207,9 @@ class Account < ActiveRecord::Base
     expl = explanation_and_val[:expl]
     @expl << " (#{expl})" if @expl && expl
     val = explanation_and_val[:val]
-    if (cap || "Infinity".to_d) > amount
-      @excess_funds = [monthly_remaining, funds_to_add, funds].compact.min - val
-      @excess_funds = nil if @excess_funds <= 0
-    end
+
+    @excess_funds = [monthly_remaining, funds_to_add, funds].compact.min - val
+    @excess_funds = nil if @excess_funds <= 0
 
     val
   end
@@ -242,6 +241,9 @@ class Account < ActiveRecord::Base
     @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{deco.h.nice_currency(priority_funds)} funds"
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
+      # Don't re-distribute to accounts where this was a prerequisite,
+      # if this account was already capped.
+      check_fulfilled_prerequisites = (cap || "Infinity".to_d) > amount
       self.amount += funds_to_distribute
       save!
       income.build_history(
@@ -263,7 +265,7 @@ class Account < ActiveRecord::Base
 
       # If this account has excess funds to distribute, hit the cap,
       # and has now fulfilled the prerequisites of other accounts...
-      if @excess_funds && cap && amount >= cap
+      if @excess_funds && cap && amount >= cap && check_fulfilled_prerequisites
         funds -= @excess_funds
         @excess_funds = income.distribute_via_prerequisite(
           from_account: self,
