@@ -178,7 +178,7 @@
 
   .fields-small{
     li{
-      flex-wrap: wrap;
+      @include flex-wrap(wrap);
     }
     label{
       @include span(full);
@@ -213,7 +213,7 @@
 
   .fields{
     li{
-      flex-wrap: wrap;
+      @include flex-wrap(wrap);
     }
     label{
       @include span(full);
