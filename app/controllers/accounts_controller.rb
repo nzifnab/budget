@@ -1,6 +1,6 @@
 require 'ostruct'
 class AccountsController < ApplicationController
-  decorates_assigned :account, :accounts, :account_with_errors
+  decorates_assigned :account, :accounts, :account_with_errors, :new_form_account
   helper_method :negative_overflow_options, :select_account_options
 
   def index
@@ -12,6 +12,7 @@ class AccountsController < ApplicationController
   def create
     @account = budget.new_account(account_params(params))
     if @account.save
+      @new_form_account = budget.new_account(enabled: true)
       render action: 'show'
     else
       render action: 'new', status: :unprocessable_entity
@@ -28,6 +29,7 @@ class AccountsController < ApplicationController
     @account = budget.account(params[:id])
 
     if @account.update_attributes(account_params(params))
+      @new_form_account = budget.new_account(enabled: true)
       render action: 'show'
     else
       @account_with_errors = @account
@@ -48,6 +50,7 @@ class AccountsController < ApplicationController
       :add_per_month,
       :add_per_month_type,
       :monthly_cap,
+      :annual_cap,
       :cap,
       :prerequisite_account_id,
       :overflow_into_id

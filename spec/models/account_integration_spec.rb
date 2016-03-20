@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe Account do
   describe "#negative_overflow_recursion_error?" do
     let(:account1){Account.new(name: "acct1", priority: 1, enabled: true)}

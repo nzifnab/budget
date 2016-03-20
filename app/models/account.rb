@@ -14,11 +14,37 @@ class Account < ActiveRecord::Base
     foreign_key: "overflow_into_id"
   )
   belongs_to :user, inverse_of: :accounts
-  has_many :account_histories, -> {order{created_at.desc}}, inverse_of: :account
+  has_many :account_histories, -> {order(created_at: :desc)}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
+  has_many(
+    :overflowed_from_accounts,
+    class_name: "Account",
+    foreign_key: "overflow_into_id"
+  )
 
   validates :name, presence: {message: "Required"}
   validates :priority, inclusion: {in: 1..10, message: "1 to 10"}
+  validates :add_per_month_type, presence: {
+    message: "Required",
+    if: ->{ add_per_month.present?}
+  }, inclusion: {
+    in: ['%', '$'],
+    allow_blank: true,
+    message: "'%' or '$' only"
+  }
+  validates :add_per_month, numericality: {
+    greater_than_or_equal_to: 0,
+    allow_blank: true,
+    message: "Positive number only",
+    if: ->{add_per_month_type == '$'}
+  }
+  validates :add_per_month, numericality: {
+    less_than_or_equal_to: 100,
+    greater_than_or_equal_to: 0,
+    allow_blank: true,
+    message: "0% to 100%",
+    if: ->{add_per_month_type == '%'}
+  }
 
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
@@ -27,15 +53,49 @@ class Account < ActiveRecord::Base
   validate :deny_negative_amount_with_no_overflow
   validate :cannot_overflow_to_disabled_account
   validate :cannot_receive_overflow_when_disabled
-  validate :cannot_overflow_as_disabled_account
+  #validate :cannot_overflow_as_disabled_account
   validate :cannot_exceed_max_overflow_recursion
 
   MAX_OVERFLOW_RECURSION_COUNT = 3
 
   attr_accessor :fund_change
 
+  def self.enabled
+    where(enabled: true)
+  end
+
+  # More reasons this belongs in a background job...
+  def self.by_distribution_priority(prerequisite_account=nil)
+    accounts = enabled.order(priority: :desc)
+      .order("accounts.cap ASC NULLS LAST")
+      .order(id: :asc)
+
+    if prerequisite_account
+      accounts = accounts.where(prerequisite_account_id: prerequisite_account.id).
+        where("""
+          (priority >= :priority) OR
+          (priority = :priority AND cap < :cap) OR
+          (priority = :priority AND cap >= :cap AND accounts.id < :id) OR
+          (priority = :priority AND cap IS NULL AND :cap IS NULL AND accounts.id < :id)
+        """,
+          priority: prerequisite_account.priority,
+          cap: prerequisite_account.cap,
+          id: prerequisite_account.id
+        )
+    end
+    accounts
+  end
+
   def disabled?
     !enabled?
+  end
+
+  def allow_negative?
+    if negative_overflow_id.present?
+      negative_overflow_id == 0 || negative_overflow_id == self.id
+    else
+      negative_overflow_account == self
+    end
   end
 
   def reset_amount
@@ -47,17 +107,121 @@ class Account < ActiveRecord::Base
   end
 
   def requires_negative_overflow?
-    amount.to_d < 0 && negative_overflow_id && negative_overflow_id != self.id
+    amount.to_d < 0 && negative_overflow_id && !allow_negative?
+  end
+
+  def prereq_fulfilled?
+    return true unless prerequisite_account
+    return false if !prerequisite_account.cap
+    prerequisite_account.amount >= prerequisite_account.cap
+  end
+
+  # TODO: PERFORMANCE: Cache amount_received_this_month/year
+  # on account, with a cached_date for the earliest recorded
+  # value so it knows if it needs to bust the cache.
+  # Otherwise this is gonna be some wonky 2(n+1) queries.
+  # ALTERNATIVELY: Collect this data all in one go
+  # before distribution iteration begins. But that might
+  # have to happen when i refactor distribution into it's own class:
+  # IncomeDistribution.
+  # ALTERNATIVELY: Do distribution in the background... of course,
+  # that'll require a running worker :(
+  def amount_received_this_month
+    account_histories.where(
+      "created_at >= :this_month",
+      this_month: Time.zone.now.beginning_of_month
+    ).
+      where("income_id IS NOT NULL").
+      sum(:amount)
+  end
+
+  def amount_received_this_year
+    account_histories.where(
+      "created_at >= :this_year",
+      this_year: Time.zone.now.beginning_of_year
+    ).
+      where("income_id IS NOT NULL").
+      sum(:amount)
+  end
+
+  def month_amount_remaining
+    # Returns Infinity if there is no monthly_cap for a %
+    val = percentage? ? monthly_cap.presence : add_per_month.to_d
+    val ? [0, val - amount_received_this_month].max : "Infinity".to_d
+  end
+
+  def year_amount_remaining
+    annual_cap ? [0, annual_cap.to_d - amount_received_this_year].max : "Infinity".to_d
+  end
+
+  def monthly_amount(amount_at_start_of_priority)
+    if percentage?
+      amount_at_start_of_priority * (add_per_month.to_d / 100.to_d)
+    else
+      add_per_month.to_d
+    end
+  end
+
+  def cash?
+    !percentage?
+  end
+
+  def percentage?
+    add_per_month_type == '%'
+  end
+
+  # TODO: HACK: Make this distribution code it's own class,
+  # which can, in the class, handle this explanation messaging.
+  # Really doesn't belong here.
+  def amount_to_use(funds, priority_funds)
+    @excess_funds = nil
+    # Cannot exceed per_month amount
+    funds_to_add = monthly_amount(priority_funds)
+    monthly_remaining = month_amount_remaining
+    yearly_remaining = year_amount_remaining
+    compare_vals = []
+    compare_vals << {val: funds}
+    compare_vals << {val: funds_to_add}
+    compare_vals << {
+      val: monthly_remaining,
+      expl: if percentage? && monthly_remaining < funds_to_add
+        "#{decorate.h.nice_currency(monthly_cap)} monthly cap"
+      elsif cash? && monthly_remaining < funds_to_add
+        "#{decorate.h.nice_currency(add_per_month - monthly_remaining)} previously added this month"
+      end
+    }
+    # Cannot exceed annual cap
+    compare_vals << {
+      val: yearly_remaining,
+      expl: "#{decorate.h.nice_currency(annual_cap)} annual cap"
+    }
+    # Cannot exceed the cap
+    if cap
+      compare_vals << {
+        expl: "#{decorate.display_cap} cap",
+        val: [0, (cap - amount)].max
+      }
+    end
+
+    explanation_and_val = compare_vals.min_by{|a| a[:val]}
+    expl = explanation_and_val[:expl]
+    @expl << " (#{expl})" if @expl && expl
+    val = explanation_and_val[:val]
+
+    @excess_funds = [monthly_remaining, funds_to_add, funds].compact.min - val
+    @excess_funds = nil if @excess_funds <= 0
+
+    val
   end
 
   def negative_overflowed_from_accounts
     Account.
-      where{negative_overflow_id == my{id}}.
-      where{negative_overflow_id != nil}.
-      where{id != my{id}}
+      where(negative_overflow_id: self.id).
+      where.not(negative_overflow_id: nil).
+      where.not(id: self.id)
   end
 
-  def apply_history_amount(quick_fund, val)
+  def apply_history_amount(quick_fund_or_income, val)
     history_amount = val.to_d
     self.amount = self.amount.to_d + history_amount
 
@@ -66,15 +230,85 @@ class Account < ActiveRecord::Base
       history_amount -= remaining_funds
       self.amount = 0
 
-      quick_fund.distribute_funds(remaining_funds, negative_overflow_account)
+      quick_fund_or_income.distribute_funds(remaining_funds, negative_overflow_account)
     end
     history_amount
+  end
+
+  # Returns the unused funds
+  def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "")
+    deco = self.decorate
+    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{deco.h.nice_currency(priority_funds)} funds"
+    if prereq_fulfilled?
+      funds_to_distribute = amount_to_use(funds, priority_funds)
+      self.amount += funds_to_distribute
+      save!
+      income.build_history(
+        self, funds_to_distribute,
+        @expl
+      )
+      funds -= funds_to_distribute
+
+      if @excess_funds && overflow_into_account.try(:enabled?)
+        funds -= @excess_funds
+        @excess_funds = overflow_into_account.apply_overflow_amount(
+          income: income,
+          from_account: self,
+          funds: @excess_funds,
+          from_priority: priority
+        )
+        funds += @excess_funds
+      end
+
+      # If this account has excess funds to distribute, hit the cap,
+      # and has now fulfilled the prerequisites of other accounts...
+      if @excess_funds && cap && amount >= cap
+        funds -= @excess_funds
+        @excess_funds = income.distribute_via_prerequisite(
+          from_account: self,
+          funds: @excess_funds,
+          from_priority: priority
+        )
+        funds += @excess_funds
+      end
+    end
+    funds
+  end
+
+  # Returns the unused funds
+  def apply_overflow_amount(income:, from_account:, funds:, from_priority:)
+    desc = "Distributed at priority level #{from_priority}: #{decorate.h.nice_currency(funds)} (Overflowed from '#{from_account.name}'"
+    funds_to_distribute = if cap && (funds + amount) > cap
+      desc << ", #{decorate.h.nice_currency(cap)} cap"
+      cap - amount
+    else
+      funds
+    end
+
+    self.amount += funds_to_distribute
+    save!
+    desc << ")"
+    income.build_history(
+      self, funds_to_distribute,
+      desc
+    )
+    funds -= funds_to_distribute
+
+    if funds > 0 && overflow_into_account
+      funds = overflow_into_account.apply_overflow_amount(
+        income: income,
+        from_account: self,
+        funds: funds,
+        from_priority: from_priority
+      )
+    end
+    funds
   end
 
   def negative_overflow_recursion_error?
     tester = false
     if negative_overflow_id.present?
-      tester = Account.where{id == my{self.negative_overflow_id}}
+      tester = Account.where(id: self.negative_overflow_id)
 
       last_account_alias = "accounts"
       # well this spiraled out of control...
@@ -135,7 +369,7 @@ class Account < ActiveRecord::Base
 
   # validate
   def deny_negative_amount_with_no_overflow
-    if amount.to_d < 0 && negative_overflow_id != self.id
+    if amount.to_d < 0 && !allow_negative?
       errors.add(:amount, "Insufficient Funds")
       errors.add(:amount_extended, "Funds unavailable in account '#{name}'")
       errors.add(:negative_overflow_id, "Insufficient Funds")
@@ -145,9 +379,20 @@ class Account < ActiveRecord::Base
 
   # validate
   def cannot_overflow_to_disabled_account
-    if negative_overflow_account.present? && negative_overflow_account != self && negative_overflow_account.disabled?
+    if !allow_negative? && negative_overflow_account.present? && negative_overflow_account.disabled?
       errors.add(:negative_overflow_id, "Invalid")
       errors.add(:negative_overflow_id_extended, "The account '#{negative_overflow_account.name}' has been disabled, and may not be selected.")
+    end
+
+    if overflow_into_account.present? && overflow_into_account.disabled?
+      errors.add(:overflow_into_id, "Invalid")
+      errors.add(:overflow_into_id_extended, "The account '#{overflow_into_account.name}' has been disabled, and may not be selected.")
+    end
+
+    # Can't income_overflow into self either.
+    if overflow_into_account == self
+      errors.add(:overflow_into_id, "Invalid")
+      errors.add(:overflow_into_id_extended, "An account cannot have income overflow into itself.")
     end
   end
 
@@ -157,13 +402,10 @@ class Account < ActiveRecord::Base
       errors.add(:enabled, "Invalid")
       errors.add(:enabled_extended, "The account '#{negative_overflowed_from_accounts.first.name}' is using this account as a negative overflow, so this account cannot be disabled.")
     end
-  end
 
-  # validate
-  def cannot_overflow_as_disabled_account
-    if disabled? && negative_overflow_id && negative_overflow_id != self.id && negative_overflow_id != 0
-      errors.add(:negative_overflow_id, "Disabled")
-      errors.add(:negative_overflow_id_extended, "Cannot set a negative overflow for a disabled account.")
+    if disabled? && overflowed_from_accounts.size > 0
+      errors.add(:enabled, "Invalid")
+      errors.add(:enabled_extended, "The account '#{overflowed_from_accounts.first.name}' is using this account as an overflow, so this account cannot be disabled.")
     end
   end
 

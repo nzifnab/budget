@@ -1,5 +1,5 @@
 .cols{
-  overflow: hidden;
+  overflow: visible;
 }
 @include with-layout($app-xxl){
   .container{
@@ -77,62 +77,49 @@
 
 @include susy-breakpoint($bp-app-xl, $app-xl){
   .container{
-    font-size: em(12px);
-  }
-
-  .fields{
-    input[type=text], textarea{
-      @include span(6 of 15);
-    }
+    font-size: em($xl-font-size);
   }
 }
 
 @include susy-breakpoint($bp-app-large, $app-large){
   .container{
     @include container();
+    font-size: em($large-font-size)
   }
 
   ul.tabs li{
-    min-width: em(56px, 12px);
-  }
-
-  .fields {
-    input[type=text], textarea{
-      @include span(7 of 15);
-    }
+    min-width: em(56px, $large-font-size);
   }
 }
 
 @include susy-breakpoint($bp-app-medium-large, $app-medium-large){
   .container{
-    font-size: em(11px);
+    font-size: em($medium-large-font-size);
   }
 
   ul.tabs li{
-    min-width: em(50px, 11px);
+    min-width: em(50px, $medium-large-font-size);
 
     a{
-      padding: em(3px, 11px) em(6px, 11px);
+      padding: em(3px, $medium-large-font-size) em(6px, $medium-large-font-size);
     }
   }
 
   .bp-break-medium-large{
     display: block;
   }
-
-  .fields{
-    input[type=text], textarea{
-      @include span(8 of 15);
-    }
-  }
 }
 
 
-// super-mobile view begins here (drops sidebar, makes it a nav tab)
+// tablet view begins here (drops sidebar, makes it a nav tab)
 @include susy-breakpoint($bp-app-medium, $app-medium){
+  .desktop-float-right, .desktop-float-left{
+    float: none;
+  }
+
   .container{
     @include container();
-    font-size: em(12px);
+    font-size: em($medium-font-size);
   }
 
   .content{
@@ -154,6 +141,94 @@
     display: inline;
   }
 
+  .tablet-visible{
+    display: block;
+  }
+
+  .tablet-hide{
+    display: none;
+  }
+
+  .fields{
+    input[type=text], textarea{
+      &.field-small{
+        @include span(last 3 of 15);
+      }
+    }
+
+    .form-error-container{
+      margin-bottom: em(5px, $medium-font-size);
+      @include span(full);
+    }
+
+    .field-small + .form-error-container{
+      margin-bottom: 0;
+      margin-right: 0;
+    }
+
+    .form-error{
+      float: left;
+      margin-left: span(5 of 15) + gutter(15);
+    }
+
+    &:not(.fields-small) .btn-mobile{
+      margin-left: span(5 of 15) + gutter(15);
+    }
+  }
+
+  .fields-small{
+    label{
+      @include span(full);
+      text-align: left;
+    }
+
+    .form-error{
+      float: right;
+      margin-left: 0;
+    }
+  }
+
+  .btn{
+    font-size: em(13px, $medium-font-size);
+    padding-left: em(11px, $medium-font-size);
+    padding-right: em(11px, $medium-font-size);
+  }
+
+  .btn-mobile{
+    @include span(full);
+    margin-bottom: 1em;
+    font-size: 1em;
+  }
+}
+
+// mobile/phone view begins here
+@include susy-breakpoint($bp-app-small, $app-small){
+  .container{
+    font-size: em($small-font-size);
+    min-width: em(300px, $small-font-size);
+  }
+
+  .fields{
+    label{
+      @include span(full);
+      text-align: left;
+    }
+
+    input[type=text], textarea{
+      &.field-small{
+        @include span(last 4 of 15);
+      }
+    }
+
+    .form-error{
+      margin-left: 0;
+    }
+
+    &:not(.fields-small) .btn-mobile{
+      margin-left: 0;
+    }
+  }
+
   .mobile-visible{
     display: block;
   }
@@ -162,72 +237,14 @@
     display: none;
   }
 
-  .fields{
-    input[type=text], textarea{
-      @include span(8 of 15);
-    }
-
-    .form-error{
-      float: right;
-      @include post(1 of 15);
-      margin-bottom: em(5px);
-    }
-
-    .field-small + .form-error{
-      clear: none;
-      float: left;
-      margin-bottom: 0;
-      margin-right: 0;
-    }
+  ul.tabs{
+    font-size: 0.8em;
   }
 
-  .fields-small{
-    label{
-      @include pre(2 of 7);
-      @include span(last 5 of 7);
-      text-align: left;
+  // inside .content
+  @include nested(15){
+    .inner-left-col, .inner-right-col{
+      @include span(last 15);
     }
-
-    input[type=text], textarea{
-      @include pre(2 of 7);
-      @include span(last 5 of 7);
-    }
-  }
-
-  .btn{
-    font-size: em(11px, 12px);
-    padding-left: em(11px, 12px);
-    padding-right: em(11px, 12px);
-  }
-}
-
-@include susy-breakpoint($bp-app-small, $app-small){
-  .container{
-    font-size: em(11px);
-    min-width: em(300px, 11px);
-  }
-
-  .fields{
-    input[type=text]{
-      @include span(7 of 15);
-    }
-  }
-
-  .fields-small{
-    label{
-      @include pre(1 of 7);
-      @include span(last 6 of 7);
-    }
-
-    input[type=text], textarea{
-      @include pre(1 of 7);
-      @include span(last 6 of 7);
-    }
-  }
-
-  .btn{
-    font-size: em(9px, 11px);
-    padding-left: em(8px, 11px);
-    padding-right: em(8px, 11px);
   }
 }

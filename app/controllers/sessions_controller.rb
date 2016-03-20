@@ -16,6 +16,11 @@ class SessionsController < ApplicationController
     end
   end
 
+  def destroy
+    reset_session
+    redirect_to session_path
+  end
+
   # Only used in testing env
   def backdoor
     reset_session

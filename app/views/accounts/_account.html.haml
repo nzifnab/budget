@@ -7,7 +7,12 @@
   %h3= account.prioritized_name
 .accordion-content.js-account-content
   .cols{class: "js-account-content-#{account.id}", style: edit_form ? "display: none;" : ""}
-    .inner-left-col
+    .inner-left-col{class: "js-account-details-#{account.id}"}
+      - if @quick_fund.try(:errors).try(:any?)
+        .box.box-red.mobile-visible
+          There was an error
+      = link_to 'Modify Funds', '#', {data: {click_add_element_class: ".js-account-details-#{account.id}", click_add_class_value: "mobile-hide", click_remove_element_class: ".js-quick-funds-form-#{account.id}", click_remove_class_value: "mobile-hide"}, class: 'btn btn-green btn-mobile mobile-visible'}
+
       - if account.description.present?
         .box.box-tan
           = simple_format account.description
@@ -15,9 +20,9 @@
       %dl.properties.break-small
         %dt.box.box-brown Add Per Month
         %dd.box.box-green= account.display_add_per_month
-        - if account.monthly_cap.present?
-          %dt.box.box-brown Monthly Cap
-          %dd.box.box-green= nice_currency(account.monthly_cap)
+        -#- if account.monthly_cap.present?
+        -#  %dt.box.box-brown Monthly Cap
+        -#  %dd.box.box-green= nice_currency(account.monthly_cap)
         - if account.cap.present?
           %dt.box.box-brown Account Cap
           %dd.box.box-green= nice_currency(account.cap)
@@ -32,9 +37,9 @@
         %dt.box.box-brown Created on
         %dd.box.box-green= account.formatted_created_at
 
-      = link_to 'Edit', edit_account_path(account), class: 'btn btn-blue', data: {remote: true, remote_hide: ".js-account-content-#{account.id}", remote_content_append: ".js-account-content-#{account.id}"}
+      = link_to 'Edit', edit_account_path(account), class: 'btn btn-blue btn-mobile', data: {remote: true, remote_hide: ".js-account-content-#{account.id}", remote_content_append: ".js-account-content-#{account.id}"}
 
-    .inner-right-col
+    .inner-right-col.mobile-hide{class: "js-quick-funds-form-#{account.id}"}
       = render partial: 'quick_funds/form', locals: {account: account}
   - if edit_form
     = render partial: 'accounts/edit_form', locals: {account: form_account}

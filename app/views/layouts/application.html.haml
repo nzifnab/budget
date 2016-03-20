@@ -3,6 +3,7 @@
   %head
     %title Budgeteer
     %link{ href: 'http://fonts.googleapis.com/css?family=Arimo:400,700,400italic,700italic', rel: 'stylesheet', type: 'text/css' }
+    %link{href: 'https://fonts.googleapis.com/css?family=Inconsolata', rel: 'stylesheet', type: 'text/css'}
     = stylesheet_link_tag "screen", media: "all", "data-turbolinks-track" => true
     = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
@@ -16,9 +17,17 @@
           - if current_user
             = current_user.email
             &nbsp;&nbsp;|&nbsp;&nbsp;
-            = link_to "Logout", "#"
+            = link_to "Logout", logout_path, "data-method" => "delete"
           - else
             = link_to "Login", session_path
 
         = flash_messages
-    = yield
+
+    .container
+      %ul.tabs
+        %li.accounts-tab{class: current_action?('accounts#index') ? 'tab-active' : nil}= link_to 'Accounts', accounts_path
+        %li{class: current_action?('incomes#index') ? 'tab-active' : nil}= link_to 'Income', incomes_path
+
+        -# Button that links to account history sidebar - tablet and smaller widths only.
+        %li.sidebar-tab.tablet-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_add_element_class: ".sidebar", click_add_class_value: "tablet-visible"}}
+      = yield

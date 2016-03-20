@@ -9,7 +9,7 @@ gem 'haml-rails'
 gem 'haml'
 gem 'uglifier'
 gem 'jbuilder'
-gem 'squeel'
+#gem 'squeel'
 gem 'will_paginate'
 gem 'valid_email'
 
@@ -56,6 +56,11 @@ group :development, :test do
   gem 'launchy'
   gem 'database_cleaner'
   gem 'teaspoon-jasmine'
+  gem 'active_record_query_trace'
+end
+
+group :test do
+  gem 'timecop'
 end
 
 # Use unicorn as the app server

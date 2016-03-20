@@ -21,6 +21,10 @@ class AccountDecorator < ApplicationDecorator
     h.nice_date(model.created_at)
   end
 
+  def display_cap
+    cap ? h.nice_currency(model.cap) : ""
+  end
+
   def truncated_name
     h.truncate(name, length: 16)
   end

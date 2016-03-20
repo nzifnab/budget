@@ -14,6 +14,10 @@ input{
   font-family: inherit;
 }
 
+.mono-font{
+  font-family: $mono-font-family;
+}
+
 p{
   margin-bottom: 6px;
 
@@ -26,8 +30,8 @@ h1{
   width: 100%;
   float: left;
   font-weight: bold;
-  font-size: em(18px, 14px);
-  margin-bottom: em(10px, 14px);
+  font-size: em(18px, $xxl-font-size);
+  margin-bottom: em(10px, $xxl-font-size);
 }
 
 h4{
@@ -36,11 +40,11 @@ h4{
   margin-bottom: 4px;
 }
 
-.float-right{
+.float-right, .desktop-float-right{
   float: right;
 }
 
-.float-left{
+.float-left, .desktop-float-left{
   float: left;
 }
 
@@ -67,7 +71,7 @@ h4{
 }
 
 .text-small{
-  font-size: em(10px, 14px);
+  font-size: em(10px, $xxl-font-size);
   line-height: em(14px, 10px);
 }
 
@@ -79,6 +83,6 @@ h4{
   @include break;
 }
 
-.hide, .mobile-hide{
+.hide, .mobile-visible, .tablet-visible{
   display: none;
 }

@@ -1,13 +1,16 @@
+= link_to 'Cancel', '#', data: {click_add_element_class: ".js-quick-funds-form-#{account.id}", click_add_class_value: "mobile-hide", click_remove_element_class: ".js-account-details-#{account.id}", click_remove_class_value: "mobile-hide"}, class: 'btn btn-red btn-mobile mobile-visible'
 %h4.text-right Quick Withdraw / Deposit
 = form_for @quick_fund || :quick_fund, url: account_quick_funds_path(account_id: account.id, format: 'json'), method: :post, remote: true, html: {class: 'js-update-account'} do |f|
   %ul.fields.fields-small
     %li
       = f.label :amount
+      .field-prepend
+        $
       = f.text_field :amount
     %li
       = f.label :description
       = f.text_area :description
 
-  .float-right
-    = f.submit "Withdraw", name: "fund_type", class: 'btn btn-orange', data: {disable_with: "Wait..."}
-    = f.submit "Deposit", name: "fund_type", class: 'btn btn-green', data: {disable_with: "Wait..."}
+  .desktop-float-right
+    = f.submit "Withdraw", name: "fund_type", class: 'btn btn-orange btn-mobile', data: {disable_with: "Wait..."}
+    = f.submit "Deposit", name: "fund_type", class: 'btn btn-green btn-mobile', data: {disable_with: "Wait..."}

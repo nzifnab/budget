@@ -1,3 +1,4 @@
+require 'rails_helper'
 RSpec.describe QuickFund do
   describe "#before_validation" do
     let(:account){Account.new(amount: 100, id: 200)}

@@ -25,6 +25,7 @@ RSpec.describe "Account Management", js: true do
       end
 
       expect(page).not_to have_selector("##{accordion[:content][:id]}", visible: true)
+      accordion = find_accordion("New Account")
       expect(accordion[:content]).not_to be_visible
 
       # find all of them so we can assert it was inserted in the right spot

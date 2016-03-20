@@ -1,15 +1,14 @@
-.container
-  .mini-content
-    = form_for :session, url: session_path do |f|
-      %ul.fields
-        %li
-          = f.label :email
-          = f.email_field :email, value: @email, required: true
+.mini-content
+  = form_for :session, url: session_path do |f|
+    %ul.fields
+      %li
+        = f.label :email
+        = f.email_field :email, value: @email, required: true
 
-        %li
-          = f.label :password
-          = f.password_field :password, required: true
+      %li
+        = f.label :password
+        = f.password_field :password, required: true
 
-        %li
-          %label
-          = f.submit "Login", data: {disable_with: "Logging in..."}
+      %li
+        %label
+        = f.submit "Login", data: {disable_with: "Logging in..."}

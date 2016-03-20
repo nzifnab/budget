@@ -1,0 +1,10 @@
+- auto_open ||= nil
+.sidebar-container.box-content
+  %h1 Income
+
+  - if incomes.present?
+    %ul.boxed-list
+      = render incomes, auto_open: auto_open
+
+    = pagination(incomes)
+  .break

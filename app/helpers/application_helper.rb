@@ -20,6 +20,7 @@ module ApplicationHelper
   end
 
   def nice_currency(currency)
+    currency ||= 0
     number_to_currency(currency, negative_format: "(%u%n)")
   end
 
@@ -45,8 +46,14 @@ module ApplicationHelper
       outer_window: 1,
       "data-remote" => true,
       renderer: AjaxLinkRenderer,
-      "data-remote-content-fill" => ".sidebar-content"
+      "data-remote-content-fill" => ".js-sidebar-content"
     }
     will_paginate collection, options
+  end
+
+  def current_action?(*action_strings)
+    cur_action = "#{controller.controller_name}##{controller.action_name}"
+
+    action_strings.include?(cur_action)
   end
 end

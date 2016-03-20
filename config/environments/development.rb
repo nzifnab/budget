@@ -29,4 +29,15 @@ Budgeteer::Application.configure do
 
   # How this is not the default is beyond me.
   config.action_controller.action_on_unpermitted_parameters = :raise
+
+  # If you need a stacktrace of where a query in the log originated from...
+  # use this!
+  #ActiveRecordQueryTrace.enabled = true
+
+  # options are :app (default), :full, and :rails - does the same thing you'd see
+  # from a stacktrace in a browser w/ app/full/rails
+  #ActiveRecordQueryTrace.level = :app
+
+  # Setting to '0' includes entire trace
+  #ActiveRecordQueryTrace.lines = 1
 end

@@ -107,7 +107,7 @@ class Account
 
   @clear: ->
     budget.clearForm()
-    $(".form-error").remove()
+    $(".form-error-container").remove()
     $form = $(".js-account-content .js-update-account")
     $accountHeader = $form.closest(".js-account-content").prev(".js-account")
     $accountHeader.each (index, element) =>
@@ -121,6 +121,9 @@ class Account
       {
         'ajax:success': (e, data, status, xhr) =>
           $(".js-account .header-notice").remove()
+          if xhr.status == 200 && data.newFormHtml?
+            newForm = @create(html: data.newFormHtml)
+
           if xhr.status == 200 && data.accounts?
             auto_open = null
             for account in data.accounts

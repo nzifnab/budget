@@ -1,0 +1,10 @@
+.content
+  .box
+    .box-content
+      %h1 New Income Amount
+
+      = render partial: 'incomes/new', locals: {income: income}
+
+.sidebar
+  .js-sidebar-content.box
+    = render partial: 'incomes/sidebar', locals: {incomes: incomes, auto_open: params[:income_id].to_i}
