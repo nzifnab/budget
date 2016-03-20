@@ -33,6 +33,14 @@ gem 'draper'
 # https://github.com/hallelujah/valid_email/issues/33
 #gem 'mail', '~> 2.5.0'
 
+platform :ruby do
+  gem 'puma'
+end
+
+group :production do
+  gem 'rails_12factor'
+end
+
 group :assets do
   #gem 'sprockets', '~> 2.11.0' # TEMPORARY until `compass-rails` fixes it's issue...
   # https://github.com/Compass/compass-rails/issues/144...
