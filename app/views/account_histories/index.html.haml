@@ -5,9 +5,9 @@
       = account.name
   - if account_histories.present?
     %ul.tabs
-      %li.tab-active= link_to "All", "#"
-      %li= link_to "Quick Funds", "#"
-      %li= link_to "Income", "#"
+      %li.tab-active= link_to "All", "#", class: "js-prevent-default"
+      -#%li= link_to "Quick Funds", "#"
+      -#%li= link_to "Income", "#"
 
     %ul.boxed-list
       = render account_histories

@@ -47,6 +47,10 @@ class Budget
     )
   end
 
+  def income(income_id)
+    user.incomes.preload(account_histories: :account).find(income_id)
+  end
+
   def account(account_id)
     user.accounts.find(account_id)
   end

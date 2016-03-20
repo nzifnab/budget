@@ -1,4 +1,5 @@
 - auto_open ||= nil
+- highlight_history ||= nil
 %li.box.box-brown[income]
   .cols{"data-click-toggle" => ".js-income-details-#{income.id}", class: "clickable"}
     .col-one-third{class: amount_class(1)}= income.display_amount
@@ -9,13 +10,18 @@
 
   .break{class: "js-income-details-#{income.id}", style: (auto_open == income.id ? '' : 'display: none;')}
     .break-small
+    - if income.description.present?
+      .box.box-tan.box-no-shadow
+        = income.description
+
     .break-small
-      %table
-        %thead
-          %tr
-            %th
-              Account
-            %th
-              Amount
-        %tbody
-          = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history
+      .box.box-green.box-no-shadow
+        %table
+          %thead
+            %tr
+              %th
+                Account
+              %th
+                Amount
+          %tbody
+            = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history, locals: {highlight_history: highlight_history}

@@ -32,7 +32,7 @@ class AccountHistoryDecorator < ApplicationDecorator
     if quick_fund_id.present?
       h.quick_fund_path(quick_fund_id, account_id: self.account_id, format: :json)
     elsif income_id.present?
-      h.income_path(income_id, account_id: self.account_id, format: :json)
+      h.income_path(income_id, account_id: self.account_id, account_history_id: self.id, format: :json)
     end
   end
 

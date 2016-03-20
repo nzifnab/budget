@@ -1,0 +1,14 @@
+.sidebar-container.box-content[income]
+  %h1
+    .float-right{class: amount_class(1)}= income.display_amount
+    Income
+
+  .break-small
+    = link_to account_histories_path(account_id: account.id, format: :json), "data-remote" => true, data: {remote_replace_right: ".sidebar-container"}, class: "btn btn-green float-left", title: account.name do
+      \&laquo;
+      = account.truncated_name
+
+  %ul.boxed-list
+    = render income, auto_open: income.id, highlight_history: params[:account_history_id].to_i
+
+  .break
