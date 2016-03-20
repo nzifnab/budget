@@ -41,6 +41,9 @@ module Budgeteer
 
     config.assets.precompile += %w(
       screen.css
+      *.gif
+      *.png
+      *.jpg
     )
   end
 end

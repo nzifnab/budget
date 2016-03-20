@@ -132,11 +132,12 @@ class Account
                 if data.auto_open == account.accountId
                   auto_open = m
             @refresh(auto_open?.accordionId())
-            Account.clear()
+            Account.clear() unless data.newFormHtml?
+
           else if xhr.status == 200 && data.html?
             account = @create(data)
             @refresh(account.accordionId())
-            Account.clear()
+            Account.clear() unless data.newFormHtml?
 
         'ajax:error': (e, xhr, status, error) =>
           $(".js-account .header-notice").remove()
