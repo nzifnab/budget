@@ -234,6 +234,12 @@ th, td{
     width: 0;
   }
 }
+.ui-datepicker{
+  th, td{
+    width: auto;
+
+  }
+}
 td{
   border-bottom: 1px dotted black;
 }

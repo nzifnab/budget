@@ -3,6 +3,9 @@
   .field-prepend
     $
   = f.text_field :amount, class: 'field-small'
+%li
+  = f.label :applied_at, "Income Date"
+  = f.text_field :applied_at, class: 'datepicker'
 
 %li
   = f.label :description

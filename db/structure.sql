@@ -121,7 +121,8 @@ CREATE TABLE incomes (
     description text,
     income_at timestamp without time zone,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    applied_at timestamp without time zone
 );
 
 
@@ -379,4 +380,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160115031516');
 INSERT INTO schema_migrations (version) VALUES ('20160319025652');
 
 INSERT INTO schema_migrations (version) VALUES ('20160319043433');
+
+INSERT INTO schema_migrations (version) VALUES ('20160321032939');
 
