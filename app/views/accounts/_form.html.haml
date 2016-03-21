@@ -35,6 +35,9 @@
 %li
   = f.label :negative_overflow_id, "Negative overflows into"
   = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; Disallow Negatives &mdash;".html_safe
+-#%li
+-#  = f.label :category_sum_id, "Category", title: "Accounts in this category are aggregated, and their totals prominently displayed"
+-#  = f.collection_select :category_sum_id, category_select_options, :id, :name
 %li
   = f.label :enabled
   = f.check_box :enabled

@@ -18,7 +18,7 @@
           = simple_format account.description
 
       %dl.properties.break-small
-        - if account.display_add_per_month.present?
+        - if account.add_per_month.present?
           %dt.box.box-brown Add Per Month
           %dd.box.box-green= account.display_add_per_month
         - if account.monthly_cap.present?

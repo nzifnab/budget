@@ -5,7 +5,7 @@
   = f.text_field :amount, class: 'field-small'
 %li
   = f.label :applied_at, "Income Date"
-  = f.text_field :applied_at, class: 'datepicker'
+  = f.text_field :applied_at, class: 'datepicker', placeholder: "Today", value: datepicker_date(income.applied_at)
 
 %li
   = f.label :description

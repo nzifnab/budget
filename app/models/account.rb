@@ -32,7 +32,9 @@ class Account < ActiveRecord::Base
     allow_blank: true,
     message: "'%' or '$' only"
   }
-  validates :add_per_month, numericality: {
+  validates :add_per_month, presence: {
+    message: "Required"
+  }, numericality: {
     greater_than_or_equal_to: 0,
     allow_blank: true,
     message: "Positive number only",
@@ -250,7 +252,9 @@ class Account < ActiveRecord::Base
       # if this account was already capped.
       check_fulfilled_prerequisites = (cap || "Infinity".to_d) > amount
       self.amount += funds_to_distribute
-      save!
+      if !save
+        raise "error on account #{self.id}: #{self.errors.full_messages.inspect}"
+      end
       income.build_history(
         self, funds_to_distribute,
         @expl
@@ -294,7 +298,9 @@ class Account < ActiveRecord::Base
     end
 
     self.amount += funds_to_distribute
-    save!
+    if !save
+      raise "error on account #{self.id}: #{self.errors.full_messages.inspect}"
+    end
     desc << ")"
     income.build_history(
       self, funds_to_distribute,
@@ -313,6 +319,9 @@ class Account < ActiveRecord::Base
     funds
   end
 
+  # TODO: Bleh,
+  # This only tests *down* the chain, but doesn't care at all
+  # if you've made this recursion in the other direction...
   def negative_overflow_recursion_error?
     tester = false
     if negative_overflow_id.present?

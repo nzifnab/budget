@@ -19,6 +19,11 @@ module ApplicationHelper
     datetime.strftime("%b %d, %Y %r")
   end
 
+  def datepicker_date(date)
+    return if date.blank?
+    date.strftime("%B %d, %Y")
+  end
+
   def nice_currency(currency)
     currency ||= 0
     number_to_currency(currency, negative_format: "(%u%n)")
