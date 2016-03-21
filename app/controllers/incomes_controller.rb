@@ -31,7 +31,8 @@ class IncomesController < ApplicationController
   def income_params
     params.require(:income).permit(
       :amount,
-      :description
+      :description,
+      :applied_at
     )
   end
 end

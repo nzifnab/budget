@@ -931,6 +931,101 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it "respects the correct monthly and annual caps when a different applied_at is specified" do
+      percentage_account.update_attributes(
+        monthly_cap: 200,
+        amount: 50
+      )
+      flat_value_account.update_attributes(
+        annual_cap: 1500,
+        amount: 500,
+        add_per_month: 800
+      )
+      Timecop.freeze("August 10, 2015".to_datetime) do
+        percentage_account.account_histories.create!(
+          income_id: 995,
+          amount: 50
+        )
+        flat_value_account.account_histories.create!(
+          income_id: 995,
+          amount: 300
+        )
+      end
+
+      Timecop.freeze("September 25, 2015".to_datetime) do
+        percentage_account.account_histories.create!(
+          income_id: 996,
+          amount: 60
+        )
+        flat_value_account.account_histories.create!(
+          income_id: 996,
+          amount: 350
+        )
+      end
+
+      Timecop.freeze("October 25, 2015".to_datetime) do
+        percentage_account.account_histories.create!(
+          income_id: 997,
+          amount: 75
+        )
+        flat_value_account.account_histories.create!(
+          income_id: 997,
+          amount: 550
+        )
+      end
+
+      Timecop.freeze("February 14, 2016".to_datetime) do
+        percentage_account.account_histories.create!(
+          income_id: 998,
+          amount: 100
+        )
+        flat_value_account.account_histories.create!(
+          income_id: 998,
+          amount: 300
+        )
+      end
+
+      Timecop.freeze("March 2, 2016".to_datetime) do
+        percentage_account.account_histories.create!(
+          income_id: 999,
+          amount: 150
+        )
+        flat_value_account.account_histories.create!(
+          income_id: 999,
+          amount: 600
+        )
+      end
+
+      Timecop.freeze("March 15, 2016".to_datetime) do
+        test_distribution(
+          accounts: [:percentage, :flat_value],
+          amount: 1_500,
+          applied_at: "September 24, 2015".to_datetime,
+
+          expect: {
+            history: [
+              {
+                amount: 300,
+                explanation: "Distributed at priority level 7: $800.00 per month of $1,500.00 funds ($1,500.00 annual cap)"
+              },
+              {
+                amount: 140,
+                explanation: "Distributed at priority level 6: 30.00% per month of $1,200.00 funds ($200.00 monthly cap)"
+              },
+              {
+                amount: 1060,
+                explanation: "Undistributed Funds"
+              }
+            ],
+            amounts: {
+              flat_value: 800,
+              percentage: 190
+            },
+            undistributed: 1060
+          }
+        )
+      end
+    end
 
 
     def test_distribution(options)
@@ -939,6 +1034,7 @@ RSpec.describe Income, type: :model do
       end
 
       income.amount = options[:amount]
+      income.applied_at = options[:applied_at].presence
       income.save!
 
       history_amounts = options[:expect][:history]

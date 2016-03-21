@@ -127,18 +127,22 @@ class Account < ActiveRecord::Base
   # ALTERNATIVELY: Do distribution in the background... of course,
   # that'll require a running worker :(
   def amount_received_this_month
+    date = @income_applied_at || Time.zone.now
     account_histories.where(
-      "created_at >= :this_month",
-      this_month: Time.zone.now.beginning_of_month
+      "created_at BETWEEN :start_of_month AND :end_of_month",
+      start_of_month: date.beginning_of_month,
+      end_of_month: date.end_of_month
     ).
       where("income_id IS NOT NULL").
       sum(:amount)
   end
 
   def amount_received_this_year
+    date = @income_applied_at || Time.zone.now
     account_histories.where(
-      "created_at >= :this_year",
-      this_year: Time.zone.now.beginning_of_year
+      "created_at BETWEEN :start_of_year AND :end_of_year",
+      start_of_year: date.beginning_of_year,
+      end_of_year: date.end_of_year
     ).
       where("income_id IS NOT NULL").
       sum(:amount)
@@ -239,6 +243,7 @@ class Account < ActiveRecord::Base
   def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "")
     deco = self.decorate
     @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{deco.h.nice_currency(priority_funds)} funds"
+    @income_applied_at = income.applied_at
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
       # Don't re-distribute to accounts where this was a prerequisite,

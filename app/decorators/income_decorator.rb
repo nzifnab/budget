@@ -12,7 +12,7 @@ class IncomeDecorator < ApplicationDecorator
   end
 
   def display_date
-    h.nice_date(model.created_at)
+    h.nice_date(model.applied_at)
   end
 
   def tooltip_date

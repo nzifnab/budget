@@ -1,20 +1,29 @@
 $old-size: $base-font-size;
 $base-font-size: $xxl-font-size;
 
-.accordion-header{
-  position: relative;
+.ui-state-default{
   background-color: $header-hover-gradient-end;
   @include background-image(linear-gradient($header-hover-gradient-start, $header-hover-gradient-end));
   color: $dark-on-light;
 
-  &.ui-state-active, &.ui-state-hover, &.ui-state-focus{
-    background-color: $content-gradient-end;
-    @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
+  .ui-icon{
+    background-image: image_url("ui-icons_222222_256x240.png");
   }
+}
 
-  &.ui-state-active{
-    border-bottom-style: none;
-  }
+.ui-state-active, .ui-state-hover, .ui-state-focus{
+  background-color: $content-gradient-end;
+  @include background-image(linear-gradient($content-gradient-start, $content-gradient-end));
+}
+
+.ui-state-active{
+  border-bottom-style: none;
+}
+
+.accordion-header{
+  position: relative;
+
+
 
   &.account-disabled{
     background-image: none;
@@ -26,7 +35,7 @@ $base-font-size: $xxl-font-size;
   }
 }
 
-.accordion-content{
+.ui-widget-content{
   background-color: $content-gradient-end;
   background-image: none;
   border-color: #333;

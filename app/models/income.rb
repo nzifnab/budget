@@ -2,6 +2,7 @@ class Income < ActiveRecord::Base
   belongs_to :user, inverse_of: :incomes
   has_many :account_histories, inverse_of: :income
 
+  before_create :set_applied_at
   after_create :build_account_histories
 
   def distribute_funds(funds)
@@ -42,16 +43,23 @@ class Income < ActiveRecord::Base
 
   def build_history(account, funds, expl=nil)
     return unless funds > 0
-    history = account_histories.create!(
+    options = {
       account: account,
       explanation: expl,
       amount: funds,
       description: description
-    )
+    }
+    options[:created_at] = self.applied_at
+    history = account_histories.create!(options)
     history
   end
 
   protected
+
+    # before_create
+    def set_applied_at
+      self.applied_at ||= Time.zone.now
+    end
 
     # after_create
     def build_account_histories

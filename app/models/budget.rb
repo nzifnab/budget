@@ -41,7 +41,7 @@ class Budget
 
   def incomes
     user.incomes.order(
-      created_at: :desc
+      applied_at: :desc
     ).preload(
       account_histories: :account
     )
