@@ -14,6 +14,8 @@ class Account < ActiveRecord::Base
     foreign_key: "overflow_into_id"
   )
   belongs_to :user, inverse_of: :accounts
+  belongs_to :category_sum, inverse_of: :accounts
+
   has_many :account_histories, -> {order(created_at: :desc)}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
   has_many(
@@ -50,6 +52,7 @@ class Account < ActiveRecord::Base
 
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
+  before_save :set_user_id_on_category_sum
   after_create :update_self_negative_overflow
 
   validate :deny_negative_amount_with_no_overflow
@@ -57,6 +60,8 @@ class Account < ActiveRecord::Base
   validate :cannot_receive_overflow_when_disabled
   #validate :cannot_overflow_as_disabled_account
   validate :cannot_exceed_max_overflow_recursion
+
+  accepts_nested_attributes_for :category_sum, reject_if: ->(attributes) {attributes[:name].blank?}
 
   MAX_OVERFLOW_RECURSION_COUNT = 3
 
@@ -379,6 +384,13 @@ class Account < ActiveRecord::Base
     @fund_change = self.amount.to_d - self.amount_was.to_d
   end
 
+  # before_save
+  def set_user_id_on_category_sum
+    if category_sum.try(:new_record?)
+      category_sum.user_id = self.user_id
+    end
+  end
+
   # after_create
   def update_self_negative_overflow
     update_attributes(negative_overflow_id: self.id) if negative_overflow_id == 0
@@ -437,4 +449,5 @@ class Account < ActiveRecord::Base
       errors.add(:amount_extended, advanced_error)
     end
   end
+
 end

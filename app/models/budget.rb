@@ -58,4 +58,8 @@ class Budget
   def quick_fund(quick_fund_id)
     user.quick_funds.preload(account_histories: :account).find(quick_fund_id)
   end
+
+  def category_sums
+    user.category_sums
+  end
 end

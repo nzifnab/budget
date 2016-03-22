@@ -8,5 +8,11 @@ class CreateCategorySums < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_column :accounts, :category_sum_id, :integer
+
+    add_index :accounts, :category_sum_id
+    add_index :category_sums, :user_id
+    add_index :incomes, :applied_at
   end
 end

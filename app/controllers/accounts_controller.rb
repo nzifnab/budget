@@ -1,7 +1,7 @@
 require 'ostruct'
 class AccountsController < ApplicationController
   decorates_assigned :account, :accounts, :account_with_errors, :new_form_account
-  helper_method :negative_overflow_options, :select_account_options
+  helper_method :negative_overflow_options, :select_account_options, :category_select_options
 
   def index
     @account = budget.new_account(enabled: true)
@@ -53,7 +53,11 @@ class AccountsController < ApplicationController
       :annual_cap,
       :cap,
       :prerequisite_account_id,
-      :overflow_into_id
+      :overflow_into_id,
+      :category_sum_id,
+      category_sum_attributes: [
+        :name
+      ]
     )
   end
 
@@ -64,5 +68,15 @@ class AccountsController < ApplicationController
 
   def select_account_options(self_id)
     @select_account_options ||= budget.accounts_except(self_id).decorate
+  end
+
+  def category_select_options
+    budget.category_sums.map do |category|
+      [category.name, category.id, {"data-hide" => true, "data-disable-fields" => true}]
+    end.push(
+      ["&mdash; Create New Category &mdash;".html_safe, nil, {"data-show" => true, "data-enable-fields" => true, "data-clear-fields" => true}]
+    ).unshift(
+      ["&mdash; Uncategorized &mdash;".html_safe, nil, {"data-hide" => true, "data-disable-fields" => true}]
+    )
   end
 end

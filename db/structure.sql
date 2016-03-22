@@ -83,11 +83,12 @@ CREATE TABLE accounts (
     updated_at timestamp without time zone,
     prerequisite_account_id integer,
     cap numeric,
-    add_per_month numeric DEFAULT 0,
-    add_per_month_type text DEFAULT '$'::text,
+    add_per_month numeric,
+    add_per_month_type text,
     monthly_cap numeric,
     overflow_into_id integer,
-    annual_cap numeric(8,2)
+    annual_cap numeric(8,2),
+    category_sum_id integer
 );
 
 
@@ -108,6 +109,40 @@ CREATE SEQUENCE accounts_id_seq
 --
 
 ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
+
+
+--
+-- Name: category_sums; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE category_sums (
+    id integer NOT NULL,
+    name text,
+    amount numeric(8,2),
+    user_id integer,
+    description text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: category_sums_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE category_sums_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_sums_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE category_sums_id_seq OWNED BY category_sums.id;
 
 
 --
@@ -154,7 +189,7 @@ CREATE TABLE quick_funds (
     amount numeric(10,2),
     account_id integer,
     description text,
-    fund_type character varying(255),
+    fund_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
@@ -184,7 +219,7 @@ ALTER SEQUENCE quick_funds_id_seq OWNED BY quick_funds.id;
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -197,7 +232,7 @@ CREATE TABLE users (
     first_name text,
     last_name text,
     email text,
-    password_digest character varying(255),
+    password_digest character varying,
     undistributed_funds numeric(10,2) DEFAULT 0,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -242,6 +277,13 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY category_sums ALTER COLUMN id SET DEFAULT nextval('category_sums_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY incomes ALTER COLUMN id SET DEFAULT nextval('incomes_id_seq'::regclass);
 
 
@@ -273,6 +315,14 @@ ALTER TABLE ONLY account_histories
 
 ALTER TABLE ONLY accounts
     ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_sums_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY category_sums
+    ADD CONSTRAINT category_sums_pkey PRIMARY KEY (id);
 
 
 --
@@ -328,6 +378,13 @@ CREATE INDEX index_account_histories_on_quick_fund_id ON account_histories USING
 
 
 --
+-- Name: index_accounts_on_category_sum_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_accounts_on_category_sum_id ON accounts USING btree (category_sum_id);
+
+
+--
 -- Name: index_accounts_on_negative_overflow_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -339,6 +396,20 @@ CREATE INDEX index_accounts_on_negative_overflow_id ON accounts USING btree (neg
 --
 
 CREATE INDEX index_accounts_on_user_id ON accounts USING btree (user_id);
+
+
+--
+-- Name: index_category_sums_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_category_sums_on_user_id ON category_sums USING btree (user_id);
+
+
+--
+-- Name: index_incomes_on_applied_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_incomes_on_applied_at ON incomes USING btree (applied_at);
 
 
 --
@@ -382,4 +453,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160319025652');
 INSERT INTO schema_migrations (version) VALUES ('20160319043433');
 
 INSERT INTO schema_migrations (version) VALUES ('20160321032939');
+
+INSERT INTO schema_migrations (version) VALUES ('20160321232118');
 
