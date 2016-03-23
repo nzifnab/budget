@@ -19,6 +19,7 @@ RSpec.describe "Account Management", js: true do
         fill_in "Name", with: "Checking Account"
         fill_in "Description", with: "Wells Fargo checking account"
         fill_in "Priority", with: "7"
+        fill_in "Add Per Month", with: "32"
         check "Enabled"
         select "Disallow Negatives", from: "Negative overflows into"
         click_button "Save Account"

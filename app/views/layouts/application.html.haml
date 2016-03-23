@@ -28,7 +28,8 @@
 
     .container
       .box.box-tan.box-no-shadow.box-fit.desktop-float-right.js-category-sums.tablet-hide
-        = render partial: 'category_sums/for_layout'
+        - if category_sums
+          = render partial: 'category_sums/for_layout'
 
 
       %ul.tabs

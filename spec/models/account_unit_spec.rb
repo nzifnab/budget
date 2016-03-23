@@ -26,8 +26,6 @@ RSpec.describe Account do
 
       it 'is valid with valid add_per_month values' do
         valid_values = [
-          ["$", nil],
-          ["%", nil],
           [nil, nil],
           ["$", 0],
           ["$", 1],
@@ -56,6 +54,8 @@ RSpec.describe Account do
 
       it 'is invalid with bad add_per_month_values' do
         invalid_values = [
+          ["$", nil],
+          ["%", nil],
           [nil, 45],
           [nil, 0],
           ["$", -1],

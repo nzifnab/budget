@@ -145,7 +145,11 @@ class Account
 
         'ajax:error': (e, xhr, status, error) =>
           $(".js-account .header-notice").remove()
-          data = JSON.parse(xhr.responseText)
+          try
+            data = JSON.parse(xhr.responseText)
+          catch err
+            return $("body").html(xhr.responseText)
+
           account = @create(data)
           @refresh(account.accordionId())
       },

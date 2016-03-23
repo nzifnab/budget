@@ -50,6 +50,7 @@ class Account < ActiveRecord::Base
     if: ->{add_per_month_type == '%'}
   }
 
+  before_validation :default_add_per_month_to_zero, on: :create
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
   before_save :set_user_id_on_category_sum
@@ -372,6 +373,14 @@ class Account < ActiveRecord::Base
   end
 
   private
+
+  # before_validation on create
+  def default_add_per_month_to_zero
+    if !add_per_month && !add_per_month_type
+      self.add_per_month_type = '$'
+      self.add_per_month = 0
+    end
+  end
 
   # before_save
   def default_amount_to_zero
