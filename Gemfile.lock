@@ -81,6 +81,8 @@ GEM
     erubis (2.7.0)
     execjs (2.6.0)
     ffi (1.9.10)
+    font-awesome-sass (4.5.0)
+      sass (>= 3.2)
     haml (4.0.7)
       tilt
     haml-rails (0.9.0)
@@ -234,6 +236,7 @@ DEPENDENCIES
   database_cleaner
   draper
   execjs
+  font-awesome-sass
   haml
   haml-rails
   jbuilder

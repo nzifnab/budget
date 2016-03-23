@@ -2,7 +2,7 @@ class CreateCategorySums < ActiveRecord::Migration
   def change
     create_table :category_sums do |t|
       t.text :name
-      t.decimal :amount, precision: 8, scale: 2
+      t.decimal :amount, precision: 8, scale: 2, default: 0, nil: false
       t.integer :user_id
       t.text :description
 

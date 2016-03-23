@@ -4,7 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_filter :authorize_current_user
+  before_filter :initialize_category_sums
   helper_method :current_user
+
+  decorates_assigned :category_sums
 
   protected
     def budget
@@ -40,6 +43,12 @@ class ApplicationController < ActionController::Base
         reset_session
         save_return_to_path
         redirect_to session_path, notice: "Please log in"
+      end
+    end
+
+    def initialize_category_sums
+      if current_user
+        @category_sums = budget.category_sums
       end
     end
 

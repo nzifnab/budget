@@ -139,6 +139,10 @@ class Account
             @refresh(account.accordionId())
             Account.clear() unless data.newFormHtml?
 
+          if xhr.status == 200 && data.dynamicUpdate?
+            for values in data.dynamicUpdate
+              $(values.selector).html(values.html) if values.selector?
+
         'ajax:error': (e, xhr, status, error) =>
           $(".js-account .header-notice").remove()
           data = JSON.parse(xhr.responseText)

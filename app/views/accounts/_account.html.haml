@@ -13,6 +13,12 @@
           There was an error
       = link_to 'Modify Funds', '#', {data: {click_add_element_class: ".js-account-details-#{account.id}", click_add_class_value: "mobile-hide", click_remove_element_class: ".js-quick-funds-form-#{account.id}", click_remove_class_value: "mobile-hide"}, class: 'btn btn-green btn-mobile mobile-visible'}
 
+      - if account.category_name.present?
+        .break-small
+          %i.fa.fa-university
+          %strong= account.category_name
+
+
       - if account.description.present?
         .box.box-tan
           = simple_format account.description

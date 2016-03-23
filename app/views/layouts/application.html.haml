@@ -12,8 +12,11 @@
 
   %body
     .container
-      %header
+      %header.break-small
         .float-right
+          %span.tablet-visible
+            = link_to '#', class: 'no-underline', data: {click_toggle: ".js-category-sums"} do
+              %i.fa.fa-bars
           - if current_user
             = current_user.email
             &nbsp;&nbsp;|&nbsp;&nbsp;
@@ -24,6 +27,10 @@
         = flash_messages
 
     .container
+      .box.box-tan.box-no-shadow.box-fit.desktop-float-right.js-category-sums.tablet-hide
+        = render partial: 'category_sums/for_layout'
+
+
       %ul.tabs
         %li.accounts-tab{class: current_action?('accounts#index') ? 'tab-active' : nil}= link_to 'Accounts', accounts_path
         %li{class: current_action?('incomes#index') ? 'tab-active' : nil}= link_to 'Income', incomes_path

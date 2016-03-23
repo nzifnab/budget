@@ -49,6 +49,7 @@ gem 'compass-rails'#, '~> 2.0.0'
 gem 'coffee-rails'
 gem 'sass-rails'#, '4.0.1' # 4.0.2 and 4.0.3 force a lower version of sass
                           # which causes compass to go from 1.x to 0.12
+gem 'font-awesome-sass'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'susy'

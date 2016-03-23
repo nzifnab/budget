@@ -75,6 +75,19 @@ h4{
   line-height: em(14px, 10px);
 }
 
+.text-large{
+  font-size: em(18px, $xxl-font-size);
+  line-height: em(20px, 10px);
+}
+
+.no-underline{
+  text-decoration: none;
+
+  &:hover, &:focus{
+    text-decoration: none;
+  }
+}
+
 .clickable{
   cursor: pointer;
 }

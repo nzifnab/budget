@@ -118,7 +118,7 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 CREATE TABLE category_sums (
     id integer NOT NULL,
     name text,
-    amount numeric(8,2),
+    amount numeric(8,2) DEFAULT 0,
     user_id integer,
     description text,
     created_at timestamp without time zone,

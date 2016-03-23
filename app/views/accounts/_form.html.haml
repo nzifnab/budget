@@ -39,10 +39,16 @@
   = f.label :category_sum_id, "Category", title: "Accounts in this category are aggregated, and their totals prominently displayed"
   = f.select :category_sum_id, category_select_options, {}, {"data-select-toggler" => ".js-category-sum-form"}
 
-%li.js-category-sum-form{style: 'display:none;'}
-  = f.fields_for :category_sum, f.object.build_category_sum do |category|
+= f.fields_for :category_sum, f.object.build_category_sum do |category|
+  %li.js-category-sum-form{style: 'display:none;'}
     = category.label :name, "Category Name"
     = category.text_field :name, disabled: true
+
+  %li.js-category-sum-form{style: 'display: none;'}
+    = category.label :description, "Category Description"
+    = category.text_area :description, disabled: true
+
+
 %li
   = f.label :enabled
   = f.check_box :enabled

@@ -53,6 +53,7 @@ class Account < ActiveRecord::Base
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
   before_save :set_user_id_on_category_sum
+  before_save :cache_amount_on_category_sum
   after_create :update_self_negative_overflow
 
   validate :deny_negative_amount_with_no_overflow
@@ -389,6 +390,23 @@ class Account < ActiveRecord::Base
     if category_sum.try(:new_record?)
       category_sum.user_id = self.user_id
     end
+  end
+
+  #before_save
+  def cache_amount_on_category_sum
+    if amount_changed? || category_sum_id_changed? || category_sum.try(:new_record?)
+      if category_sum_id_was
+        old_category = CategorySum.find(category_sum_id_was)
+        old_category.amount -= amount_was.to_d
+        old_category.save!
+      end
+      if category_sum
+        category_sum.reload unless category_sum.new_record?
+        category_sum.amount += amount.to_d
+        category_sum.save!
+      end
+    end
+    true
   end
 
   # after_create

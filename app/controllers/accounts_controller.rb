@@ -56,7 +56,8 @@ class AccountsController < ApplicationController
       :overflow_into_id,
       :category_sum_id,
       category_sum_attributes: [
-        :name
+        :name,
+        :description
       ]
     )
   end

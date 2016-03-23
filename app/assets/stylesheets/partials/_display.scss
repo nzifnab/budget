@@ -61,6 +61,10 @@ $base-font-size: $xxl-font-size;
   width: 100%;
 }
 
+.box-fit{
+  width: auto;
+}
+
 .box-red{
   border-color: #ffb7b7;
   background-color: #CC3333;
@@ -241,6 +245,11 @@ th, td{
 
   &.cell_collapse{
     width: 0;
+  }
+}
+.float-right, .desktop-float-right{
+  th, td{
+    width: auto;
   }
 }
 .ui-datepicker{
