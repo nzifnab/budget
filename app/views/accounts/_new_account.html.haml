@@ -1,7 +1,7 @@
 .accordion-header
   %h3 New Account
 .accordion-content
-  = form_for account, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
+  = form_for account, format: 'json', remote: true, html: {class: 'js-update-account js-update-content'} do |f|
     %ul.fields
       = render partial: 'accounts/form', locals: {f: f}
       %li

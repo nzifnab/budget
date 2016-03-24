@@ -62,4 +62,8 @@ class Budget
   def category_sums
     user.category_sums
   end
+
+  def category_sum(category_id)
+    user.category_sums.find(category_id)
+  end
 end

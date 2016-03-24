@@ -118,6 +118,14 @@ $base-font-size: $xxl-font-size;
   overflow: hidden;
 }
 
+.text-red{
+  color: #ff0000;
+
+  &:hover, &:focus{
+    color: #ff0000;
+  }
+}
+
 //.box-header, .box-content{
 //  padding: 4px;
 //}

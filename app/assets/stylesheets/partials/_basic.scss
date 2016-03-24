@@ -5,6 +5,10 @@ a{
   }
 }
 
+strong{
+  font-weight: bold;
+}
+
 body{
   font-size: $app-font-size;
   font-family: $app-font-family;
@@ -77,7 +81,10 @@ h4{
 
 .text-large{
   font-size: em(18px, $xxl-font-size);
-  line-height: em(20px, 10px);
+}
+
+.text-xxl{
+  font-size: em(24px, $xxl-font-size);
 }
 
 .no-underline{

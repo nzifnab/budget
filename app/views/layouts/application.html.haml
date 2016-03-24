@@ -27,9 +27,8 @@
         = flash_messages
 
     .container
-      .box.box-tan.box-no-shadow.box-fit.desktop-float-right.js-category-sums.tablet-hide
-        - if category_sums
-          = render partial: 'category_sums/for_layout'
+      .js-category-sums
+        = render partial: 'category_sums/for_layout'
 
 
       %ul.tabs

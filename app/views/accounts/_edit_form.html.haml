@@ -1,4 +1,4 @@
-= form_for account.model, format: 'json', remote: true, html: {class: 'js-update-account'} do |f|
+= form_for account.model, format: 'json', remote: true, html: {class: 'js-update-account js-update-content'} do |f|
   %ul.fields
     = render partial: 'accounts/form', locals: {f: f}
     %li

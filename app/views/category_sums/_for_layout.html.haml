@@ -1,4 +1,6 @@
-.box-content
-  %table
-    %tbody
-      = render category_sums
+- if category_sums.try(:any?)
+  .box.box-tan.box-no-shadow.box-fit.desktop-float-right.tablet-hide
+    .box-content
+      %table
+        %tbody
+          = render category_sums
