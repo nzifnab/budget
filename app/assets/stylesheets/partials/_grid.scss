@@ -130,9 +130,6 @@
 @include susy-breakpoint($bp-app-medium, $app-medium){
   .desktop-float-right, .desktop-float-left{
     float: none;
-    th, td{
-      width: 100%;
-    }
   }
 
   .container{

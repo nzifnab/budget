@@ -243,23 +243,22 @@ ul.boxed-list{
   display: none;
 }
 
+table{
+  width: 100%;
+}
 th{
   font-weight: bold;
   border-bottom: 1px solid black;
 }
 th, td{
   padding: em(3px) em(6px);
-  width: 100%;
 
-  &.cell_collapse{
+  &.cell-collapse{
     width: 0;
+    padding-right: 0;
   }
 }
-.float-right, .desktop-float-right{
-  th, td{
-    width: auto;
-  }
-}
+
 .ui-datepicker{
   th, td{
     width: auto;

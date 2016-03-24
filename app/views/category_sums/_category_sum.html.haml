@@ -1,5 +1,5 @@
 %tr
-  %td
+  %td.cell-collapse
     = link_to category_sum_path(category_sum), {title: "Delete", "data-remote" => true, "data-confirm" => "Delete this category? Accounts under this category will be uncategorized. This cannot be undone.", "data-method" => "delete", class: 'text-red no-underline text-large js-update-content'} do
       %strong
         %i x

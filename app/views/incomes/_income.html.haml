@@ -21,7 +21,7 @@
             %tr
               %th
                 Account
-              %th
+              %th.cell-collapse
                 Amount
           %tbody
             = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history, locals: {highlight_history: highlight_history}
