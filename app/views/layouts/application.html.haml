@@ -18,7 +18,7 @@
             = link_to '#', class: 'no-underline text-xxl', data: {click_toggle: ".js-category-sums"} do
               %i.fa.fa-bars
           - if current_user
-            = current_user.email
+            = link_to current_user.email, edit_user_path
             &nbsp;&nbsp;|&nbsp;&nbsp;
             = link_to "Logout", logout_path, "data-method" => "delete"
           - else

@@ -13,6 +13,7 @@ Budgeteer::Application.routes.draw do
 
   resources :account_histories, only: [:index]
   resources :category_sums, only: [:destroy]
+  resource :user, only: [:edit, :update]
 
   match '/login' => 'sessions#new', as: :session, via: :get
   match '/login' => 'sessions#create', via: :post

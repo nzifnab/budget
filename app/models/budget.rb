@@ -21,7 +21,8 @@ class Budget
     ).preload(
       :negative_overflow_account,
       :prerequisite_account,
-      :overflow_into_account
+      :overflow_into_account,
+      :category_sum
     )
   end
 

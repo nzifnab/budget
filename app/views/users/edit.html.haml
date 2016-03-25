@@ -1,0 +1,21 @@
+.content
+  .box.box-tan.box-no-shadow
+    .box-content
+      = form_for user do |f|
+        %h1 User Profile
+        %ul.fields
+          %li
+            = f.label :email
+            = f.text_field :email
+
+        %h2 Edit your password
+        %ul.fields
+          %li
+            = f.label :old_password
+            = f.password_field :old_password
+          %li
+            = f.label :password, "New password"
+            = f.password_field :password
+          %li
+            %label
+            = f.submit "Save Changes", class: 'btn btn-green btn-mobile', data: {disable_with: "Saving..."}

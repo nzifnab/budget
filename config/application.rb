@@ -25,7 +25,7 @@ module Budgeteer
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Mountain Time (US & Canada)'
     config.encoding = "utf-8"
-    config.filter_parameters += [:password, :password_confirmation]
+    config.filter_parameters += [:password, :old_password]
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
