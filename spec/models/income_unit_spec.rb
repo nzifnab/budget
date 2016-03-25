@@ -738,7 +738,7 @@ RSpec.describe Income, type: :model do
             },
             { # catchall
               amount: 275,
-              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 5 with $275.00 - Distributed at priority level 5: 100.00% per month of $275.00 funds"
+              explanation: "Re-distributed from fulfilled prerequisite 'Percentage' at priority level 5 with $275.00 - Distributed at priority level 5: 100.00% per month of $2,000.00 funds"
             },
             { # flat_value
               # send $1,100
@@ -885,6 +885,142 @@ RSpec.describe Income, type: :model do
           amounts: {
             flat_value: 8000,
             percentage: 825
+          }
+        }
+      )
+    end
+
+    it 'sends to prerequisite-fulfilled accounts with a percentage monthly amount with a value up to the amount that would have been distributed if that account had not been skipped' do
+      # For instance, if an account is set to 15% at priority level 10, and
+      # the amount that it *would* have received at that point is $200, it will
+      # use all available redistribution funds to fulfill that $200,
+      # and no more. It will at this point ignore the 15%,
+      # since it already knows what 15% should have been.
+      # If the prerequisite used $50 and then capped, the redistributed
+      # 15%-account will get $200.
+
+      percentage_account.update_attributes(
+        name: "Emergency Fund",
+        add_per_month: 15,
+        add_per_month_type: "%",
+        cap: 11_000,
+        amount: 9_450,
+        priority: 9,
+        prerequisite_account: catchall_account
+      )
+      flat_value_account.update_attributes(
+        name: "Investments",
+        add_per_month: 15,
+        add_per_month_type: "%",
+        priority: 8,
+        prerequisite_account: percentage_account
+      )
+      catchall_account.update_attributes(
+        name: "Credit Card",
+        add_per_month: 20,
+        add_per_month_type: "%",
+        priority: 7,
+        cap: 0,
+        amount: -100
+      )
+
+      test_distribution(
+        accounts: [:percentage, :flat_value, :catchall],
+        amount: 5_000,
+
+        expect: {
+          history: [
+            { # catchall
+              amount: 100,
+              explanation: "Distributed at priority level 7: 20.00% per month of $5,000.00 funds ($0.00 cap)"
+            },
+            { # percentage
+              amount: 750,
+              explanation: "Re-distributed from fulfilled prerequisite 'Credit Card' at priority level 7 with $900.00 - Distributed at priority level 9: 15.00% per month of $5,000.00 funds"
+            },
+            #{ # flat_value
+            #  amount: 150,
+            #  explanation: "Re-distributed from fulfilled prerequisite 'Emergency Fund' at priority level 9 with $150.00 - Distributed at priority level 8: 15.00% per month of $5,000.00 funds"
+            #},
+            { # undistributed
+              amount: 4_150,
+              explanation: "Undistributed Funds"
+            }
+          ],
+
+          undistributed: 4150,
+          amounts: {
+            percentage: 10_200,
+            flat_value: 0,
+            catchall: 0
+          }
+        }
+      )
+    end
+
+    it 'sends to prerequisite-fulfilled accounts that fulfill further prerequisites' do
+      # For instance, if an account is set to 15% at priority level 10, and
+      # the amount that it *would* have received at that point is $200, it will
+      # use all available redistribution funds to fulfill that $200,
+      # and no more. It will at this point ignore the 15%,
+      # since it already knows what 15% should have been.
+      # If the prerequisite used $50 and then capped, the redistributed
+      # 15%-account will get $200.
+
+      percentage_account.update_attributes(
+        name: "Emergency Fund",
+        add_per_month: 15,
+        add_per_month_type: "%",
+        cap: 9_500,
+        amount: 9_450,
+        priority: 9,
+        prerequisite_account: catchall_account
+      )
+      flat_value_account.update_attributes(
+        name: "Investments",
+        add_per_month: 15,
+        add_per_month_type: "%",
+        priority: 8,
+        prerequisite_account: percentage_account
+      )
+      catchall_account.update_attributes(
+        name: "Credit Card",
+        add_per_month: 20,
+        add_per_month_type: "%",
+        priority: 7,
+        cap: 0,
+        amount: -100
+      )
+
+      test_distribution(
+        accounts: [:percentage, :flat_value, :catchall],
+        amount: 5_000,
+
+        expect: {
+          history: [
+            { # catchall
+              amount: 100,
+              explanation: "Distributed at priority level 7: 20.00% per month of $5,000.00 funds ($0.00 cap)"
+            },
+            { # percentage
+              amount: 50,
+              explanation: "Re-distributed from fulfilled prerequisite 'Credit Card' at priority level 7 with $900.00 - Distributed at priority level 9: 15.00% per month of $5,000.00 funds ($9,500.00 cap)"
+            },
+            { # flat_value
+              amount: 700,
+              explanation: "Re-distributed from fulfilled prerequisite 'Emergency Fund' at priority level 9 with $700.00 - Distributed at priority level 8: 15.00% per month of $5,000.00 funds"
+            },
+            { # undistributed
+              amount: 4_150,
+              explanation: "Undistributed Funds"
+            }
+          ],
+
+          undistributed: 4150,
+          amounts: {
+            percentage: 9_500,
+            flat_value: 700,
+            catchall: 0
           }
         }
       )

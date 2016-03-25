@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Usage: dropdb [db]
+# Summary: kill connections and drop database
+
+set -e
+if [[ -z $1 ]]; then
+  echo "Exiting: no database provided."
+  exit 1
+fi
+db=$1
+
+if psql --list | grep -w "$db" > /dev/null; then
+  psql -d postgres -c "
+    SELECT
+      pg_terminate_backend(pg_stat_activity.pid)
+    FROM
+      pg_stat_activity
+    WHERE
+      pg_stat_activity.datname = '${db}'" > /dev/null
+
+  dropdb $db || true # don't die if db does not exist
+fi

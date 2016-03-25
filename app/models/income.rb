@@ -33,7 +33,7 @@ class Income < ActiveRecord::Base
   def distribute_via_prerequisite(from_account:, funds:, from_priority:)
     last_priority = 11
     priority_funds = funds
-    user.accounts.by_distribution_priority(from_account).each do |account|
+    user.accounts.by_distribution_priority(self, from_account).each do |account|
       if account.priority < last_priority
         last_priority = account.priority
         priority_funds = funds
@@ -42,7 +42,8 @@ class Income < ActiveRecord::Base
         income: self,
         funds: funds,
         priority_funds: priority_funds,
-        desc_prefix: "Re-distributed from fulfilled prerequisite '#{from_account.name}' at priority level #{from_priority} with #{decorate.h.nice_currency(funds)} - "
+        desc_prefix: "Re-distributed from fulfilled prerequisite '#{from_account.name}' at priority level #{from_priority} with #{decorate.h.nice_currency(funds)} - ",
+        redistribution: true
       )
     end
     funds

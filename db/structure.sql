@@ -88,7 +88,9 @@ CREATE TABLE accounts (
     monthly_cap numeric,
     overflow_into_id integer,
     annual_cap numeric(8,2),
-    category_sum_id integer
+    category_sum_id integer,
+    prereq_skipped_income_id integer,
+    prereq_skipped_amount numeric(8,2)
 );
 
 
@@ -455,4 +457,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160319043433');
 INSERT INTO schema_migrations (version) VALUES ('20160321032939');
 
 INSERT INTO schema_migrations (version) VALUES ('20160321232118');
+
+INSERT INTO schema_migrations (version) VALUES ('20160324235358');
 

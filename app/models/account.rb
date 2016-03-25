@@ -74,23 +74,16 @@ class Account < ActiveRecord::Base
   end
 
   # More reasons this belongs in a background job...
-  def self.by_distribution_priority(prerequisite_account=nil)
+  def self.by_distribution_priority(income=nil, prerequisite_account=nil)
     accounts = enabled.order(priority: :desc)
       .order("accounts.cap ASC NULLS LAST")
       .order(id: :asc)
 
-    if prerequisite_account
-      accounts = accounts.where(prerequisite_account_id: prerequisite_account.id).
-        where("""
-          (priority >= :priority) OR
-          (priority = :priority AND cap < :cap) OR
-          (priority = :priority AND cap >= :cap AND accounts.id < :id) OR
-          (priority = :priority AND cap IS NULL AND :cap IS NULL AND accounts.id < :id)
-        """,
-          priority: prerequisite_account.priority,
-          cap: prerequisite_account.cap,
-          id: prerequisite_account.id
-        )
+    if income && prerequisite_account
+      # When a prerequisite is fulfilled, we need to backtrack on
+      # skipped prereq-fulfilled accounts and redistribute into them.
+      accounts = accounts.where(prereq_skipped_income_id: income.id)
+        .where(prerequisite_account_id: prerequisite_account.id)
     end
     accounts
   end
@@ -136,7 +129,7 @@ class Account < ActiveRecord::Base
   # ALTERNATIVELY: Do distribution in the background... of course,
   # that'll require a running worker :(
   def amount_received_this_month
-    date = @income_applied_at || Time.zone.now
+    date = @income.try(:applied_at) || Time.zone.now
     account_histories.where(
       "created_at BETWEEN :start_of_month AND :end_of_month",
       start_of_month: date.beginning_of_month,
@@ -147,7 +140,7 @@ class Account < ActiveRecord::Base
   end
 
   def amount_received_this_year
-    date = @income_applied_at || Time.zone.now
+    date = @income.try(:applied_at) || Time.zone.now
     account_histories.where(
       "created_at BETWEEN :start_of_year AND :end_of_year",
       start_of_year: date.beginning_of_year,
@@ -168,7 +161,14 @@ class Account < ActiveRecord::Base
   end
 
   def monthly_amount(amount_at_start_of_priority)
-    if percentage?
+    if @income && prereq_skipped_income_id == @income.try(:id)
+      # For re-distribution, the desired monthly amount should be
+      # the amount that was originally skipped because the prerequisite was
+      # unfulfilled (So if there was 10% of $100 at priority 10 when this was
+      # skipped, it should only try to add up to $10 when it comes back
+      # to it)
+      prereq_skipped_amount.to_d
+    elsif percentage?
       amount_at_start_of_priority * (add_per_month.to_d / 100.to_d)
     else
       add_per_month.to_d
@@ -249,16 +249,25 @@ class Account < ActiveRecord::Base
   end
 
   # Returns the unused funds
-  def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "")
+  # What a freakin' clusterfuck.
+  def apply_income_amount(income:, funds:, priority_funds:, desc_prefix: "", redistribution: false)
     deco = self.decorate
-    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{deco.h.nice_currency(priority_funds)} funds"
-    @income_applied_at = income.applied_at
+    desc_priority_funds = if prereq_skipped_income_id == income.id && percentage?
+      deco.h.nice_currency(prereq_skipped_amount.to_d / (add_per_month.to_d/100))
+    else
+      deco.h.nice_currency(priority_funds)
+    end
+    @expl = "#{desc_prefix}Distributed at priority level #{priority}: #{deco.display_add_per_month} per month of #{desc_priority_funds} funds"
+    @income = income
+
     if prereq_fulfilled?
       funds_to_distribute = amount_to_use(funds, priority_funds)
       # Don't re-distribute to accounts where this was a prerequisite,
-      # if this account was already capped.
-      check_fulfilled_prerequisites = (cap || "Infinity".to_d) > amount
+      # if this account was already capped, unless this is itself a redistribution
+      check_fulfilled_prerequisites = redistribution || ((cap || "Infinity".to_d) > amount)
       self.amount += funds_to_distribute
+      self.prereq_skipped_amount = nil
+      self.prereq_skipped_income_id = nil
       if !save
         raise "error on account #{self.id}: #{self.errors.full_messages.inspect}"
       end
@@ -290,6 +299,10 @@ class Account < ActiveRecord::Base
         )
         funds += @excess_funds
       end
+    else
+      self.prereq_skipped_amount = monthly_amount(priority_funds)
+      self.prereq_skipped_income_id = income.id
+      save!
     end
     funds
   end

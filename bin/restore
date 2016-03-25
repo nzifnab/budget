@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+# Usage: restore [options...]
+# Summary: restore development database
+# Help: Drops and restores development database.
+# If a template exists, it will restore from that template, which is
+# great for testing migrations or gnarly data transformation tasks
+# as it is VERY FAST.
+#
+# If a template does not exist OR if the -f flag is passed, a new
+# backup will be downloaded from heroku pg:backups and a template will
+# be created from that dump. The development database is then created
+# from that template. This should only be done when development data
+# has gotten stale or the latest copy is required. This will be much slower.
+#
+#
+# OPTIONS:
+#
+#   -f, --force
+#       Force a new download from heroku pg:backup to use as the local DB template
+#
+#   -d=ID, --dbid=ID
+#       Use a specific database ID from heroku as the backup download.
+#       See `heroku pg:backups` for a list of available backup ids.
+#       Using this option will cause the `-f` flag to automatically be used.
+
+set -e
+
+force=false
+# Parse the argment options
+heroku_app=zifbudget
+dev_db=budgeteer_development
+db=budget
+for i in "$@"
+do
+case $i in
+  -f|--force)
+    force=true
+    ;;
+  -d=*|--dbid=*)
+    dbid="${i#*=}"
+    force=true
+    shift # past argument=value
+    ;;
+  *)
+    echo "Unknown option: $i";
+    exit 1
+    ;;
+esac
+done
+echo "options parsed"
+
+if [ -z $dev_db ]; then
+  echo "Must specify database!"
+  exit 1
+fi
+
+db_template="${dev_db}_template"
+
+mkdir -p /tmp/budget
+db_dump=/tmp/budget/$db.pgbackup
+
+# Clear local db file download and template
+# Bash booleans are weird. See: http://goo.gl/coaQHM
+if [ "$force" = true ]; then
+  rm -f $db_dump
+  dropdb $db_template &> /dev/null || true
+  echo "db template dropped"
+fi
+
+if ! psql --list | grep -w "$db_template" > /dev/null; then
+  if ! [ -z $dbid ]; then
+    echo "Downloading $heroku_app pgbackup with id $dbid"
+  else
+    echo "Downloading latest $heroku_app pgbackup."
+  fi
+  backup_url=$(heroku pg:backups public-url $dbid --app=$heroku_app)
+  curl -o $db_dump $backup_url
+
+  echo "Creating template: $db_template"
+  createdb -E UTF8 $db_template
+
+  pg_restore \
+    --clean \
+    --no-acl \
+    --no-owner \
+    --clean \
+    --jobs=3 \
+    --dbname=$db_template \
+    $db_dump || true
+fi
+
+echo "Restoring $dev_db from template: $db_template"
+dropdb $dev_db
+createdb $dev_db --template=$db_template
+
+echo "Finished."
