@@ -5,8 +5,20 @@
         %h1 User Profile
         %ul.fields
           %li
+            = f.label :first_name
+            = f.text_field :first_name
+          %li
+            = f.label :last_name
+            = f.text_field :last_name
+          %li
             = f.label :email
             = f.text_field :email
+          - if user.undistributed_funds != 0
+            %li
+              = f.label :undistributed_funds
+              .field-prepend
+                $
+              = f.text_field :undistributed_funds
 
         %h2 Edit your password
         %ul.fields
