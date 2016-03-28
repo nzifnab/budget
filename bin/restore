@@ -88,9 +88,10 @@ if ! psql --list | grep -w "$db_template" > /dev/null; then
     --dbname=$db_template \
     $db_dump || true
 fi
-
+current_dir=`pwd`
+export PATH="$current_dir/bin:$PATH"
+budget-dropdb $dev_db
 echo "Restoring $dev_db from template: $db_template"
-dropdb $dev_db
 createdb $dev_db --template=$db_template
 
 echo "Finished."

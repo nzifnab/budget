@@ -8,7 +8,7 @@ if [[ -z $1 ]]; then
   exit 1
 fi
 db=$1
-
+echo "dropping database $db"
 if psql --list | grep -w "$db" > /dev/null; then
   psql -d postgres -c "
     SELECT
@@ -18,5 +18,5 @@ if psql --list | grep -w "$db" > /dev/null; then
     WHERE
       pg_stat_activity.datname = '${db}'" > /dev/null
 
-  dropdb $db || true # don't die if db does not exist
+  dropdb $db || echo "no database found to drop; skipping."
 fi
