@@ -5,10 +5,10 @@ class AccountHistoriesController < ApplicationController
     if params[:account_id].present?
       @account = budget.account(params[:account_id])
       @account_histories = @account.account_histories.
-        preload(:quick_fund).page(params[:page]).per_page(15)
+        preload(:quick_fund, :income).page(params[:page]).per_page(15)
     else
       @account_histories = budget.account_histories.
-        preload(:quick_fund).page(params[:page]).per_page(15)
+        preload(:quick_fund, :income, :account).page(params[:page]).per_page(15)
     end
     render layout: !request.xhr?
   end
