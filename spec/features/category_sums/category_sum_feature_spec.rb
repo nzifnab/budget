@@ -28,7 +28,8 @@ RSpec.describe "Category sums", js: true do
         expect(page).to have_content("$150.00")
       end
 
-      within(open_accordion("Food")) do
+      within(find_accordion("Food")[:content]) do
+        expect(page).to have_content("Checking Account")
         fill_in "Amount", with: "250"
         click_button "Deposit"
       end

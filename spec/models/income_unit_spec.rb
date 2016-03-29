@@ -596,7 +596,9 @@ RSpec.describe Income, type: :model do
         cap: 700
       )
       overflow_to_flat_account.update_attributes(
-        amount: 55
+        amount: 55,
+        monthly_cap: nil,
+        add_per_month: 15
       )
 
       test_distribution(
@@ -617,23 +619,23 @@ RSpec.describe Income, type: :model do
               explanation: "Distributed at priority level 7: $600.00 per month of $2,000.00 funds"
             },
             { # overflow_to_flat
-              amount: 200, # hit monthly_cap
-              explanation: "Distributed at priority level 3: 25.00% per month of $1,400.00 funds ($200.00 monthly cap)"
+              amount: 210,
+              explanation: "Distributed at priority level 3: 15.00% per month of $1,400.00 funds"
             },
             { # double_overflow
-              # sending $1,200
+              # sending $1,190
               amount: 450, # hit cap
-              explanation: "Distributed at priority level 2: $700.00 per month of $1,200.00 funds ($1,000.00 cap)"
+              explanation: "Distributed at priority level 2: $700.00 per month of $1,190.00 funds ($1,000.00 cap)"
             },
             { # overflow_to_flat
               # sending $250
-              amount: 145,
+              amount: 135,
               explanation: "Distributed at priority level 2: $250.00 (Overflowed from 'Double Overflow', $400.00 cap)"
             },
             { # flat_value
-              # sending $105
+              # sending $115
               amount: 100,
-              explanation: "Distributed at priority level 2: $105.00 (Overflowed from 'Overflow to Flat', $700.00 cap)"
+              explanation: "Distributed at priority level 2: $115.00 (Overflowed from 'Overflow to Flat', $700.00 cap)"
             },
             {
               amount: 505,
@@ -643,6 +645,91 @@ RSpec.describe Income, type: :model do
           ]
         }
       )
+    end
+
+    it 'respects monthly and annual caps when distributing into overflow accounts' do
+      percentage_account.update_attributes(
+        add_per_month: 0,
+        monthly_cap: 450
+      )
+      overflow_to_percent_account.update_attributes(
+        add_per_month: 2,
+        add_per_month_type: "%",
+        annual_cap: 1_000,
+        cap: 750
+      )
+      double_overflow_account.update_attributes(
+        cap: 495,
+        add_per_month: 35,
+        add_per_month_type: "%",
+        overflow_into_account: overflow_to_percent_account
+      )
+
+      percentage_account.account_histories.create!(
+        created_at: "February 9, 2016".to_datetime,
+        amount: 75,
+        income_id: 446
+      )
+      overflow_to_percent_account.account_histories.create!(
+        created_at: "January 3, 2016".to_datetime,
+        amount: 300,
+        income_id: 444
+      )
+      overflow_to_percent_account.account_histories.create!(
+        created_at: "February 8, 2016".to_datetime,
+        amount: 450,
+        income_id: 445
+      )
+
+      # Don't count non-income ones...
+      overflow_to_percent_account.account_histories.create!(
+        created_at: "February 15, 2016".to_datetime,
+        amount: 350,
+        quick_fund_id: 8
+      )
+      double_overflow_account.account_histories.create!(
+        created_at: "February 15, 2016".to_datetime,
+        amount: 80,
+        quick_fund_id: 8
+      )
+
+      Timecop.freeze("February 17, 2016".to_datetime) do
+        test_distribution(
+          accounts: [:overflow_to_percent, :percentage, :double_overflow],
+          amount: 5_000,
+
+          expect: {
+            history: [
+              { # overflow_to_percent
+                amount: 100,
+                explanation: "Distributed at priority level 4: 2.00% per month of $5,000.00 funds"
+              },
+              { # double_overflow ($1715 is 35% of 4500)
+                amount: 495,
+                explanation: "Distributed at priority level 2: 35.00% per month of $4,900.00 funds ($495.00 cap)"
+              },
+              { # overflow_to_percent ($1,220 sent here)
+                amount: 150,
+                explanation: "Distributed at priority level 2: $1,220.00 (Overflowed from 'Double Overflow', $1,000.00 annual cap)"
+              },
+              { # percentage ($1070 sent here)
+                amount: 375,
+                explanation: "Distributed at priority level 2: $1,070.00 (Overflowed from 'Overflow to Percent', $450.00 monthly cap)"
+              },
+              {
+                amount: 3880,
+                explanation: "Undistributed Funds"
+              }
+            ],
+            undistributed: 3880,
+            amounts: {
+              overflow_to_percent: 250,
+              percentage: 375,
+              double_overflow: 495
+            }
+          }
+        )
+      end
     end
 
     it 'when the account caps, it sends remaining funds to higher-priority accounts where this one was a prerequisite' do

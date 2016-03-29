@@ -310,12 +310,43 @@ class Account < ActiveRecord::Base
   # Returns the unused funds
   def apply_overflow_amount(income:, from_account:, funds:, from_priority:)
     desc = "Distributed at priority level #{from_priority}: #{decorate.h.nice_currency(funds)} (Overflowed from '#{from_account.name}'"
-    funds_to_distribute = if cap && (funds + amount) > cap
-      desc << ", #{decorate.h.nice_currency(cap)} cap"
-      cap - amount
-    else
-      funds
+    # This is very duplicated from amount_to_use
+    # TODO: REFACTOR
+    compare_vals = []
+    compare_vals << {val: funds}
+    monthly_remaining = month_amount_remaining
+    yearly_remaining = year_amount_remaining
+    if cap
+      compare_vals << {
+        val: [0, (cap - amount)].max,
+        desc: ", #{decorate.h.nice_currency(cap)} cap"
+      }
     end
+    if percentage?
+      compare_vals << {
+        val: monthly_remaining,
+        desc: ", #{decorate.h.nice_currency(monthly_cap)} monthly cap"
+      }
+    end
+    compare_vals << {
+      val: yearly_remaining,
+      desc: ", #{decorate.h.nice_currency(annual_cap)} annual cap"
+    }
+    #funds_to_distribute = if cap && (funds + amount) > cap
+    #  desc << ", #{decorate.h.nice_currency(cap)} cap"
+    #  cap - amount
+    #elsif percentage? && monthly_cap && (funds + (this_month_amount=amount_received_this_month)) > monthly_cap
+    #  desc << ", #{decorate.h.nice_currency(monthly_cap)} monthly cap"
+    #  monthly_cap - this_month_amount
+    #elsif annual_cap && (funds + (this_year_amount=amount_received_this_year)) > annual_cap
+    #  desc << ", #{decorate.h.nice_currency(annual_cap)} annual cap"
+    #  annual_cap - this_year_amount
+    #else
+    #  funds
+    #end
+    result = compare_vals.min_by{|a| a[:val]}
+    desc << result[:desc].to_s
+    funds_to_distribute = result[:val]
 
     self.amount += funds_to_distribute
     if !save
