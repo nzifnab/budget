@@ -153,7 +153,7 @@ class Effects
     $(document).on(
       {
         'ajax:success': (e, data, status, xhr) ->
-          Effects.remoteContentAppend(this, data)
+          Effects.remoteContentAppend(this, data.html || data)
         'ajax:error': (e, xhr, status, error) ->
           Effects.remoteContentAppend(this, xhr.responseText)
       }, "[data-remote-content-append]"
@@ -163,7 +163,7 @@ class Effects
     $(document).on(
       {
         "ajax:success": (e, data, status, xhr) ->
-          Effects.remoteContentFill(this, data.html)
+          Effects.remoteContentFill(this, data.html || data)
         "ajax:error": (e, xhr, status, error) ->
           Effects.remoteContentFill(this, xhr.responseText)
       }, "[data-remote-content-fill]"

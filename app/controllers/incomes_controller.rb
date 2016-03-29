@@ -4,6 +4,10 @@ class IncomesController < ApplicationController
   def index
     @income = budget.new_income
     @incomes = budget.incomes.page(params[:page]).per_page(15)
+
+    if request.xhr?
+      render partial: 'incomes/sidebar', locals: {incomes: incomes}, layout: false
+    end
   end
 
   def create
