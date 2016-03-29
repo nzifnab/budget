@@ -310,6 +310,7 @@ class Account < ActiveRecord::Base
   # Returns the unused funds
   def apply_overflow_amount(income:, from_account:, funds:, from_priority:)
     desc = "Distributed at priority level #{from_priority}: #{decorate.h.nice_currency(funds)} (Overflowed from '#{from_account.name}'"
+    @income = income
     # This is very duplicated from amount_to_use
     # TODO: REFACTOR
     compare_vals = []
