@@ -30,11 +30,14 @@
       .js-category-sums.tablet-hide
         = render partial: 'category_sums/for_layout'
 
-
+      -# TODO: These should probably be accounts/_header
+      -# and incomes/_header, since they're starting to differ
+      -# significantly from each other.
       %ul.tabs
-        %li.accounts-tab{class: current_action?('accounts#index') ? 'tab-active' : nil}= link_to 'Accounts', accounts_path
+        %li.accounts-tab{class: current_action?('accounts#index') ? 'tab-active' : nil}= link_to 'Accounts', accounts_path, {data: current_action?('accounts#index') ? {click_remove_element_class: ".js-account-accordion", click_remove_class_value: "tablet-hide", click_add_element_class: ".sidebar", click_add_class_value: "tablet-hide"} : {}}
         %li{class: current_action?('incomes#index') ? 'tab-active' : nil}= link_to 'Income', incomes_path
 
         -# Button that links to account history sidebar - tablet and smaller widths only.
-        %li.sidebar-tab.tablet-hide= link_to "Account History", '#', {data: {click_hide: ".js-account-accordion", click_remove_element_class: ".sidebar", click_remove_class_value: "tablet-hide"}}
+        - if current_action?("accounts#index")
+          %li.js-sidebar-tab.tablet-visible= link_to "Transactions", '#', {data: {click_add_element_class: ".js-account-accordion", click_add_class_value: "tablet-hide", click_remove_element_class: ".sidebar", click_remove_class_value: "tablet-hide"}}
       = yield

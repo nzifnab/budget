@@ -333,18 +333,6 @@ class Account < ActiveRecord::Base
       val: yearly_remaining,
       desc: ", #{decorate.h.nice_currency(annual_cap)} annual cap"
     }
-    #funds_to_distribute = if cap && (funds + amount) > cap
-    #  desc << ", #{decorate.h.nice_currency(cap)} cap"
-    #  cap - amount
-    #elsif percentage? && monthly_cap && (funds + (this_month_amount=amount_received_this_month)) > monthly_cap
-    #  desc << ", #{decorate.h.nice_currency(monthly_cap)} monthly cap"
-    #  monthly_cap - this_month_amount
-    #elsif annual_cap && (funds + (this_year_amount=amount_received_this_year)) > annual_cap
-    #  desc << ", #{decorate.h.nice_currency(annual_cap)} annual cap"
-    #  annual_cap - this_year_amount
-    #else
-    #  funds
-    #end
     result = compare_vals.min_by{|a| a[:val]}
     desc << result[:desc].to_s
     funds_to_distribute = result[:val]

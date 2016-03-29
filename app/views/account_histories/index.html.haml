@@ -1,8 +1,8 @@
 .sidebar-container.box-content
-  - if account.present?
-    %h1
+  %h1
+    - if account.present?
       .float-right{class: account.amount_class}= account.display_amount
-      = account.name
+    = account.try(:name) || "Transaction History"
   - if account_histories.present?
     %ul.tabs
       %li.tab-active= link_to "All", "#", class: "js-prevent-default"
@@ -10,7 +10,7 @@
       -#%li= link_to "Income", "#"
 
     %ul.boxed-list
-      = render account_histories
+      = render account_histories, details_account_name: account.blank?
 
     = pagination(account_histories)
   .break

@@ -4,5 +4,7 @@
 
     = render partial: 'accounts/account', collection: accounts
 
-.sidebar.hide.tablet-hide
-  .js-sidebar-content.box
+.sidebar.tablet-hide
+  .js-sidebar-content.hide.box
+
+  = link_to "View full transaction history", account_histories_path(format: 'json'), "data-remote-content-fill" => ".js-sidebar-content", "data-remote-show" => ".js-sidebar-content", "data-remote-text" => ".js-sidebar-tab a", "data-remote-text-content" => "Transactions", "data-remote" => true, class: "btn btn-blue btn-mobile"

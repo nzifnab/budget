@@ -9,8 +9,10 @@ class Effects
 
   @globalEvents: =>
     @initRemoteHide()
+    @initRemoteShow()
     @initRemoteContentAppend()
     @initRemoteReplace()
+    @initRemoteText()
     @initClickRemove()
     @initClickShow()
     @initClickHide()
@@ -82,6 +84,10 @@ class Effects
     $(document).on 'ajax:complete', "[data-remote-hide]", ->
       $($(this).data('remote-hide')).hide()
 
+  @initRemoteShow: ->
+    $(document).on 'ajax:complete', "[data-remote-show]", ->
+      $($(this).data('remote-show')).show()
+
   @initRemoteReplace: ->
     $(document).on(
       {
@@ -100,6 +106,12 @@ class Effects
           Effects.remoteReplaceSlide($(this), xhr.responseText, 'right')
       }, "[data-remote-replace-right]"
     )
+
+  @initRemoteText: ->
+    $(document).on 'ajax:complete', "[data-remote-text]", ->
+      $($(this).data('remote-text')).text(
+        $(this).data('remote-text-content')
+      )
 
 
   @remoteReplaceSlide: ($element, data, direction) ->
@@ -188,15 +200,11 @@ class Effects
     $(document).on 'click', ".accounts-tab", (e) ->
       if $(".js-account-accordion").length > 0
         e.preventDefault()
-        $(".js-account-accordion").show()
-        $(".sidebar").addClass("tablet-hide")
         $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
         $(this).addClass("tab-active")
 
-    $(document).on 'click', ".sidebar-tab", (e) ->
+    $(document).on 'click', ".js-sidebar-tab", (e) ->
       e.preventDefault()
-      $(".js-account-accordion").hide()
-      $(".sidebar").removeClass("tablet-hide")
       $(this).parents(".tabs").find(".tab-active").removeClass("tab-active")
       $(this).addClass("tab-active")
 

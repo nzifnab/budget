@@ -25,8 +25,8 @@ class AccountDecorator < ApplicationDecorator
     cap ? h.nice_currency(model.cap) : ""
   end
 
-  def truncated_name
-    h.truncate(name, length: 16)
+  def truncated_name(size=16)
+    h.truncate(name, length: size)
   end
 
   def category_name

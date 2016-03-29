@@ -1,4 +1,5 @@
 - display_basic ||= false
+- details_account_name ||= false
 %li.box.box-brown[account_history]
   .cols{display_basic ? {} : {"data-click-toggle" => ".js-history-details-#{account_history.id}", class: "clickable"}}
     .col-one-third{class: account_history.amount_class}= account_history.display_amount
@@ -8,7 +9,8 @@
           = account_history.account.truncated_name
           &raquo;
       - else
-        = link_to "Details", "#", class: 'text-small js-prevent-default'
+        - link_text = (details_account_name ? account_history.account.try(:name) : nil) || "Details"
+        = link_to link_text, "#", class: 'text-small js-prevent-default'
     .col-one-third.text-right{title: account_history.tooltip_date}= account_history.display_date
 
   .break{class: "js-history-details-#{account_history.id}", style: 'display: none;'}
