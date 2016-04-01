@@ -50,7 +50,7 @@ class Budget
     # http://stackoverflow.com/questions/21996653/postgres-left-outer-join-appears-to-not-be-using-table-indices/21996913?noredirect=1#comment33338427_21996913
     AccountHistory.from((income_history).union(:all,
       quick_fund_history).to_sql + " AS account_histories"
-    ).order(created_at: :desc)
+    ).order(created_at: :desc, id: :desc)
   end
 
   def incomes

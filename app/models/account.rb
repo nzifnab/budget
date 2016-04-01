@@ -16,7 +16,7 @@ class Account < ActiveRecord::Base
   belongs_to :user, inverse_of: :accounts
   belongs_to :category_sum, inverse_of: :accounts
 
-  has_many :account_histories, -> {order(created_at: :desc)}, inverse_of: :account
+  has_many :account_histories, -> {order(created_at: :desc, id: :desc)}, inverse_of: :account
   has_many :quick_funds, inverse_of: :account, validate: false
   has_many(
     :overflowed_from_accounts,

@@ -1,6 +1,6 @@
 class Income < ActiveRecord::Base
   belongs_to :user, inverse_of: :incomes
-  has_many :account_histories, inverse_of: :income
+  has_many :account_histories, ->{order(id: :asc)}, inverse_of: :income
 
   validates :amount, presence: {
     message: "Required"
