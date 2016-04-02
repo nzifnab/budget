@@ -424,7 +424,7 @@ class Account < ActiveRecord::Base
 
   # before_save
   def record_fund_change_amount
-    @fund_change = self.amount.to_d - self.amount_was.to_d
+    @fund_change = @fund_change.to_d + (self.amount.to_d - self.amount_was.to_d)
   end
 
   # before_save

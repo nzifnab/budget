@@ -116,38 +116,41 @@ class Account
       $("#edit_account_#{id}").remove()
 
 
-  @events: =>
-    $('.js-account-accordion').on(
+  @globalEvents: =>
+    #$('.js-account-accordion').on(
+    $(document).on(
       {
         'ajax:success': (e, data, status, xhr) =>
-          $(".js-account .header-notice").remove()
-          if xhr.status == 200 && data.newFormHtml?
-            newForm = @create(html: data.newFormHtml)
+          if $(".js-account-accordion").length >= 1
+            $(".js-account .header-notice").remove()
+            if xhr.status == 200 && data.newFormHtml?
+              newForm = @create(html: data.newFormHtml)
 
-          if xhr.status == 200 && data.accounts?
-            auto_open = null
-            for account in data.accounts
-              if account.html?
-                m = @create(account)
-                if data.auto_open == account.accountId
-                  auto_open = m
-            @refresh(auto_open?.accordionId())
-            Account.clear() unless data.newFormHtml?
+            if xhr.status == 200 && data.accounts?
+              auto_open = null
+              for account in data.accounts
+                if account.html?
+                  m = @create(account)
+                  if data.auto_open == account.accountId
+                    auto_open = m
+              @refresh(auto_open?.accordionId())
+              Account.clear() unless data.newFormHtml?
 
-          else if xhr.status == 200 && data.html?
-            account = @create(data)
-            @refresh(account.accordionId())
-            Account.clear() unless data.newFormHtml?
+            else if xhr.status == 200 && data.html?
+              account = @create(data)
+              @refresh(account.accordionId())
+              Account.clear() unless data.newFormHtml?
 
         'ajax:error': (e, xhr, status, error) =>
-          $(".js-account .header-notice").remove()
-          try
-            data = JSON.parse(xhr.responseText)
-          catch err
-            return $("body").html(xhr.responseText)
+          if $(".js-account-accordion").length >= 1
+            $(".js-account .header-notice").remove()
+            try
+              data = JSON.parse(xhr.responseText)
+            catch err
+              return $("body").html(xhr.responseText)
 
-          account = @create(data)
-          @refresh(account.accordionId())
+            account = @create(data)
+            @refresh(account.accordionId())
       },
       '.js-update-account'
     )

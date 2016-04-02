@@ -3,6 +3,11 @@ if income.errors[:amount].any?
   updatable << ["#income_#{income.id}", "incomes/income", {type: "replace", locals: {auto_open: income.id}}]
 else
   updatable << ["#income_#{income.id}", nil, {type: "replace"}]
+
+  json.accounts income.account_histories.map(&:account).reject(&:blank?) do |account|
+    json.partial! "accounts/account", account: account
+    json.html render(partial: 'accounts/account', locals: {account: account.decorate}, formats: [:html])
+  end
 end
 
 json.dynamicUpdate updatable do |attrs|
