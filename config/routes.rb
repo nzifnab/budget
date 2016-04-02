@@ -9,7 +9,7 @@ Budgeteer::Application.routes.draw do
     resources :quick_funds, only: [:create, :show]
   end
 
-  resources :incomes, only: [:index, :create, :show]
+  resources :incomes, only: [:index, :create, :show, :destroy]
 
   resources :account_histories, only: [:index]
   resources :category_sums, only: [:destroy]

@@ -9,6 +9,7 @@ class AccountHistory < ActiveRecord::Base
   validate :steal_amount_validation_from_account
   before_create :add_to_undistributed_funds
   before_create :save_account
+  before_destroy :revert_account_amount
 
   def amount_for_quick_fund=(val)
     self.amount = val
@@ -62,5 +63,20 @@ class AccountHistory < ActiveRecord::Base
         user.save
       end
       true
+    end
+
+    # before_destroy
+    def revert_account_amount
+      if account
+        account.amount -= self.amount
+        if !account.save
+          errors.add(:amount,  "#{account.name} - #{account.errors.messages[:amount].first}")
+          errors.add(:amount_extended, account.errors.messages[:amount_extended].first)
+          return false
+        end
+      else
+        user.undistributed_funds -= self.amount
+        user.save
+      end
     end
 end

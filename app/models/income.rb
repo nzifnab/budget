@@ -11,6 +11,9 @@ class Income < ActiveRecord::Base
 
   before_create :set_applied_at
   after_create :build_account_histories
+  before_destroy :destroy_account_histories
+
+  attr_accessor :skip_distribution
 
   def distribute_funds(funds)
     last_priority = 11
@@ -71,6 +74,19 @@ class Income < ActiveRecord::Base
 
     # after_create
     def build_account_histories
-      distribute_funds(amount)
+      distribute_funds(amount) unless skip_distribution
+    end
+
+    # before_destroy
+    def destroy_account_histories
+      success = true
+      account_histories.each do |hist|
+        if !hist.destroy
+          errors.add(:amount, hist.errors.messages[:amount].first)
+          errors.add(:amount_extended, hist.errors.messages[:amount_extended].first)
+          success = false
+        end
+      end
+      success
     end
 end

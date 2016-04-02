@@ -25,3 +25,9 @@
                 Amount
           %tbody
             = render partial: 'account_histories/for_income_table', collection: income.account_histories, as: :account_history, locals: {highlight_history: highlight_history}
+
+    = link_to "Revert", income_path(income, format: 'json'), "data-remote" => true, "data-method" => "delete", class: "js-update-content text-red text-small float-right", "data-confirm" => "Are you sure you want to revert this income? This will revert all funds on all accounts. This cannot be undone."
+
+    - if income.errors[:amount].any?
+      .box.box-red.float-right{title: income.errors.messages[:amount_extended].first}
+        = income.errors.messages[:amount].first

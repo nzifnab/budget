@@ -8,6 +8,14 @@ class AccountHistoryDecorator < ApplicationDecorator
     h.amount_class(model.amount)
   end
 
+  def row_highlight_class(highlight_id)
+    if errors.messages[:amount].present?
+      "highlight-red"
+    elsif highlight_id == model.id
+      "highlight"
+    end
+  end
+
   def display_amount
     h.nice_currency(model.amount)
   end

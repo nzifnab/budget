@@ -1306,4 +1306,86 @@ RSpec.describe Income, type: :model do
 
     end
   end
+
+  describe "#destroy" do
+    let(:user){User.create!(
+      first_name: "User",
+      last_name: "Dude",
+      undistributed_funds: 650,
+      password: "password",
+      email: "example@example.com"
+    )}
+    let(:account1){Account.create!(
+      name: "Account 1",
+      priority: 10,
+      enabled: true,
+      amount: 350
+    )}
+    let(:account2){Account.create!(
+      name: "Account 2",
+      priority: 5,
+      enabled: true,
+      amount: 600
+    )}
+    let(:account3){Account.create!(
+      name: "Account 3",
+      priority: 3,
+      enabled: false,
+      amount: 1050
+    )}
+
+    it "reverts account amounts based on the histories in the income" do
+      income = Income.create!(
+        amount: 50,
+        skip_distribution: true,
+        user: user,
+        account_histories: [
+          AccountHistory.new(
+            account: account1,
+            amount: 350
+          ), AccountHistory.new(
+            account: account2,
+            amount: 150
+          ), AccountHistory.new(
+            account: account3,
+            amount: 200
+          ), AccountHistory.new(
+            amount: 450
+          )
+        ]
+      )
+      expect(user.reload.undistributed_funds).to eq(1100)
+
+      expect(income.destroy).to be_truthy
+      expect(account1.reload.amount).to eq(0)
+      expect(account2.reload.amount).to eq(450)
+      expect(account3.reload.amount).to eq(850)
+      expect(user.reload.undistributed_funds).to eq(650)
+    end
+
+    it "gives a validation error if the account has insufficient funds to revert" do
+      income = Income.create!(
+        amount: 50,
+        skip_distribution: true,
+        user: user,
+        account_histories: [
+          AccountHistory.new(
+            account: account2,
+            amount: 150
+          ),
+          AccountHistory.new(
+            account: account1,
+            amount: 351
+          )
+        ]
+      )
+
+      expect(income.destroy).to be_falsey
+      expect(account1.reload.amount).to eq(350)
+      expect(account2.reload.amount).to eq(600)
+      expect(income.errors.messages[:amount].first).to eq(
+        "Account 1 - Insufficient Funds"
+      )
+    end
+  end
 end

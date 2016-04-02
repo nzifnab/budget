@@ -30,6 +30,11 @@ class IncomesController < ApplicationController
     render layout: !request.xhr?
   end
 
+  def destroy
+    @income = budget.income(params[:id])
+    @income.destroy
+  end
+
   private
 
   def income_params
