@@ -26,15 +26,7 @@
   .field-prepend
     $
   = f.text_field :cap
-%li
-  = f.label :prerequisite_account_id, "Prerequisite"
-  = f.collection_select :prerequisite_account_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
-%li
-  = f.label :overflow_into_id, "Income overflows into"
-  = f.collection_select :overflow_into_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
-%li
-  = f.label :negative_overflow_id, "Negative overflows into"
-  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; Disallow Negatives &mdash;".html_safe
+
 %li
   = f.label :category_sum_id, "Category", title: "Accounts in this category are aggregated, and their totals prominently displayed"
   = f.select :category_sum_id, category_select_options, {}, {"data-select-toggler" => ".js-category-sum-form"}
@@ -47,6 +39,21 @@
   %li.js-category-sum-form{style: 'display: none;'}
     = category.label :description, "Category Description"
     = category.text_area :description, disabled: true
+
+%li
+  %label
+  = link_to "Advanced Fields", "#", "data-click-toggle" => ".js-advanced-account-fields"
+
+%li.js-advanced-account-fields{style: 'display:none;'}
+  = f.label :prerequisite_account_id, "Prerequisite"
+  = f.collection_select :prerequisite_account_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
+%li.js-advanced-account-fields{style: 'display:none;'}
+  = f.label :overflow_into_id, "Income overflows into"
+  = f.collection_select :overflow_into_id, select_account_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; None &mdash;".html_safe
+%li.js-advanced-account-fields{style: 'display:none;'}
+  = f.label :negative_overflow_id, "Negative overflows into"
+  = f.collection_select :negative_overflow_id, negative_overflow_options(f.object.id), :id, :truncated_name, include_blank: "&mdash; Disallow Negatives &mdash;".html_safe
+
 
 
 %li
