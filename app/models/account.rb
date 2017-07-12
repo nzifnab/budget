@@ -221,7 +221,7 @@ class Account < ActiveRecord::Base
     @expl << " (#{expl})" if @expl && expl
     val = explanation_and_val[:val]
 
-    @excess_funds = [monthly_remaining, funds_to_add, funds].compact.min - val
+    @excess_funds = [percentage? ? "Infinity".to_d : monthly_remaining, funds_to_add, funds].compact.min - val
     @excess_funds = nil if @excess_funds <= 0
 
     val

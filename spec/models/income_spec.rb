@@ -1154,6 +1154,69 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it 'sends remaining funds beyond monthly_cap into overflow_into_account if the per_month type is %' do
+      flat_value_account.update_attributes(
+        name: "Investments",
+        add_per_month: 0,
+        add_per_month_type: "$",
+        enabled: true,
+        priority: 10
+      )
+      overflow_to_flat_account.update_attributes(
+        name: "Vanguard IRA",
+        add_per_month: 7.5,
+        add_per_month_type: "%",
+        monthly_cap: 100,
+        annual_cap: 5500,
+        cap: nil,
+        priority: 10,
+        enabled: true,
+        overflow_into_account: flat_value_account
+      )
+      overflow_to_percent_account.update_attributes(
+        name: "Emergency Fund",
+        add_per_month: 7.5,
+        add_per_month_type: "%",
+        cap: 200,
+        overflow_into_account: overflow_to_flat_account,
+        priority: 10,
+        enabled: true
+      )
+
+      test_distribution(
+        accounts: [:flat_value, :overflow_to_flat, :overflow_to_percent],
+        amount: 1_650,
+
+        expect: {
+          amounts: {
+            flat_value: 23.75,
+            overflow_to_flat: 100,
+            overflow_to_percent: 123.75
+          },
+          undistributed: 1_402.5,
+
+          history: [
+            { # Emergency Fund
+              amount: 123.75,
+              explanation: "Distributed at priority level 10: 7.50% per month of $1,650.00 funds"
+            },
+            { # Vanguard IRA
+              amount: 100,
+              explanation: "Distributed at priority level 10: 7.50% per month of $1,650.00 funds ($100.00 monthly cap)"
+            },
+            { # Investments
+              amount: 23.75,
+              explanation: "Distributed at priority level 10: $23.75 (Overflowed from 'Vanguard IRA')"
+            },
+            { # undistributed
+              amount: 1_402.5,
+              explanation: "Undistributed Funds"
+            }
+          ]
+        }
+      )
+    end
+
     it "respects the correct monthly and annual caps when a different applied_at is specified" do
       percentage_account.update_attributes(
         monthly_cap: 200,
@@ -1263,20 +1326,27 @@ RSpec.describe Income, type: :model do
       history_amounts = options[:expect][:history]
       hash_size = history_amounts.size
       histories = income.account_histories.order(id: :asc)
+
       histories.each do |history|
         history_hash = history_amounts.shift
-        expect(
-          [
-            history.amount,
-            history.explanation
-          ]
-        ).to eq(
-          [
-            history_hash[:amount].to_d,
-            history_hash[:explanation]
-          ]
-        )
+
+        if history_hash
+          expect(
+            [
+              history.amount,
+              history.explanation
+            ]
+          ).to eq(
+            [
+              history_hash[:amount].to_d,
+              history_hash[:explanation]
+            ]
+          )
+        else
+          raise "Unexpected history: #{history.inspect}"
+        end
       end
+
       expect(
         history_size: histories.size
       ).to eq(

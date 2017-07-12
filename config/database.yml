@@ -18,7 +18,7 @@ development:
   adapter: postgresql
   database: budgeteer_development
   encoding: unicode
-  username: pg_dev
+  username: ruby_dev
   password: please$$
   host: localhost
   pool: 5
@@ -50,5 +50,5 @@ test:
   database: budgeteer_test
   pool: 5
   host: localhost
-  username: pg_dev
+  username: ruby_dev
   password: please$$

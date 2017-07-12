@@ -258,5 +258,8 @@ DEPENDENCIES
   valid_email
   will_paginate
 
+RUBY VERSION
+   ruby 2.2.4p230
+
 BUNDLED WITH
-   1.11.2
+   1.15.1
