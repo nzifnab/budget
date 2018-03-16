@@ -2,12 +2,17 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.6.2
+-- Dumped by pg_dump version 9.6.2
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
@@ -30,7 +35,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: account_histories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: account_histories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE account_histories (
@@ -67,7 +72,7 @@ ALTER SEQUENCE account_histories_id_seq OWNED BY account_histories.id;
 
 
 --
--- Name: accounts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: accounts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE accounts (
@@ -114,7 +119,7 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 
 
 --
--- Name: category_sums; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: category_sums; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE category_sums (
@@ -148,7 +153,7 @@ ALTER SEQUENCE category_sums_id_seq OWNED BY category_sums.id;
 
 
 --
--- Name: incomes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: incomes; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE incomes (
@@ -183,7 +188,7 @@ ALTER SEQUENCE incomes_id_seq OWNED BY incomes.id;
 
 
 --
--- Name: quick_funds; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: quick_funds; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE quick_funds (
@@ -217,7 +222,7 @@ ALTER SEQUENCE quick_funds_id_seq OWNED BY quick_funds.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE schema_migrations (
@@ -226,7 +231,7 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE users (
@@ -262,49 +267,49 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: account_histories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY account_histories ALTER COLUMN id SET DEFAULT nextval('account_histories_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: accounts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: category_sums id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY category_sums ALTER COLUMN id SET DEFAULT nextval('category_sums_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: incomes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY incomes ALTER COLUMN id SET DEFAULT nextval('incomes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: quick_funds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY quick_funds ALTER COLUMN id SET DEFAULT nextval('quick_funds_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: account_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: account_histories account_histories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY account_histories
@@ -312,7 +317,7 @@ ALTER TABLE ONLY account_histories
 
 
 --
--- Name: accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY accounts
@@ -320,7 +325,7 @@ ALTER TABLE ONLY accounts
 
 
 --
--- Name: category_sums_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: category_sums category_sums_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY category_sums
@@ -328,7 +333,7 @@ ALTER TABLE ONLY category_sums
 
 
 --
--- Name: incomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: incomes incomes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY incomes
@@ -336,7 +341,7 @@ ALTER TABLE ONLY incomes
 
 
 --
--- Name: quick_funds_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: quick_funds quick_funds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY quick_funds
@@ -344,7 +349,7 @@ ALTER TABLE ONLY quick_funds
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -352,77 +357,77 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_account_histories_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_account_histories_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_histories_on_account_id ON account_histories USING btree (account_id);
 
 
 --
--- Name: index_account_histories_on_income_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_account_histories_on_income_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_histories_on_income_id ON account_histories USING btree (income_id);
 
 
 --
--- Name: index_account_histories_on_overflow_from_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_account_histories_on_overflow_from_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_histories_on_overflow_from_id ON account_histories USING btree (overflow_from_id);
 
 
 --
--- Name: index_account_histories_on_quick_fund_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_account_histories_on_quick_fund_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_account_histories_on_quick_fund_id ON account_histories USING btree (quick_fund_id);
 
 
 --
--- Name: index_accounts_on_category_sum_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_accounts_on_category_sum_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_accounts_on_category_sum_id ON accounts USING btree (category_sum_id);
 
 
 --
--- Name: index_accounts_on_negative_overflow_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_accounts_on_negative_overflow_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_accounts_on_negative_overflow_id ON accounts USING btree (negative_overflow_id);
 
 
 --
--- Name: index_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_accounts_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_accounts_on_user_id ON accounts USING btree (user_id);
 
 
 --
--- Name: index_category_sums_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_category_sums_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_category_sums_on_user_id ON category_sums USING btree (user_id);
 
 
 --
--- Name: index_incomes_on_applied_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_incomes_on_applied_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_incomes_on_applied_at ON incomes USING btree (applied_at);
 
 
 --
--- Name: index_quick_funds_on_account_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_quick_funds_on_account_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_quick_funds_on_account_id ON quick_funds USING btree (account_id);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
@@ -432,7 +437,7 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20130824223328');
 

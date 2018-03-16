@@ -1,19 +1,10 @@
 require File.expand_path('../boot', __FILE__)
 
-# Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+require 'rails/all'
 
-Bundler.require(:default, Rails.env)
-#if defined?(Bundler)
-  # If you precompile assets before deploying to production, use this line
-#  Bundler.require(*Rails.groups(:assets => %w(development test)))
-  # If you want your assets lazily compiled in production, use this line
-  # Bundler.require(:default, :assets, Rails.env)
-#end
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(*Rails.groups)
 
 module Budgeteer
   class Application < Rails::Application
@@ -30,7 +21,6 @@ module Budgeteer
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    config.i18n.enforce_available_locales = true
 
     config.action_view.field_error_proc = Proc.new {|html_tag, instance|
       "#{html_tag}".html_safe
@@ -45,5 +35,8 @@ module Budgeteer
       *.png
       *.jpg
     )
+
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end

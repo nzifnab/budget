@@ -2,7 +2,7 @@ source "https://rubygems.org"
 ruby '2.2.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1.6'
+gem 'rails', '4.2.10'
 gem 'pg'
 
 gem 'haml-rails'
@@ -12,6 +12,7 @@ gem 'jbuilder'
 #gem 'squeel'
 gem 'will_paginate'
 gem 'valid_email'
+gem 'rake', '< 11.0'
 
 
 
@@ -65,6 +66,9 @@ group :development, :test do
   gem 'teaspoon-jasmine'
   gem 'active_record_query_trace'
 end
+
+
+gem 'web-console', '~> 2.0', group: :development
 
 group :test do
   gem 'timecop'

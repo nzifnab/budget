@@ -50,6 +50,7 @@ class Account < ActiveRecord::Base
     if: ->{add_per_month_type == '%'}
   }
 
+  before_validation :record_new_category_sum
   before_validation :default_add_per_month_to_zero, on: :create
   before_save :default_amount_to_zero
   before_save :record_fund_change_amount
@@ -427,25 +428,37 @@ class Account < ActiveRecord::Base
     @fund_change = @fund_change.to_d + (self.amount.to_d - self.amount_was.to_d)
   end
 
+  # before_validation
+  # This is... kinda hacky. For some reason the below
+  # `before_save` callbacks do not see category_sum as a new record, *ever*.
+  # It gets saved to the DB before those callbacks are ever executed, for no known reason.
+  # So... we need to see if it was a new record before it got saved... I guess?
+  # This behavior appears to have changed between rails 4.1 and 4.2. I have no idea.
+  def record_new_category_sum
+    @category_sum_new = true if category_sum.try(:new_record?)
+  end
+
   # before_save
   def set_user_id_on_category_sum
-    if category_sum.try(:new_record?)
+    if @category_sum_new
       category_sum.user_id = self.user_id
     end
   end
 
-  #before_save
+  # before_save
   def cache_amount_on_category_sum
-    if amount_changed? || category_sum_id_changed? || category_sum.try(:new_record?)
+    if amount_changed? || category_sum_id_changed? || @category_sum_new
       if category_sum_id_was
         old_category = CategorySum.find(category_sum_id_was)
         old_category.amount -= amount_was.to_d
         old_category.save!
+        @category_sum_new = false
       end
       if category_sum
-        category_sum.reload unless category_sum.new_record?
+        category_sum.reload unless @category_sum_new
         category_sum.amount += amount.to_d
         category_sum.save!
+        @category_sum_new = false
       end
     end
     true
