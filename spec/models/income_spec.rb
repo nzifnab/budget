@@ -1154,6 +1154,52 @@ RSpec.describe Income, type: :model do
       )
     end
 
+    it 'sends remaining funds beyond the cap into the overflow_into_account, even if the account is even when both accounts are at the same priority level' do
+      percentage_account.update_attributes(
+        name: "IRA Account",
+        cap: nil,
+        add_per_month: 10,
+        add_per_month_type: "%",
+        priority: 10
+      )
+      overflow_to_percent_account.update_attributes(
+        cap: 1000,
+        amount: 1000,
+        add_per_month: 20,
+        add_per_month_type: "%",
+        priority: 10,
+        name: "Emergency Fund"
+      )
+
+      test_distribution(
+        accounts: [:percentage, :overflow_to_percent],
+        amount: 1_000,
+
+        expect: {
+          amounts: {
+            percentage: 300,
+            overflow_to_percent: 1000
+          },
+          undistributed: 700,
+
+          history: [
+            { # IRA, overflowed from emergency
+              amount: 200,
+              explanation: "Distributed at priority level 10: $200.00 (Overflowed from 'Emergency Fund')"
+            },
+            {
+              amount: 100,
+              explanation: "Distributed at priority level 10: 10.00% per month of $1,000.00 funds"
+            },
+            {
+              amount: 700,
+              explanation: "Undistributed Funds"
+            }
+          ]
+        }
+      )
+    end
+
     it 'sends remaining funds beyond monthly_cap into overflow_into_account if the per_month type is %' do
       flat_value_account.update_attributes(
         name: "Investments",

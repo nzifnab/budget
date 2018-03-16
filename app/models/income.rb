@@ -18,7 +18,15 @@ class Income < ActiveRecord::Base
   def distribute_funds(funds)
     last_priority = 11
     priority_funds = funds
-    user.accounts.by_distribution_priority.each do |account|
+
+    # Since distributing into one account can potentially change the
+    # amounts/values in the next account, we should just do a single query
+    # for each account that is going to be looped over...
+    account_ids = user.accounts.by_distribution_priority.map(&:id)
+
+
+    account_ids.each do |account_id|
+      account = Account.find(account_id)
       if account.priority < last_priority
         last_priority = account.priority
         priority_funds = funds
@@ -36,7 +44,9 @@ class Income < ActiveRecord::Base
   def distribute_via_prerequisite(from_account:, funds:, from_priority:)
     last_priority = 11
     priority_funds = funds
-    user.accounts.by_distribution_priority(self, from_account).each do |account|
+    account_ids = user.accounts.by_distribution_priority(self, from_account).map(&:id)
+    account_ids.each do |account_id|
+      account = Account.find(account_id)
       if account.priority < last_priority
         last_priority = account.priority
         priority_funds = funds
